@@ -29,7 +29,9 @@ setup(
       "pyarrow",
       "python-barcode[images]",
       "qrcode",
-      "pyzbar[scripts]" 
+      "pyzbar[scripts]",
+      "opencv-python",
+      "pycrypto" 
     ],
     packages=find_packages(exclude=('tests', 'docs'))
 )
