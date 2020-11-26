@@ -6,6 +6,7 @@ import os
 import shutil
 import tempfile
 import filecmp
+import base64
 
 class AdvancedTestSuite(unittest.TestCase):
   """Writing and reading a key as QR produces the same key"""
@@ -34,10 +35,10 @@ class AdvancedTestSuite(unittest.TestCase):
     f128 = os.path.join(self.test_dir, f"{name}128.png")
     f256 = os.path.join(self.test_dir, f"{name}256.png")
     f512 = os.path.join(self.test_dir, f"{name}512.png")
-    wkey32 = kskit.generate_qr_key(f32, 32)
-    wkey128 = kskit.generate_qr_key(f128, 128)
-    wkey256 = kskit.generate_qr_key(f256, 256)
-    wkey512 = kskit.generate_qr_key(f512, 512)
+    wkey32 = base64.decodebytes(kskit.generate_qr_key(f32, 32).encode("ASCII"))
+    wkey128 = base64.decodebytes(kskit.generate_qr_key(f128, 128).encode("ASCII"))
+    wkey256 = base64.decodebytes(kskit.generate_qr_key(f256, 256).encode("ASCII"))
+    wkey512 = base64.decodebytes(kskit.generate_qr_key(f512, 512).encode("ASCII"))
     with self.subTest():
       self.assertEqual(len(wkey32), 32)
     with self.subTest():
