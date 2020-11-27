@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 
-with open('README.rst') as f:
+with open('README.md') as f:
     readme = f.read()
 
 with open('LICENSE') as f:
@@ -14,6 +14,7 @@ setup(
     version='0.0.1',
     description='Cancer screening analysis module build on Python',
     long_description=readme,
+    long_description_content_type='text/markdown',
     author='Francisco Orchard',
     author_email='f.orchard@epiconcept.fr',
     url='https://github.com/Epiconcept-Paris/kskit',

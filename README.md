@@ -1,5 +1,4 @@
-kskit module
-========================
+## kskit module
 
 Functionality for cancer screening data pipeline including DICOM image importing and processing.
 
