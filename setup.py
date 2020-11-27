@@ -11,7 +11,7 @@ with open('LICENSE') as f:
 
 setup(
     name='kskit',
-    version='0.0.1',
+    version='0.0.2',
     description='Cancer screening analysis module build on Python',
     long_description=readme,
     long_description_content_type='text/markdown',
