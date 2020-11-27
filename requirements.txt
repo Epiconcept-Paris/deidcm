@@ -1,4 +1,0 @@
-setuptools
-pydicom
-pynetdicom
-requests
