@@ -31,7 +31,7 @@ setup(
       "qrcode",
       "pyzbar[scripts]",
       "opencv-python",
-      "pycrypto"
+      "pycryptodome"
     ],
     packages=find_packages(exclude=('tests', 'docs'))
 )
