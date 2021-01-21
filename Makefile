@@ -4,28 +4,37 @@ SPARK_VERSION=3.0.0
 SBT_OPTS=-Xmx16G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT
 
 init:
-	python3 -m venv env;\
+	python -m venv env;\
 	source env/bin/activate;\
-	pip3 install --upgrade pip;\
-	pip3 install --upgrade setuptools wheel twine
+	pip install --upgrade pip;\
+	pip install --upgrade setuptools wheel twine
+
+install:
+	source env/bin/activate;\
+	pip install -e .;\
 
 package:
 	source env/bin/activate;\
-	python3 setup.py sdist bdist_wheel
+	rm dist/*;\
+	python setup.py sdist bdist_wheel
 
-upload-test:
+release-test:
 	source env/bin/activate;\
 	rm dist/*;\
-	python3 setup.py sdist bdist_wheel;\
-	python3 -m twine upload --repository testpypi dist/*
+	python setup.py sdist bdist_wheel;\
+	python -m twine upload --repository testpypi dist/*
 
+release:
+	source env/bin/activate;\
+	rm dist/*;\
+	python setup.py sdist bdist_wheel;\
+	python -m twine upload dist/*
 
-spark-interpreter:
-	devscripts/sparkInterpreter.sh
-
-spark-compile:
-	cd scala;\
-  sbt compile 
+check:
+	source env/bin/activate;\
+	rm dist/*;\
+	python setup.py sdist bdist_wheel;\
+	python -m twine check/*
 
 test:
 	nosetests tests
