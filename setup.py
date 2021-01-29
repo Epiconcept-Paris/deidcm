@@ -7,7 +7,7 @@ with open('README.md') as f:
 
 setup(
     name='kskit',
-    version='0.0.5',
+    version='0.0.6',
     description='Cancer screening analysis module build on Python',
     long_description=readme,
     long_description_content_type='text/markdown',

@@ -75,7 +75,8 @@ def generate_rows(rows, columns) :
     yield [voo_parse(getattr(r, field), columns[field].type) for field in list(columns.keys())] 
 
 def get_datasets(voo_url, login, password) :
-  r = requests.get(f'{voo_url}/ws/dataset', auth = HTTPBasicAuth(login, password)) 
+  url = f'{voo_url}/ws/dataset'
+  r = requests.get(url, auth = HTTPBasicAuth(login, password)) 
   ds = read_response(r)
   return ds.root.response.dataset
 
