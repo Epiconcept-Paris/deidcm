@@ -40,9 +40,13 @@ def voo_parse(value, d_type):
   elif d_type == False:
     return str(value)
   elif d_type == "date":
-    return numpy.datetime64(value)
+    if value == "0000-00-00":
+      return None
+    d = numpy.datetime64(value)
+    return d if d.astype(object) <= pd.Timestamp.max.to_pydatetime().date() and d.astype(object) >= pd.Timestamp.min.to_pydatetime().date() else None
   elif d_type == "datetime":
-    return numpy.datetime64(value)
+    d = numpy.datetime64(value)
+    return d if d.astype(object) <= pd.Timestamp.max.to_pydatetime() and d.astype(object) >= pd.Timestamp.min.to_pydatetime() else None
   else:
     raise NotImplementedError(f"Parsing {value} as {d_type} is not yet implemented")
 
@@ -88,13 +92,13 @@ def get_dataset(voo_url, login, password, dataset, format = "json", order_by = N
       return
     else:
       dataset = datasets[-1] 
-
+  lines = 0
   sort = "/sort/"+order_by if order_by != None else "" 
   next_url = f'{voo_url}/ws/dataset/id/{dataset}/format/{format}{sort}/begin/0/range/{batch}' 
   page = 1
   folded_df = None
   while next_url != None:
-    print(next_url)
+    #print(next_url)
     r = read_response(requests.get(next_url, auth = HTTPBasicAuth(login, password))) 
     next_url = None
     new_df = None
@@ -114,6 +118,8 @@ def get_dataset(voo_url, login, password, dataset, format = "json", order_by = N
       columns = dict([(n, getattr(r.metadata.fields,n )) for n in dir(r.metadata.fields) if re.match("^__", n) == None])
       data = generate_rows(r.rowdata, columns)
       new_df = pd.DataFrame(data = data, columns = columns.keys()).astype(dict(voo_type(columns)))
+      lines = lines + new_df.shape[0]
+      print(f"{lines} of {r.total_rows}", end="\r", flush=True)
       if begin + new_df.shape[0] >= total_rows:
         next_url = None
       elif begin != (page - 1) * range:
