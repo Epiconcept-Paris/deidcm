@@ -76,13 +76,15 @@ def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
   #   Query/Retrieve level
   ds = Dataset()
   ds.QueryRetrieveLevel = retrieveLevel
-  # Unique key for PATIENT level
-  #ds.PatientID = '1234567'
-  # Unique key for STUDY level
-  #ds.StudyInstanceUID = '1.2.3'
-  # Unique key for SERIES level
-  ds.SeriesInstanceUID = ids
-  
+  if retrieveLevel == "SERIES":
+    ds.SeriesInstanceUID = ids
+  elif retrieveLevel == "PATIENT":
+    ds.PatientID = ids
+  elif retrieveLevel == "STUDY":
+    ds.StudyInstanceUID = ids
+  else:
+    raise ValueError("Retrieve level must be one of 'SERIES', 'PATIENT', 'STUDY' but {retrieveLevel} was passed")
+     
   # Associate with peer AE at IP 127.0.0.1 and port 11112
   assoc = ae.associate(server, port, ae_title=title, ext_neg=ext_neg, evt_handlers=handlers)
   
@@ -93,7 +95,7 @@ def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
           if status:
               #import pdb; pdb.set_trace() 
               if status.NumberOfCompletedSuboperations == 1:
-                print (f"Success") 
+                print (f"{ids} downloaded successfully") 
               elif status.NumberOfCompletedSuboperations == 0:
                 print (f"id {ids} not found") 
               else:
