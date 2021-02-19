@@ -40,7 +40,7 @@ def info_logger():
   handler.setFormatter(formatter)
   logger.addHandler(handler)
 
-def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retrieveLevel = 'SERIES'):
+def get_dicom(key, dest, server = "127.0.0.1", port = 11112, title = "ANY", retrieveLevel = 'SERIES'):
   #info_logger()
   handlers = [(evt.EVT_C_STORE, handle_store)]
   global storage_dest 
@@ -77,11 +77,11 @@ def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
   ds = Dataset()
   ds.QueryRetrieveLevel = retrieveLevel
   if retrieveLevel == "SERIES":
-    ds.SeriesInstanceUID = ids
+    ds.SeriesInstanceUID = key
   elif retrieveLevel == "PATIENT":
-    ds.PatientID = ids
+    ds.PatientID = key
   elif retrieveLevel == "STUDY":
-    ds.StudyInstanceUID = ids
+    ds.StudyInstanceUID = key
   else:
     raise ValueError("Retrieve level must be one of 'SERIES', 'PATIENT', 'STUDY' but {retrieveLevel} was passed")
      
@@ -94,10 +94,10 @@ def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
       for (status, identifier) in responses:
           if status:
               #import pdb; pdb.set_trace() 
-              if status.NumberOfCompletedSuboperations == 1:
-                print (f"{ids} downloaded successfully") 
+              if status.NumberOfCompletedSuboperations >= 1:
+                print(f"{key} downloaded {status.NumberOfCompletedSuboperations} successfully") 
               elif status.NumberOfCompletedSuboperations == 0:
-                print (f"id {ids} not found") 
+                print (f"id {key} not found") 
               else:
                 print('C-GET query status: 0x{0:04x}'.format(status.Status))
           else:
@@ -108,5 +108,5 @@ def get_dicom(ids, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
   else:
       print('Association rejected, aborted or never connected')
   
-#get_dicom(ids='1.3.6.1.4.1.9590.100.1.2.25530538411839768118282182472795553760', dest = "/tmp/pynetdicom", server = "127.0.0.1", port = 11112, title = b'DCM4CHEE')
+#get_dicom(key='1.3.6.1.4.1.9590.100.1.2.25530538411839768118282182472795553760', dest = "/tmp/pynetdicom", server = "127.0.0.1", port = 11112, title = b'DCM4CHEE')
 
