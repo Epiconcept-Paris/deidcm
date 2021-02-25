@@ -84,7 +84,7 @@ def get_datasets(voo_url, login, password) :
   ds = read_response(r)
   return ds.root.response.dataset
 
-def get_dataset(voo_url, login, password, dataset, format = "json", order_by = None, batch = 500, folder = lambda new, cum: pd.concat([new, cum])) : 
+def get_dataset(voo_url, login, password, dataset, format = "json", order_by = None, batch = 500, folder = lambda new, cum: pd.concat([new, cum], ignore_index = True)) : 
   if type(dataset) == str and not dataset.isnumeric() :
     datasets = list(line.id for line in get_datasets(voo_url, login, password) if line.name == dataset)
     if len(datasets) == 0:
