@@ -4,6 +4,8 @@ from matplotlib import pyplot
 import base64
 import pandas as pd
 import json
+import itertools
+
 
 def write_dicom(infiles):
   i = 0
@@ -31,7 +33,7 @@ def search_dicom(search_dir) :
 def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs = True):
   ds = pydicom.dcmread(dicom_file)
   line = {}
-  for element in ds.iterall():
+  for element in itertools.chain(ds.file_meta.iterall(), ds.iterall()):
     if ((with_pixels or element.tag != 0x7FE00010) and 
        (with_private or not element.is_private) and
        (with_seqs or element.VR != "SQ")):
@@ -68,7 +70,7 @@ def encode_unit(value):
   t = type(value)
   if t == int:
     return str(value)
-  if t == int:
+  if t == float:
     return str(value)
   elif t == str: 
     return value
