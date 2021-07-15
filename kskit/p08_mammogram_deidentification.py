@@ -4,8 +4,8 @@ import shutil
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
-from dpiste import dicom2png
-from dpiste import utils
+from dpiste import dicom2png, utils, report
+from .dicom import dicom2df
 
 def p08_001_anonymize_folder():
     """
@@ -48,15 +48,15 @@ They are the ones with no words listed and they were not modified)\n\n\n
             output_ds = outdir_intermediate + "/" + os.path.basename(file) + ".txt"
             output_summary = outdir_intermediate + "/summary.log"
 
-        dicom = dicom2png.dicom2narray(input_path)
-        pixels = dicom[0]
+        (pixels, ds) = dicom2png.dicom2narray(input_path)
 
         ocr_data = p08_002_get_text_areas(pixels)
-        
+
         if len(ocr_data):
             print("\n___________A text area has been detected : " + input_path + "___________\n")
             pixels = p08_003_hide_text(pixels, ocr_data)
-            dicom2png.narray2dicom(pixels, dicom[1], output_path)
+            ds = p08_004_de_identify_ds(ds)
+            dicom2png.narray2dicom(pixels, ds, output_path)
         else:
             print("\nNo text area detected\n")
             print(input_path, output_path)
@@ -66,11 +66,11 @@ They are the ones with no words listed and they were not modified)\n\n\n
 
         with open(output_ds,'a') as f:
             file_path = indir + file
-            text = input_path + '\n' + str(dicom[1]) + '\n' + "Words recognized : " + \
+            text = input_path + '\n' + str(ds) + '\n' + "Words recognized : " + \
                str(ocr_data) + '\n'
             f.write(text)
 
-        summary = p08_004_update_summary(summary, file_path, ocr_data)
+        summary = p08_005_update_summary(summary, file_path, ocr_data)
         nb_images_processed += 1
 
     
@@ -136,7 +136,20 @@ def p08_003_hide_text(pixels, ocr_data, mode = "black"):
     return np.asarray(im)
 
 
-def p08_004_update_summary(summary, file_path, ocr_data):
+
+def p08_004_de_identify_ds(ds):
+    print("producing consolidated dicom dataframe")
+    dicom_dir = os.environ.get('DP_HOME')
+    df = dicom2df(dicom_dir)
+    
+    print("Saving dicom consolidated dataframe")
+    dicomdf_dir = os.path.join("input, dcm4chee", "dicom_df")
+    df.to_parquet(os.path.join(dicomdf_dir, str(page)), "pyarrow")
+    return ds
+
+
+
+def p08_005_update_summary(summary, file_path, ocr_data):
     summary += "\n" + file_path + "\n↪words : "
     ocr_words = []
     for found in ocr_data:
