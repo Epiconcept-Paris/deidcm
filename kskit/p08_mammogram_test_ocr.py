@@ -561,12 +561,12 @@ ocr_recognized_words, total_words, tp, tn, fp, fn, outdir_intermediate, file_pat
         accuracy, precision, recall, f1_score = -1, -1, -1, -1
 
     if total_words != 0:
-        percentage_recognized = (ocr_recognized_words/total_words)*100
+        percentage_recognized = round((ocr_recognized_words/total_words)*100, 1)
     else:
         percentage_recognized = 100
 
     if sum_total_words != 0:
-        percentage_total_recognized = (sum_ocr_recognized_words/sum_total_words)*100
+        percentage_total_recognized = round((sum_ocr_recognized_words/sum_total_words)*100, 1)
     else:
         percentage_total_recognized = 100
 
