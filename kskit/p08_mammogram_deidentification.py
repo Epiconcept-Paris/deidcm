@@ -1,6 +1,8 @@
 import os
+import string
 import time
 import shutil
+import json
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
@@ -138,14 +140,54 @@ def p08_003_hide_text(pixels, ocr_data, mode = "black"):
 
 
 def p08_004_de_identify_ds(ds):
-    print("producing consolidated dicom dataframe")
-    dicom_dir = os.environ.get('DP_HOME')
-    df = dicom2df(dicom_dir)
+    """Deidentifies the dataset of the DICOM passed in parameter"""
+    attributes = get_DICOM_attributes(dir(ds))   
+
+    with open('/home/williammadie/GitHub/kskit/kskit/confidential_attributes.json') as f:
+        confidential_attributes = json.load(f)
+
+    compare_attributes_to_confidential_attributes(confidential_attributes, attributes, ds)
+
     
-    print("Saving dicom consolidated dataframe")
-    dicomdf_dir = os.path.join("input, dcm4chee", "dicom_df")
-    df.to_parquet(os.path.join(dicomdf_dir, str(page)), "pyarrow")
-    return ds
+
+
+def get_DICOM_attributes(attributes):
+    """Removes python basic attributes and keeps only DICOM attributes"""
+    index_attribute = 0
+    while index_attribute < len(attributes):
+        attribute = attributes[index_attribute]
+        if len(attribute) != 0 and attribute[0] not in string.ascii_uppercase:
+            attributes.remove(attributes[index_attribute])
+        else:
+            index_attribute += 1
+    return attributes
+
+
+
+def compare_attributes_to_confidential_attributes(confidential_attributes, attributes, ds):
+    """Compares the DICOM's attributes to attributes known for being at risk if kept in clear"""
+    for attribute in attributes:
+        if attribute in confidential_attributes:
+            #print(attribute, "is in the confidential attributes")
+            (deid_mode, id_attribute) = confidential_attributes[attribute]
+            x_id, y_id = get_id(id_attribute)
+            
+            if deid_mode == 'Z' and ds[x_id, y_id].value == '':
+                print("")
+            elif deid_mode == 'X':
+                print("ATTRIBUT NON ANONYMISE :", attribute)
+            
+
+
+def get_id(id_attribute):
+    id_attribute = id_attribute.replace('(','')
+    id_attribute = id_attribute.replace(')','')
+    beginning_ids = ["0x", "0x"]
+    end_ids = id_attribute.split(",")
+    beginning_ids[0] += end_ids[0]
+    beginning_ids[1] += end_ids[1]
+    return tuple(beginning_ids)
+    
 
 
 
@@ -160,4 +202,4 @@ def p08_005_update_summary(summary, file_path, ocr_data):
         ocr_words.append(found[1])
     for found in sorted(ocr_words):
         summary += found.lower() + " |"
-    return summary
+    return summary     
