@@ -146,8 +146,8 @@ def p08_004_de_identify_ds(ds):
     with open('/home/williammadie/GitHub/kskit/kskit/confidential_attributes.json') as f:
         confidential_attributes = json.load(f)
 
-    compare_attributes_to_confidential_attributes(confidential_attributes, attributes, ds)
-
+    remove_confidential_attributes(confidential_attributes, attributes, ds)
+    
     
 
 
@@ -164,22 +164,43 @@ def get_DICOM_attributes(attributes):
 
 
 
-def compare_attributes_to_confidential_attributes(confidential_attributes, attributes, ds):
+def remove_confidential_attributes(confidential_attributes, attributes, ds):
     """Compares the DICOM's attributes to attributes known for being at risk if kept in clear"""
     for attribute in attributes:
         if attribute in confidential_attributes:
-            #print(attribute, "is in the confidential attributes")
             (deid_mode, id_attribute) = confidential_attributes[attribute]
             x_id, y_id = get_id(id_attribute)
             
-            if deid_mode == 'Z' and ds[x_id, y_id].value == '':
-                print("")
-            elif deid_mode == 'X':
-                print("ATTRIBUT NON ANONYMISE :", attribute)
-            
+            #Zero-length string
+            if deid_mode == 'Z' and ds[x_id, y_id].value not in ['','UNKNOWN']:
+                print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
+                ds[x_id, y_id].value = ''
+            #Delete
+            elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
+                #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
+                delattr(ds, attribute)
+
+    ds.remove_private_tags()
+    #Deletes the De-identificationMethodSequence attribute and all its sub-attributes
+    """
+    if (0x0012, 0x0064) in ds:
+        delattr(ds, 'DeidentificationMethodCodeSequence')
+    """
+    create_deid_methode_code_sequence_attribute()
+    #PatientIdentityRemoved CS : YES
+    if (0x0012, 0x0062) not in ds:
+        ds.add_new([0x0012, 0x0062], 'CS', 'YES')
+    else:
+        ds[0x0012, 0x0062].value = 'YES'
+    #BurnedInAnnotation CS : NO (shows that OCR deidentification was applied)
+    if (0x0028, 0x0301) not in ds:
+        ds.add_new([0x0028, 0x0301], 'CS', 'NO')
+    else:
+        ds[0x0012, 0x0062].value = 'NO'
 
 
 def get_id(id_attribute):
+    """reformats the id stored as a string (0xYYYY,0xZZZZ) to a tuple"""
     id_attribute = id_attribute.replace('(','')
     id_attribute = id_attribute.replace(')','')
     beginning_ids = ["0x", "0x"]
