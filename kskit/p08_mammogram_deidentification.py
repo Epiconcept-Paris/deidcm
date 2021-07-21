@@ -21,15 +21,13 @@ def p08_001_anonymize_folder():
     start_time = time.time()
     nb_images_processed = 1
     summary = """\n\n\n
-Here is a summary of the DICOMs that have been de-identified.
-(The DICOMs that had no text area have been moved to the output directory.
-They are the ones with no words listed and they were not modified)\n\n\n
+Here is a summary of the DICOMs that have been de-identified.\n\n\n
     """
 
-    
     indir = utils.get_home('data', 'input', 'hdh','')
     outdir = utils.get_home('data','output','hdh','')
     outdir_intermediate = utils.get_home('data','transform','hdh','')
+    confidential_attr_path = utils.get_home('data','confidential_attributes.json')
 
     list_dicom = sorted(os.listdir(indir))
     for file in list_dicom:
@@ -57,7 +55,7 @@ They are the ones with no words listed and they were not modified)\n\n\n
         if len(ocr_data):
             print("\n___________A text area has been detected : " + input_path + "___________\n")
             pixels = p08_003_hide_text(pixels, ocr_data)
-            ds = p08_004_de_identify_ds(ds)
+            ds = p08_004_de_identify_ds(ds, confidential_attr_path)
             dicom2png.narray2dicom(pixels, ds, output_path)
         else:
             print("\nNo text area detected\n")
@@ -139,19 +137,19 @@ def p08_003_hide_text(pixels, ocr_data, mode = "black"):
 
 
 
-def p08_004_de_identify_ds(ds):
+def p08_004_de_identify_ds(ds, confidential_attr_path):
     """Deidentifies the dataset of the DICOM passed in parameter"""
-    attributes = get_DICOM_attributes(dir(ds))   
+    attributes = filter_DICOM_attributes(dir(ds))   
 
-    with open('/home/williammadie/GitHub/kskit/kskit/confidential_attributes.json') as f:
+    with open(confidential_attr_path) as f:
         confidential_attributes = json.load(f)
 
     remove_confidential_attributes(confidential_attributes, attributes, ds)
-    
+    add_deid_required_attributes(ds)
     
 
 
-def get_DICOM_attributes(attributes):
+def filter_DICOM_attributes(attributes):
     """Removes python basic attributes and keeps only DICOM attributes"""
     index_attribute = 0
     while index_attribute < len(attributes):
@@ -166,6 +164,8 @@ def get_DICOM_attributes(attributes):
 
 def remove_confidential_attributes(confidential_attributes, attributes, ds):
     """Compares the DICOM's attributes to attributes known for being at risk if kept in clear"""
+    
+    """
     for attribute in attributes:
         if attribute in confidential_attributes:
             (deid_mode, id_attribute) = confidential_attributes[attribute]
@@ -179,24 +179,56 @@ def remove_confidential_attributes(confidential_attributes, attributes, ds):
             elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
                 #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
                 delattr(ds, attribute)
+    #TODO: Investigate on the necessity of removing the private tags
+    #ds.remove_private_tags()
+    """
+    recipe = DeidRecipe("/home/williammadie/GitHub/deep.piste/dpiste/test_reports/deid.dicom-group")
+    recipe.deid
+    OrderedDict([('format', 'dicom'),
+                ('values',
+                OrderedDict([('cookie_names',
+                                [{'action': 'SPLIT',
+                                'field': 'PatientID',
+                                'value': 'by="^";minlength=4'}]),
+                            ('operator_names',
+                                [{'action': 'FIELD',
+                                'field': 'startswith:Operator'}])])),
+                ('fields',
+                OrderedDict([('instance_fields',
+                                [{'action': 'FIELD',
+                                'field': 'contains:Instance'}])])),
+                ('header',
+                [{'action': 'ADD',
+                    'field': 'PatientIdentityRemoved',
+                    'value': 'Yes'},
+                {'action': 'REPLACE',
+                    'field': 'values:cookie_names',
+                    'value': 'var:id'},
+                {'action': 'REPLACE',
+                    'field': 'values:operator_names',
+                    'value': 'var:source_id'}])])
 
-    ds.remove_private_tags()
+
+def add_deid_required_attributes(ds):
+    """Adds the de-identification attributes required by the DICOM standard"""
     #Deletes the De-identificationMethodSequence attribute and all its sub-attributes
     """
     if (0x0012, 0x0064) in ds:
         delattr(ds, 'DeidentificationMethodCodeSequence')
     """
-    create_deid_methode_code_sequence_attribute()
+    
     #PatientIdentityRemoved CS : YES
     if (0x0012, 0x0062) not in ds:
         ds.add_new([0x0012, 0x0062], 'CS', 'YES')
     else:
         ds[0x0012, 0x0062].value = 'YES'
-    #BurnedInAnnotation CS : NO (shows that OCR deidentification was applied)
+    #BurnedInAnnotation CS : NO (Indicates whether or not image contains sufficient burned in annotation to identify the patient and date the image was acquired.)
+    #TODO: investigate on the necessity to modify this attribute
     if (0x0028, 0x0301) not in ds:
         ds.add_new([0x0028, 0x0301], 'CS', 'NO')
     else:
         ds[0x0012, 0x0062].value = 'NO'
+
 
 
 def get_id(id_attribute):
