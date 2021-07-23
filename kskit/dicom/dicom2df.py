@@ -31,7 +31,7 @@ def search_dicom(search_dir) :
       yield os.path.join(root, file)
 
 def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs = True):
-  ds = pydicom.dcmread(dicom_file)
+  ds = pydicom.dcmread(dicom_file, force=True)
   line = {}
   for element in itertools.chain(ds.file_meta, ds):
     if ((with_pixels or element.tag != 0x7FE00010) and 
