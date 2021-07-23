@@ -3,88 +3,16 @@ import string
 import time
 import shutil
 import json
+import datetime
 import numpy as np
+from pydicom.sequence import Sequence
+from pydicom.dataset import Dataset
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
-from dpiste import dicom2png, utils, report
-from .dicom import dicom2df
-
-def p08_001_anonymize_folder():
-    """
-    Anonymize a complete directory of DICOM.
-
-    @param
-
-    indir = the initial directory of DICOM to de-identify
-    outdir = the final director of DICOM which have been de-identied
-    """
-    start_time = time.time()
-    nb_images_processed = 1
-    summary = """\n\n\n
-Here is a summary of the DICOMs that have been de-identified.\n\n\n
-    """
-
-    indir = utils.get_home('data', 'input', 'hdh','')
-    outdir = utils.get_home('data','output','hdh','')
-    outdir_intermediate = utils.get_home('data','transform','hdh','')
-    confidential_attr_path = utils.get_home('data','confidential_attributes.json')
-
-    list_dicom = sorted(os.listdir(indir))
-    for file in list_dicom:
-    
-        nb_files = len(list_dicom)
-        
-        if indir.endswith("/"):
-            input_path = indir + file
-        else:
-            input_path = indir + '/' + file
-        
-        if outdir.endswith("/"):
-            output_path = outdir  + os.path.basename(file)
-            output_ds = outdir_intermediate + os.path.basename(file) + ".txt"
-            output_summary = outdir_intermediate + "summary.log"
-        else:
-            output_path = outdir  + '/' + os.path.basename(file)
-            output_ds = outdir_intermediate + "/" + os.path.basename(file) + ".txt"
-            output_summary = outdir_intermediate + "/summary.log"
-
-        (pixels, ds) = dicom2png.dicom2narray(input_path)
-
-        ocr_data = p08_002_get_text_areas(pixels)
-
-        if len(ocr_data):
-            print("\n___________A text area has been detected : " + input_path + "___________\n")
-            pixels = p08_003_hide_text(pixels, ocr_data)
-            ds = p08_004_de_identify_ds(ds, confidential_attr_path)
-            dicom2png.narray2dicom(pixels, ds, output_path)
-        else:
-            print("\nNo text area detected\n")
-            print(input_path, output_path)
-            shutil.copy2(input_path, output_path)
-
-        print(nb_images_processed, "/", nb_files, "DICOM(s) de-identified")
-
-        with open(output_ds,'a') as f:
-            file_path = indir + file
-            text = input_path + '\n' + str(ds) + '\n' + "Words recognized : " + \
-               str(ocr_data) + '\n'
-            f.write(text)
-
-        summary = p08_005_update_summary(summary, file_path, ocr_data)
-        nb_images_processed += 1
-
-    
-    time_taken = time.time() - start_time
-    with open(output_summary, 'w') as f:
-        f.write(
-          str(round(time_taken/60)) + " minutes taken to de-identify all images.\n" + \
-            summary
-        )
 
 
 
-
-def p08_002_get_text_areas(pixels):
+def get_text_areas(pixels):
     """
     Easy OCR function. Gets an image at the path below and gets the 
     text of the picture. 
@@ -94,7 +22,7 @@ def p08_002_get_text_areas(pixels):
 
 
 
-def p08_003_hide_text(pixels, ocr_data, mode = "black"):
+def hide_text(pixels, ocr_data, mode = "black"):
     """
     Get a NUMPY array, a list of the coordinates of the different text areas 
     in this array and (optional) a mode which can be : 
@@ -128,7 +56,7 @@ def p08_003_hide_text(pixels, ocr_data, mode = "black"):
                 draw = ImageDraw.Draw(im)
 
                 #If the value is a tuple, the color has to be a tuple (RGB image)
-                color = (0,0,0) if type(pixels[0][0]) == tuple else 0
+                color = (255,255,255) if type(pixels[0][0]) == tuple else 255
                     
                 draw.rectangle([x1, y1, x2, y2], fill=color)
                 del draw
@@ -137,7 +65,7 @@ def p08_003_hide_text(pixels, ocr_data, mode = "black"):
 
 
 
-def p08_004_de_identify_ds(ds, confidential_attr_path):
+def de_identify_ds(ds, confidential_attr_path):
     """Deidentifies the dataset of the DICOM passed in parameter"""
     attributes = filter_DICOM_attributes(dir(ds))   
 
@@ -164,70 +92,97 @@ def filter_DICOM_attributes(attributes):
 
 def remove_confidential_attributes(confidential_attributes, attributes, ds):
     """Compares the DICOM's attributes to attributes known for being at risk if kept in clear"""
-    
-    """
     for attribute in attributes:
         if attribute in confidential_attributes:
             (deid_mode, id_attribute) = confidential_attributes[attribute]
             x_id, y_id = get_id(id_attribute)
             
+            #Calculates the age with the Birth Date
+            if x_id == '0x0010' and y_id == '0x0030':
+                if (0x0010, 0x1010) in ds and ds[0x0010, 0x1010].value == '':
+                    ds[0x0010, 0x1010].value  = get_age(ds[x_id, y_id].value)
+                elif (0x0010, 0x1010) not in ds and ds[x_id, y_id].value != '':
+                    ds.add_new([0x0010, 0x1010], 'AS', get_age(ds[x_id, y_id].value))
+
             #Zero-length string
             if deid_mode == 'Z' and ds[x_id, y_id].value not in ['','UNKNOWN']:
-                print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
+                #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
                 ds[x_id, y_id].value = ''
             #Delete
             elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
                 #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
                 delattr(ds, attribute)
+            
     #TODO: Investigate on the necessity of removing the private tags
     #ds.remove_private_tags()
-    """
-    recipe = DeidRecipe("/home/williammadie/GitHub/deep.piste/dpiste/test_reports/deid.dicom-group")
-    recipe.deid
-    OrderedDict([('format', 'dicom'),
-                ('values',
-                OrderedDict([('cookie_names',
-                                [{'action': 'SPLIT',
-                                'field': 'PatientID',
-                                'value': 'by="^";minlength=4'}]),
-                            ('operator_names',
-                                [{'action': 'FIELD',
-                                'field': 'startswith:Operator'}])])),
-                ('fields',
-                OrderedDict([('instance_fields',
-                                [{'action': 'FIELD',
-                                'field': 'contains:Instance'}])])),
-                ('header',
-                [{'action': 'ADD',
-                    'field': 'PatientIdentityRemoved',
-                    'value': 'Yes'},
-                {'action': 'REPLACE',
-                    'field': 'values:cookie_names',
-                    'value': 'var:id'},
-                {'action': 'REPLACE',
-                    'field': 'values:operator_names',
-                    'value': 'var:source_id'}])])
+    
+
+
+def get_age(birth_date):
+    """Takes the birth date of the patient and returns its age"""
+    birth_year = int(birth_date[0:4])
+    present_year = datetime.datetime.now().year
+    patient_age = present_year - birth_year
+    if 10 < patient_age and patient_age < 100:
+        patient_age = "0" + str(patient_age) + "Y"
+    elif patient_age < 10:
+        patient_age = "00" + str(patient_age) + "Y"
+    else:
+        patient_age = str(patient_age) + "Y"
+    print(patient_age)
+    return patient_age 
+    
 
 
 def add_deid_required_attributes(ds):
     """Adds the de-identification attributes required by the DICOM standard"""
-    #Deletes the De-identificationMethodSequence attribute and all its sub-attributes
-    """
-    if (0x0012, 0x0064) in ds:
-        delattr(ds, 'DeidentificationMethodCodeSequence')
-    """
     
     #PatientIdentityRemoved CS : YES
     if (0x0012, 0x0062) not in ds:
         ds.add_new([0x0012, 0x0062], 'CS', 'YES')
     else:
         ds[0x0012, 0x0062].value = 'YES'
+    
+    #Deletes the De-identificationMethodSequence attribute and all its sub-attributes
+    if (0x0012, 0x0064) in ds:
+        delattr(ds, 'DeidentificationMethodCodeSequence')
+
+    ds.add_new([0x0012, 0x0064], 'SQ', [])
+    
+    ds[0x0012, 0x0064].value.append(Dataset())
+    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0100), 'SH', '113100')
+    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0102), 'SH', 'DCM')
+    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0104), 'LO', 'Basic Application Confidentiality Profile')
+
+    ds[0x0012, 0x0064].value.append(Dataset())
+    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0100), 'SH', '113101')
+    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0102), 'SH', 'DCM')
+    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0104), 'LO', 'Clean Pixel Data Option')
+
+    ds[0x0012, 0x0064].value.append(Dataset())
+    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0100), 'SH', '113108')
+    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0102), 'SH', 'DCM')
+    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0104), 'LO', 'Retain Patient Characteristics Option')
+
+    #Add the attribute DeidentificationMethod
+    if (0x0012, 0X0063) in ds:
+        delattr(ds, 'DeidentificationMethod')
+    ds.add_new((0x0012, 0X0063), 'LO', 'Per DICOM PS 3.15 AnnexE. Details in 0012,0064')
+
     #BurnedInAnnotation CS : NO (Indicates whether or not image contains sufficient burned in annotation to identify the patient and date the image was acquired.)
     #TODO: investigate on the necessity to modify this attribute
     if (0x0028, 0x0301) not in ds:
-        ds.add_new([0x0028, 0x0301], 'CS', 'NO')
+        ds.add_new([0x0028, 0x0301], 'CS', 'YES')
     else:
-        ds[0x0012, 0x0062].value = 'NO'
+        ds[0x0012, 0x0062].value = 'YES'
+
+    """
+    Print and change nested attributes (core elements)
+    print("Nested attribute 1", ds[0x0008, 0x2218][0][0x0008, 0x0100].value)
+    print("Nested attribute 2", ds[0x0008, 0x2218][0][0x0008, 0x0102].value)
+    print("Nested attribute 3", ds[0x0008, 0x2218][0][0x0008, 0x0104].value)
+    ds[0x0008, 0x2218][0][0x0008, 0x0104].value = 'Foot'
+    """
 
 
 

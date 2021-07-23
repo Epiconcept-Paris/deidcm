@@ -1,120 +1,12 @@
 import random
 import string
 import time
-from datetime import datetime
+from datetime import datetime as dt
 import os
-import pydicom
 import numpy as np
-from dpiste import utils
-from dpiste.dicom2png import dicom2narray, narray2dicom
 from PIL import Image, ImageFont, ImageDraw
-from .p08_mammogram_deidentification import *
-
-PATH_DCM = '/home/williammadie/images/test_mix/dicom'
-PATH_PNG = '/home/williammadie/images/test_mix/png'
-PATH_FONTS = '/home/williammadie/images/fonts'
-
-"""
-
-This module aims at evaluating the OCR package abilities. 
-It generates and adds random texts to test images and then treats them with 
-the OCR module.
-
-"""
-
-def p08_000_test_OCR(font, size, blur, repetition):    
-    start_time = time.time()
-    #Default values
-    utils.get_home('data', 'input', 'hdh','')
-    utils.get_home('data','output','hdh','')
-    utils.get_home('data','transform','hdh','')
-    indir = os.environ.get('DP_HOME') + '/data/input/hdh'
-    outdir = os.environ.get('DP_HOME') + '/data/output/hdh'
-    outdir_intermediate = os.environ.get('DP_HOME') + '/data/transform/hdh'
-
-    if font is None:
-        font = [PATH_FONTS + '/FreeMono.ttf']
-    if size is None:
-        size = [2]
-    if blur is None:
-        blur = [0]
-    if repetition is None:
-        repetition = 1
-
-    check_resources(font, size, blur)
-
-    sum_ocr_recognized_words, sum_total_words, nb_images_tested = 0, 0, 1
-    tp, tn, fp, fn = 0, 0, 0, 0
-    list_dicom, list_chosen = sorted(os.listdir(indir)), []
-    result = ""
-
-    #Tests for false positives
-    (nb_images_tested, list_chosen, summary, fp, tn) = search_false_positives(
-        indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn)
-    
-    #Tests for criteria FONT, SIZE & BLUR
-    nb_images_total = len(font)*len(size)*len(blur)*3 + 3
-    summary += "\n\n\nTested with several FONT SIZE & BLUR parameters x" + \
-    str(nb_images_total - 3) + "\n\n\n"
-    for index_font in range(len(font)):
-        for index_size in range(len(size)):
-            for index_blur in range(len(blur)):
-                for r in range(repetition):
-                    (pixels, ds, dicom, file_path, list_chosen) = get_random_dicom_ds_array(
-                        list_dicom, indir, list_chosen
-                        )
-                    
-                    if pixels.size < 100000:
-                        test_words = generate_random_words(random.randint(1,1), 5)
-                    elif size[index_size] > 3:
-                        test_words = generate_random_words(random.randint(1,5), 5)
-                    else:
-                        test_words = generate_random_words(random.randint(1,10), 10)
-
-                    (pixels, words_array, test_words) = add_words_on_image(
-                        pixels, test_words, size[index_size], 
-                        font=font[index_font], blur=blur[index_blur]
-                        )
-
-                    img = Image.fromarray(pixels)
-                    img.save(outdir + '/' + os.path.basename(dicom) + ".png")
-
-                    ocr_data = p08_002_get_text_areas(pixels)
-            
-                    (ocr_recognized_words, total_words) = compare_ocr_data_and_reality(
-                        test_words, words_array, ocr_data
-                        )
-
-                    #Test numbers :
-                    sum_ocr_recognized_words += ocr_recognized_words
-                    sum_total_words += total_words
-
-                    #Calculate test model values
-                    (tp, tn, fn) = calculate_test_values(
-                        total_words, ocr_recognized_words, tp, tn, fn
-                        )        
-                    result = save_test_information(
-                        nb_images_tested, nb_images_total, sum_ocr_recognized_words, sum_total_words, 
-                        ocr_recognized_words, total_words, tp, tn, fp, fn, outdir_intermediate, file_path, result
-                        )
-                    save_dicom_info(
-                        outdir_intermediate + '/' + os.path.basename(dicom) + ".txt", 
-                        file_path, ds, ocr_data, test_words, total_words)
-                    
-                    summary += "\n" + file_path + "\n↪parameters : F = " \
-                         + str(os.path.basename(font[index_font])) + " | B = " \
-                             + str(blur[index_blur]) + " | S = " + str(size[index_size])
-                    nb_images_tested += 1
-    
-    time_taken = time.time() - start_time
-    with open(outdir_intermediate + '/test_summary.log', 'w') as f:
-        f.write(
-          str(round(time_taken/60)) + " minutes taken to process all images.\n" + \
-          summary)
-            
-    #pixels = hide_text(pixels, ocr_data)
-    #narray2dicom(pixels, dicom[1], (pathPNG + "/dicom/de_identified" + str(count) + ".dcm"))
-
+from .deid_mammogram import *
+from dpiste.dicom2png import dicom2narray
 
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
@@ -124,7 +16,7 @@ def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, 
     summary += "\n\n\nTested for detecting possible false positives x" + str(repetition) + "\n\n\n"
     for i in range(repetition):
         (pixels, ds, dicom, file_path, list_chosen) = get_random_dicom_ds_array(list_dicom, indir, list_chosen)
-        ocr_data = p08_002_get_text_areas(pixels)
+        ocr_data = get_text_areas(pixels)
         if is_there_ghost_words(ocr_data):
             fp += 1
         else:
@@ -139,21 +31,6 @@ def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, 
     return (nb_images_tested, list_chosen, summary, fp, tn)
 
 
-
-def check_resources(font, size, blur):
-    """Checks if all font resources are existing and correct"""
-    for f in font:
-        if not os.path.isfile(f):
-            raise TypeError("Font " + f + " does not exist. Please check spelling.") 
-
-    if max(size) > 5 or min(size) < 1:
-        raise ValueError("Possible text sizes are [1, 2, 3, 4, 5]")
-    
-    if max(blur) > 10 or min(blur) < 0:
-        raise ValueError("Possible blur strengths are [0..10]")
-
-
-
 def get_random_dicom_ds_array(list_dicom, indir, list_chosen):
     """Returns the dataset and the array of a random dicom file in the folder"""
     while True:
@@ -165,9 +42,22 @@ def get_random_dicom_ds_array(list_dicom, indir, list_chosen):
             if len(list_chosen) == len(list_dicom):
                 break
 
-    file_path = indir + '/' + dicom
+    file_path = dicom
     (pixels, ds) = dicom2narray(file_path)
     return (pixels, ds, dicom, file_path, list_chosen)
+
+
+def check_resources(PATH_FONTS, font, size, blur):
+    """Checks if all font resources are existing and correct"""
+    for f in font:
+        if not os.path.isfile(PATH_FONTS + f):
+            raise TypeError("Font " + f + " does not exist. Please check spelling.") 
+
+    if max(size) > 5 or min(size) < 1:
+        raise ValueError("Possible text sizes are [1, 2, 3, 4, 5]")
+    
+    if max(blur) > 10 or min(blur) < 0:
+        raise ValueError("Possible blur strengths are [0..10]")
 
 
 
@@ -175,7 +65,7 @@ def save_dicom_info(output_ds, file_path, ds, ocr_data, test_words, total_words)
     """Write the dataset of the image"""
     with open(output_ds,'a') as f:
         f.write(
-            datetime.now().strftime(
+            dt.now().strftime(
                 "%d/%m/%Y %H:%M:%S"
                 ) + '\n' + file_path + '\n' + str(ds) + "\nRecognized words :\n")
         ocr_words = []
@@ -191,31 +81,6 @@ def save_dicom_info(output_ds, file_path, ds, ocr_data, test_words, total_words)
         if total_words == len(test_words):
             for word in sorted(test_words):
                 f.write(word + " |")
-
-
-def summarize_dcm_info(pixels, file, count):
-    """
-    Debug function which prints useful information of the narray (@param pixels)
-    """
-    strObtenue = """
-Nbre de dimensions : {0},
-Taille dim1, dim2 : {1},
-Nbre total d'éléments : {2},
-Taille dimension 1 : {3},
-(vMin, vMax) contenu dans une cellule : {4},
-MONOCHROME : {5}
-
-==================================================
-        """.format(
-            pixels.ndim,
-            pixels.shape,
-            pixels.size,
-            len(pixels),
-            (pixels.amin(), pixels.amax()),
-            pydicom.read_file(PATH_DCM + "/" + file).PhotometricInterpretation
-        )
-    print("==================================================\n")
-    print("Image n°" + str(count) + " : " + file + "\n" + strObtenue )
 
 
 
@@ -572,24 +437,24 @@ ocr_recognized_words, total_words, tp, tn, fp, fn, outdir_intermediate, file_pat
 
     accuracy, precision = round(accuracy, 1), round(precision, 1)
     recall, f1_score = round(recall, 1), round(f1_score, 1)
-    hour = datetime.now().strftime("%H:%M:%S")
+    hour = dt.now().strftime("%H:%M:%S")
     prompt = """
 \n
-===========================================================================
-Image : {file_path}
-Image tested at : {hour}
-Amount of images tested: {nb_images_tested}/{nb_images_total}
-TOTAL: {ocr_recognized_words}/{total_words} words recognized (last image) ({percentage_recognized}%)
-GRAND TOTAL: {sum_ocr_recognized_words}/{sum_total_words} words recognized ({percentage_total_recognized}%)
-True Positive (totally recognized images): {tp}
-False Negative (NOT totally recognized images): {fn}
-False Positive (Images with ghost words): {fp}
-True Negative (Images with NO ghost words): {tn}
-Precision: {precision}
-Recall: {recall}
-F1_Score: {f1_score}
-Accuracy: {accuracy} % 
-===========================================================================
+================================================================================================
+Image :                                                         {file_path}
+Image tested at :                                               {hour}
+Amount of images tested:                                        {nb_images_tested}/{nb_images_total}
+TOTAL:                                                          {ocr_recognized_words}/{total_words} words recognized (last image) ({percentage_recognized}%)
+GRAND TOTAL:                                                    {sum_ocr_recognized_words}/{sum_total_words} words recognized ({percentage_total_recognized}%)
+True Positive   (IMAGE: x words | OCR : x words):               {tp}
+False Negative  (IMAGE: x words | OCR : y words):               {fn}
+False Positive  (IMAGE: no words | OCR : detects word(s)):      {fp}
+True Negative   (IMAGE: no words | OCR : no words):             {tn}
+Precision:                                                      {precision}
+Recall:                                                         {recall}
+F1_Score:                                                       {f1_score}
+Accuracy:                                                       {accuracy} % 
+================================================================================================
 \n
     """.format(
         file_path = file_path, hour = hour, nb_images_tested = nb_images_tested,
@@ -612,12 +477,3 @@ Accuracy: {accuracy} %
             f.write(result)
     else:
         return result
-
-
-
-if __name__ == '__main__':  
-    p08_000_test_OCR(     
-        [PATH_FONTS+"/FreeSansBoldOblique.ttf", PATH_FONTS+"/P052-Roman.otf", 
-        PATH_FONTS+"/NimbusRoman-Regular.otf", PATH_FONTS+"/FreeSerif.ttf"], 
-        [1, 2, 5], [0], 3
-        )
