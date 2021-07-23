@@ -6,7 +6,7 @@ import os
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 from .deid_mammogram import *
-from dpiste.dicom2png import dicom2narray
+from kskit.dicom2png import dicom2narray
 
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
@@ -22,7 +22,10 @@ def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, 
         else:
             tn += 1
         save_dicom_info(
-            outdir_intermediate + '/' + os.path.basename(dicom) + ".txt", 
+            "{}/{}_FP_FP_FP.txt".format(
+                outdir_intermediate,
+                os.path.basename(dicom)
+            ),
             file_path, ds, ocr_data, [], 0
             )
         summary += "\n" + file_path + "\n↪parameters : F = - | B = - | S = -"
@@ -62,12 +65,12 @@ def check_resources(PATH_FONTS, font, size, blur):
 
 
 def save_dicom_info(output_ds, file_path, ds, ocr_data, test_words, total_words):
-    """Write the dataset of the image"""
+    """Write OCR test information about the process on a particular dicom"""
     with open(output_ds,'a') as f:
         f.write(
             dt.now().strftime(
                 "%d/%m/%Y %H:%M:%S"
-                ) + '\n' + file_path + '\n' + str(ds) + "\nRecognized words :\n")
+                ) + '\n' + file_path + "\nRecognized words :\n")
         ocr_words = []
         for found in ocr_data:
             if ' ' in found[1]:
@@ -78,6 +81,7 @@ def save_dicom_info(output_ds, file_path, ds, ocr_data, test_words, total_words)
         for found in sorted(ocr_words):
             f.write(found.lower() + " |")
         f.write("\nReal words :\n")
+
         if total_words == len(test_words):
             for word in sorted(test_words):
                 f.write(word + " |")

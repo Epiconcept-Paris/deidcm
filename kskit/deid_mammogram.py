@@ -22,7 +22,7 @@ def get_text_areas(pixels):
 
 
 
-def hide_text(pixels, ocr_data, mode = "black"):
+def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     """
     Get a NUMPY array, a list of the coordinates of the different text areas 
     in this array and (optional) a mode which can be : 
@@ -55,9 +55,11 @@ def hide_text(pixels, ocr_data, mode = "black"):
                 #Add a black rectangle on the targeted text
                 draw = ImageDraw.Draw(im)
 
-                #If the value is a tuple, the color has to be a tuple (RGB image)
-                color = (255,255,255) if type(pixels[0][0]) == tuple else 255
-                    
+                #If the value in the pixel array is a tuple, the color has to be a tuple (RGB image)
+                if color_value == 'white':
+                    color = (255,255,255) if type(pixels[0][0]) == tuple else 255
+                else:
+                    color = (0,0,0) if type(pixels[0][0]) == tuple else 0
                 draw.rectangle([x1, y1, x2, y2], fill=color)
                 del draw
 
@@ -65,20 +67,20 @@ def hide_text(pixels, ocr_data, mode = "black"):
 
 
 
-def de_identify_ds(ds, confidential_attr_path):
+def de_identify_ds(ds, PATH_ATTRIBUTES_TO_KEEP):
     """Deidentifies the dataset of the DICOM passed in parameter"""
     attributes = filter_DICOM_attributes(dir(ds))   
 
-    with open(confidential_attr_path) as f:
-        confidential_attributes = json.load(f)
+    with open(PATH_ATTRIBUTES_TO_KEEP) as f:
+        attributes_ref = json.load(f)
 
-    remove_confidential_attributes(confidential_attributes, attributes, ds)
-    add_deid_required_attributes(ds)
-    
+    ds = remove_confidential_attributes(attributes_ref, attributes, ds)
+    ds = add_deid_required_attributes(ds)
+    return ds
 
 
 def filter_DICOM_attributes(attributes):
-    """Removes python basic attributes and keeps only DICOM attributes"""
+    """Removes python basic attributes from the dataset and keeps only DICOM attributes"""
     index_attribute = 0
     while index_attribute < len(attributes):
         attribute = attributes[index_attribute]
@@ -90,12 +92,12 @@ def filter_DICOM_attributes(attributes):
 
 
 
-def remove_confidential_attributes(confidential_attributes, attributes, ds):
-    """Compares the DICOM's attributes to attributes known for being at risk if kept in clear"""
+def remove_confidential_attributes(attributes_ref, attributes, ds):
+    """Compares the DICOM's attributes to attributes known for being at risk if kept in clear""" 
     for attribute in attributes:
-        if attribute in confidential_attributes:
-            (deid_mode, id_attribute) = confidential_attributes[attribute]
-            x_id, y_id = get_id(id_attribute)
+        if attribute in attributes_ref:
+            spec_attribute = attributes_ref[attribute]
+            x_id, y_id = get_id(spec_attribute[0])
             
             #Calculates the age with the Birth Date
             if x_id == '0x0010' and y_id == '0x0030':
@@ -103,16 +105,19 @@ def remove_confidential_attributes(confidential_attributes, attributes, ds):
                     ds[0x0010, 0x1010].value  = get_age(ds[x_id, y_id].value)
                 elif (0x0010, 0x1010) not in ds and ds[x_id, y_id].value != '':
                     ds.add_new([0x0010, 0x1010], 'AS', get_age(ds[x_id, y_id].value))
-
-            #Zero-length string
-            if deid_mode == 'Z' and ds[x_id, y_id].value not in ['','UNKNOWN']:
-                #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
-                ds[x_id, y_id].value = ''
-            #Delete
-            elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
-                #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
-                delattr(ds, attribute)
-            
+        else:
+            delattr(ds, attribute)
+    return ds
+    """
+    #Zero-length string
+    if deid_mode == 'Z' and ds[x_id, y_id].value not in ['','UNKNOWN']:
+        #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
+        ds[x_id, y_id].value = ''
+    #Delete
+    elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
+        #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
+        delattr(ds, attribute)
+    """
     #TODO: Investigate on the necessity of removing the private tags
     #ds.remove_private_tags()
     
@@ -183,20 +188,15 @@ def add_deid_required_attributes(ds):
     print("Nested attribute 3", ds[0x0008, 0x2218][0][0x0008, 0x0104].value)
     ds[0x0008, 0x2218][0][0x0008, 0x0104].value = 'Foot'
     """
+    return ds
 
 
 
 def get_id(id_attribute):
-    """reformats the id stored as a string (0xYYYY,0xZZZZ) to a tuple"""
-    id_attribute = id_attribute.replace('(','')
-    id_attribute = id_attribute.replace(')','')
-    beginning_ids = ["0x", "0x"]
-    end_ids = id_attribute.split(",")
-    beginning_ids[0] += end_ids[0]
-    beginning_ids[1] += end_ids[1]
-    return tuple(beginning_ids)
+    """reformats the id stored as a string 0xYYYYZZZZ to a tuple"""
+    y_id = '0x' + id_attribute[6:len(id_attribute)]
+    return (id_attribute[0:6], y_id)
     
-
 
 
 def p08_005_update_summary(summary, file_path, ocr_data):
