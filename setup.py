@@ -34,8 +34,7 @@ setup(
       "imageio",
       "tqdm",
       "pillow",
-      "gdcm",
-      "easyocr"
+      "gdcm"
     ],
     packages=find_packages(exclude=('tests', 'docs'))
 )
