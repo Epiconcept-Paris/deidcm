@@ -7,7 +7,7 @@ with open('README.md') as f:
 
 setup(
     name='kskit',
-    version='0.0.8',
+    version='0.0.9',
     description='Cancer screening analysis module build on Python',
     long_description=readme,
     long_description_content_type='text/markdown',
@@ -16,6 +16,7 @@ setup(
     url='https://github.com/Epiconcept-Paris/kskit',
     license="MIT License",
     install_requires=[
+      "easyocr",
       "pydicom",
       "Numpy",
       "matplotlib",
