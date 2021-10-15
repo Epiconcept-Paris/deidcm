@@ -1,12 +1,15 @@
 import os
 from numpy import dot, e, ndarray
+from numpy.lib.function_base import append
 import pydicom
+from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
 from matplotlib import pyplot
 import base64
 import pandas as pd
 import json
 import ast
+import time
 
 from pydicom import tag
 
@@ -26,175 +29,74 @@ def read_dicom(infiles):
     yield((infile, ds) )
 
 
-def df2dicom(dataframe, outdir):
+def df2dicom(df, outdir):
   """
   Fill up a directory with DICOMs initially contained in a dataframe
   @param dataframe : data structure containing the information needed to
   reconstruct DICOMs
   @param outdir : output directory where the DICOMs will be generated
   """
+
+  for index in range(len(df)):
+    build_dicom(df, index, parent_path = '')
+  
+  """
   dico = dataframe.to_dict()
+  print(dico)
+  exit(1)
   build_dicoms(dico)
-
-
-
-def build_dicoms(dico):
   """
-  Gets all the attributes names and values and call for the build of each
-  dicom.
-  dico is the initial dataframe but cast in a dictionary type
-  """
-  attributes_names , attributes_values = [], []
 
-  for element in dico:
-    element_info = element.split("_")
-    infos = {}
-   
-    for i in range(len(element_info)):
-      infos[i] = element_info[i]
-    
-    attributes_names.append(infos)
-    attributes_values.append(list(dico[element].values()))
+
+
+"""
+def get_ds_attr(df, parent_path, attr):
+  #filtrer noms colonnes commençant par parent_path et attr
+  #extraire le numéro @i. et enlever les doublons
   
-  #TODO : create a loop that build the dicom from 0 to n
-  no_dicom = 1
-  ds = build_dicom(no_dicom, attributes_names, attributes_values)
-  print(ds)
+
+def build_seq(df, index, parent_path, seq_attr):
+  seq = Sequence()
+  for ds_attr in get_ds_attr(df, parent_path, seq_attr):
+    seq.append(build_dicom(df, index, parent_path+seq_attr+ds_attr@.))
+"""
+
+def getSeq_attr(attrs):
+  nom_seq = set([attr.split('@')[0] for attr in attrs]) #extract the part before the @
+  return list(nom_seq)    #keep only unique values
+  
+
+def getValue(df, index, parent_path, child_path):
+  print(df[parent_path+child_path][index])
+  return df[parent_path+child_path][index]
 
 
+def getVR(column_name):
+  """Returns the type as it is defined in the pydicom definition"""
+  return pydicom.sequence.Sequence if 'SQ' in column_name else '' 
 
-def build_dicom(no_dicom, attr_names, attr_values):
-  """
-  Builds a single DICOM's dataset and returns it.
-  @param no_dicom : index of the dicom to build
-  @param attr_names : list of dictionaries containing element info
-  @param attr_values : list of lists containing values for each element of all the DICOMs
-  """
-  debug_list = []
-  ds = pydicom.Dataset()
-  nb_sequences = 0
-  i = 0
-  while i < len(attr_names):
-    print("i réel : ", i)
-    name = attr_names[i]
 
-    #debug
-    if name[1] in debug_list:
-      print(name[1], name[2], name[0], attr_values[i][no_dicom])
-      print("Déjà ajouté !")
-      exit(1)
-
-    print(name[1], name[2], name[0], attr_values[i][no_dicom])
-    
-    
-    if (name[2] != 'SQ'):
-      value = encode_unit(attr_values[i][no_dicom], name[2])
+def build_dicom(df, index, parent_path = ''):
+  seq_attrs, nonseq_attrs = [], []
+  child_attr = [col for col in df.columns if col.startswith(parent_path)] #noms de toutes les colonnes commençant par parent_path en retirant le parent_path (startsWith)
+  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr ] #filtrer child_attr pour ceux qui getVR(child)!= pydicom.sequence.Sequence
+  ds = Dataset()
+  
+  for attr in nonseq_attrs:
+    if not pd.isna(getValue(df, index, parent_path, attr)):
       try:
-        ds.add_new(name[1], name[2], value)
+        ds.add_new(attr.split('_')[1], attr.split('_')[2], getValue(df, index, parent_path, attr))
       except ValueError:
-        #If the value is a multival (= list of values), it needs to be removed
-        #from the string and properly cast as a multivalue compatible type
-        ds.add_new(name[1], name[2], ast.literal_eval(value))
-      debug_list.append(name[1])
-      i += 1
-
-    else:
-      nb_sequences += 1
-      print(attr_values[i])
-      (seq, l) = build_sequence(no_dicom, attr_names, attr_values, i)
-      print(i, no_dicom)
-      
-      ds.add_new(name[1], name[2], Sequence(seq))
-      ds.add_new("Columns", "US", 128)
-      #with open("/home/williammadie/images/deid/df2dicom_test/ds.txt", "a") as f:
-      #  f.write(f"\n\n\n\n{ds}\n\n\n\n")
-      debug_list.append(name[1])
-      i += (l-2)
-      print("attr suivant : ", attr_names[i][1], attr_names[i][2], attr_names[i][0], attr_values[i][no_dicom])
-      print("i suivant : ", i)
-    
-      """
-      TODO : CONTINUE TO BUILD SEQUENCE
-      - find how to name the sequence with the correct element (tag and name)
-      - check why build_sequence() didn't build the full sequence in the test (it built only one Data Element)
-      - try to make build_sequence() for one layer (= one level)
-      """
-   
-  print(f"NB_SEQUENCE ====> {nb_sequences}")
-  return ds
-
-
-
-def build_sequence(no_dicom, attr_names, attr_values, i, nb_previous_parents = 0):
-  #The sequence is a list of datasets
-  sequence = []
-  name = attr_names[i]
-  """
-  TODO: remove debug
-  for i in range(i, i+30):
-    print(attr_names[i])
-  """
+            #If the value is a multival (= list of values), it needs to be removed
+            #from the string and properly cast as a multivalue compatible type
+            ds.add_new(attr.split('_')[1], attr.split('_')[2], ast.literal_eval(getValue(df, index, parent_path, attr)))
   
-  #Determines the number of levels for recursive search of data elements
-  nb_levels = -1
-  #Levels is a list which contains tuples like (dic_key_tag_attr, tag_attr)
-  #dic_key_tag_attr is the key associated to the tag_attr in the dic attr_names
-  levels = []
-  #Finds all the tag_attr in the name. If there are n tag_attr, then there are
-  #n-1 levels
-  for key, value in name.items():
-    if '0x' in value:
-      nb_levels += 1
-      levels.append((key, value))
-    if '@' in value:
-      ind_in_sequence = int(value[1])
-  #print("IND_IN_SEQ = ", ind_in_sequence)   
-  print(nb_levels)
-  #print("Levels :", levels)
-  if nb_levels > 2:
-    print("récursion requise")
-    exit(1)
-  nb_treated_levels = 1
-  parent_tag = levels[len(levels)-1-nb_treated_levels][1]
-  ind_level = levels[len(levels)-1-nb_treated_levels][0]
-
-  #Browse through the list of attr_names of all dicom from the current attr
-  #until it meets a new sequence or the current sequence ends
-  ds = pydicom.Dataset()
-  l = 1
-  for i in range(i, len(attr_names)):
-    name = attr_names[i]
-    #print(f"Tour n°{l}\n")
-    #print(attr_names[i])
-    l += 1
-    print(f"CHECK {attr_names[i][1]} <=> {parent_tag}")
-    if attr_names[i][1] != parent_tag:
-      print("Sequence suivante !")
-      break
-      
-    for attribute in attr_names[i].values():
-      if '@' in attribute:
-        #print(attribute)
-        current_ind_in_sequence = int(attribute[1])
-    
-    if current_ind_in_sequence != ind_in_sequence:
-      #print(f"Fin de dataset {current_ind_in_sequence} != {ind_in_sequence}")
-      #print("DS :\n", ds)
-      sequence.append(ds)
-      ds = pydicom.Dataset()
-      ind_in_sequence += 1
-
-    if nb_treated_levels == len(levels):
-      break
-    else:
-      #print(i, no_dicom)
-      print(name)
-      print(name[ind_level+6], name[ind_level+6], attr_values[i][no_dicom])
-      ds.add_new(name[ind_level+6], name[ind_level+6], attr_values[i][no_dicom])
-
-  sequence.append(ds)
-  return (sequence, l)
-
+  for attr in getSeq_attr(seq_attrs):
+    #getHex(attr) ?
+    ds.add_new(attr.split('_')[1], attr.split('_')[2], build_seq(df, index, parent_path, attr))
+  
+  return ds
+  
 
 
 def encode_unit(value, VR):
