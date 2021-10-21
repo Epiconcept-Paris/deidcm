@@ -5,6 +5,9 @@ import base64
 import pandas as pd
 import json
 import itertools
+from tabulate import tabulate
+#TODO : remove the import from df2dicom
+import df2dicom
 
 
 def write_dicom(infiles):
@@ -91,3 +94,13 @@ def encode_unit(value):
   else:
     raise ValueError(f"cannot encode {t} as unit")
 
+
+if __name__ == '__main__':
+  """
+  for file in os.listdir('/home/williammadie/images/deid/dicom2df_test/other'):
+    print(file)
+    print(str(pydicom.dcmread('/home/williammadie/images/deid/dicom2df_test/other/' + file)))
+  """
+  df = dicom2df('/home/williammadie/images/deid/dicom2df_test/other')
+  
+  df2dicom.df2dicom(df, '~/images/deid/df2dicom_test/other')
