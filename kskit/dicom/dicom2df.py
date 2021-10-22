@@ -59,12 +59,12 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     for ds in element.value:
       i = i + 1
       for celem in ds:
-        dico_add(celem, line, base = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}@{i}", with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
+        dico_add(celem, line, base = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}@{i}", with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
   elif (t == list or t == pydicom.multival.MultiValue) and len(element.value) > 0:
-    field_name = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}"
+    field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}"
     line[field_name] = json.dumps([encode_unit(e) for e in element.value])
   else:
-    field_name = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}"
+    field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}"
     line[field_name] = encode_unit(element.value) 
     
   
@@ -96,11 +96,5 @@ def encode_unit(value):
 
 
 if __name__ == '__main__':
-  """
-  for file in os.listdir('/home/williammadie/images/deid/dicom2df_test/other'):
-    print(file)
-    print(str(pydicom.dcmread('/home/williammadie/images/deid/dicom2df_test/other/' + file)))
-  """
   df = dicom2df('/home/williammadie/images/deid/dicom2df_test/other')
-  
-  df2dicom.df2dicom(df, '~/images/deid/df2dicom_test/other')
+  df2dicom.df2dicom(df, '/home/williammadie/images/deid/dicom2df_test/result')
