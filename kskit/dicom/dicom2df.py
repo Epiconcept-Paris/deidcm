@@ -5,9 +5,6 @@ import base64
 import pandas as pd
 import json
 import itertools
-from tabulate import tabulate
-#TODO : remove the import from df2dicom
-import df2dicom
 
 
 def write_dicom(infiles):
@@ -44,7 +41,6 @@ def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs 
   return line;
   
 def dico_add(element, line, base = "", with_private = False, with_pixels = False, with_seqs = True):
-  print("ELEMENT : ", element)
   tag = f"{element.tag:#0{10}x}"
   name = f"{element.keyword}_" if element.keyword != '' else '_'
   parent = "" if base == "" else f"{base}."
@@ -59,13 +55,13 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     i = 0
     
     if len(element.value) != 0:
+      print(len(element.value))
       for ds in element.value:
         i = i + 1
-        for celem in ds:        
+        for celem in ds:       
           dico_add(celem, line, base = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}@{i}", with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
     else:
       field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}@__empty"
-      print(f"FIELD : {field_name}\n")
       line[field_name] = ""
 
   elif (t == list or t == pydicom.multival.MultiValue) and len(element.value) > 0:
@@ -108,5 +104,6 @@ def encode_unit(value):
 
 
 if __name__ == '__main__':
-  df = dicom2df('/home/williammadie/images/deid/dicom2df_test/other')
+  #df = dicom2df('/home/williammadie/images/deid/dicom2df_test/other')
+  df = dicom2df(os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'mg_dcm4build_tests', 'usable'))
   df2dicom.df2dicom(df, '/home/williammadie/images/deid/dicom2df_test/result')

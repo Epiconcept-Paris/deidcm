@@ -39,9 +39,8 @@ def df2dicom(df, outdir):
 
   nb_file = 0
   for index in range(len(df)):
-    print("dicom n°", nb_file)
+    print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
-    #print(f"\n\nEnd of transformation : {ds}\n\n")
     ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
     nb_file += 1
 

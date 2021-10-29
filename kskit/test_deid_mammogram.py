@@ -6,7 +6,7 @@ import os
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 from .deid_mammogram import *
-from dicom2png import dicom2narray
+from .dicom2png import dicom2narray
 
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
