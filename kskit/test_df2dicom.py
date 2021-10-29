@@ -42,16 +42,14 @@ def prepare_dicom(indir, tmp_dir):
     modified_dicoms.sort()
     return initial_dicoms, modified_dicoms
 
-def rmfulldir(dir2rm):
+def cleandir(dir2clean, rmdir = False):
     """Remove a directory full of files"""
-    files = os.listdir(dir2rm)
+    files = os.listdir(dir2clean)
     if len(files) != 0:
-        [os.remove(os.path.join(dir2rm, file)) for file in files]
-    os.rmdir(dir2rm)
+        [os.remove(os.path.join(dir2clean, file)) for file in files]
+    os.rmdir(dir2clean) if rmdir else None 
 
 def test_df2dicom(indir, tmp_dir):
-    print(indir)
-    print(tmp_dir)
     """
     Compare rebuild dicoms with their original version. Param :
     @indir : directory where are located the dicoms
@@ -60,7 +58,8 @@ def test_df2dicom(indir, tmp_dir):
     """
    
     if not os.path.isdir(indir): raise FileNotFoundError 
-    os.makedirs(tmp_dir) if not os.path.isdir(tmp_dir) else None
+    #Creates or cleans the tmp_dir
+    os.makedirs(tmp_dir) if not os.path.isdir(tmp_dir) else cleandir(tmp_dir, False)
 
     diff = difflib.Differ()
     initial_dicoms, modified_dicoms = prepare_dicom(indir, tmp_dir)
@@ -68,14 +67,10 @@ def test_df2dicom(indir, tmp_dir):
 
     for dicom_i in range(len(initial_dicoms)):
         for line in diff.compare(initial_dicoms[dicom_i], modified_dicoms[dicom_i]):
-            #print(line)
-            #if line[0] != "?":
-                #print(line)
-            
-            if line[0] in ['?', '+', '-']:
-                nb_diff += 1
+            nb_diff = nb_diff + 1 if line[0] in ['?', '+', '-'] else nb_diff
+                
         print(f"\n{nb_diff} difference(s) / {dicom_i+1} tested images\n")
-    rmfulldir(tmp_dir)
+    cleandir(tmp_dir, False)
         
     
 if __name__ == "__main__":
