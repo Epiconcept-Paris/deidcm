@@ -72,7 +72,6 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     line[field_name] = encode_unit(element.value) 
     
   
-
 def encode_unit(value):
   t = type(value)
   
@@ -101,9 +100,3 @@ def encode_unit(value):
       return str(None)
     else:
       raise ValueError(f"cannot encode {t} as unit")
-
-
-if __name__ == '__main__':
-  #df = dicom2df('/home/williammadie/images/deid/dicom2df_test/other')
-  df = dicom2df(os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'mg_dcm4build_tests', 'usable'))
-  df2dicom.df2dicom(df, '/home/williammadie/images/deid/dicom2df_test/result')

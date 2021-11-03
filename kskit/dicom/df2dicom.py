@@ -1,33 +1,9 @@
-import os
-from numpy import dot, e, ndarray
-from numpy.lib.function_base import append
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
-from matplotlib import pyplot
 import base64
 import pandas as pd
 import json
-import ast
-import time
-
-from pydicom import tag
-
-def write_dicom(infiles):
-  i = 0
-  for infile in infiles:
-    outfile = f"/home/fod/deleteme/dicom_{i}.png"
-    ds = dcmread(infile)
-    pixels = ds.pixel_array
-    pyplot.imsave(outfile, pixels, cmap=pyplot.cm.bone)
-    print(f"file {outfile} written")
-    i = i +1
-
-def read_dicom(infiles):
-  for infile in infiles:
-    ds = dcmread(infile)
-    yield((infile, ds) )
-
 
 def df2dicom(df, outdir):
   """
@@ -169,5 +145,5 @@ def decode_unit(value, VR, VM):
         return int(value)
       elif VR == 'FD':
         return float(value)
-    return value;
+    return value
 
