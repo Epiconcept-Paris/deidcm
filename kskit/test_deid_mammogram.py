@@ -290,21 +290,8 @@ def levenshtein_distance(word_1, word_2):
                 array[i-1][j-1] + cost
                 )
 
-    return array[len(word_1)][len(word_2)]     
-       
-"""
-TODO : Include this test in the right place
-def test_levenshtein_distance():
-    assert OCR_test_series.levenshtein_distance("chien","niche") == 4
-    assert OCR_test_series.levenshtein_distance("javawasneat","scalaisgreat") == 7
-    assert OCR_test_series.levenshtein_distance("forward","drawrof") == 6
-    assert OCR_test_series.levenshtein_distance("distance","eistancd") == 2
-    assert OCR_test_series.levenshtein_distance("sturgeon","urgently") == 6
-    assert OCR_test_series.levenshtein_distance("difference","distance") == 5
-    assert OCR_test_series.levenshtein_distance("example","samples") == 3
-    assert OCR_test_series.levenshtein_distance("bsfhebfkrn","bsthebtkrn") == 2
-    assert OCR_test_series.levenshtein_distance("cie","cle") == 1
-"""
+    return array[len(word_1)][len(word_2)]         
+
 
 def is_there_ghost_words(ocr_data):
     """

@@ -1,15 +1,17 @@
 import os
 import string
+import hashlib
 import time
 import shutil
 import json
 import datetime
+import base64
 import numpy as np
 from pydicom.sequence import Sequence
 from pydicom.dataset import Dataset
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
-
+from random import randint, choice  #2D
 
 
 def get_text_areas(pixels):
@@ -196,7 +198,17 @@ def get_id(id_attribute):
     """reformats the id stored as a string 0xYYYYZZZZ to a tuple"""
     y_id = '0x' + id_attribute[6:len(id_attribute)]
     return (id_attribute[0:6], y_id)
-    
+
+
+def gen_uuid(string):
+    """creates a hash based on the string passed in parameters"""
+    return hashlib.sha256(string.encode('utf8')).hexdigest()
+
+
+def offset4date(date, offset):
+    """takes a date and an offset in days. Returns date - offset"""
+    d = datetime.datetime.strptime(date, '%Y%m%d') - datetime.timedelta(days=offset)
+    return d.strftime('%Y%m%d')
 
 
 def p08_005_update_summary(summary, file_path, ocr_data):
