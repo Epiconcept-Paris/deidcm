@@ -1,17 +1,14 @@
-import os
 import string
 import hashlib
-import time
-import shutil
 import json
-import datetime
-import base64
+import uuid
+from random import choice, randint
 import numpy as np
-from pydicom.sequence import Sequence
+from datetime import datetime
+from datetime import timedelta
 from pydicom.dataset import Dataset
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
-from random import randint, choice  #2D
 
 
 def get_text_areas(pixels):
@@ -95,7 +92,8 @@ def filter_DICOM_attributes(attributes):
 
 
 def remove_confidential_attributes(attributes_ref, attributes, ds):
-    """Compares the DICOM's attributes to attributes known for being at risk if kept in clear""" 
+    """Compares the DICOM's attributes to attributes known for being at risk if 
+    kept in clear""" 
     for attribute in attributes:
         if attribute in attributes_ref:
             spec_attribute = attributes_ref[attribute]
@@ -200,14 +198,23 @@ def get_id(id_attribute):
     return (id_attribute[0:6], y_id)
 
 
-def gen_uuid(string):
-    """creates a hash based on the string passed in parameters"""
-    return hashlib.sha256(string.encode('utf8')).hexdigest()
+def gen_uuid(patient_id: str, guid: str) -> str:
+    """Creates a DICOM GUID based on the patient_id and original guid
+    concatenation
+    """
+    base4hash = f"{patient_id}{guid.replace('.', '')}"
+    hash_value = int(hashlib.sha256(base4hash.encode('utf8')).hexdigest(), 16)
+    return f"1.2.826.0.1.3680043.10.866.{str(hash_value)[0:30]}"
 
 
-def offset4date(date, offset):
+def gen_uuid2():
+    """Returns a DICOM UUID build from the Derived UID method (see standard)"""
+    return f"2.25.{uuid.uuid1().int}"
+
+
+def offset4date(date: str, offset: int) -> str:
     """takes a date and an offset in days. Returns date - offset"""
-    d = datetime.datetime.strptime(date, '%Y%m%d') - datetime.timedelta(days=offset)
+    d = datetime.strptime(date, '%Y%m%d') - timedelta(days=offset)
     return d.strftime('%Y%m%d')
 
 
@@ -223,3 +230,9 @@ def p08_005_update_summary(summary, file_path, ocr_data):
     for found in sorted(ocr_words):
         summary += found.lower() + " |"
     return summary     
+
+if __name__ == "__main__":
+    for i in range(0, 9999):
+            patient_id = ''.join(choice(string.ascii_letters) for _ in range(randint(5,30)))
+            guid = ''.join(choice(string.digits) for _ in range(30))
+            print(gen_uuid(patient_id, guid))

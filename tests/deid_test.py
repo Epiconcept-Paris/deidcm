@@ -22,10 +22,14 @@ class DeidentificationMethodTest(unittest.TestCase):
         """test function for gen_uuid"""
         already_seen = []
         for i in range(0, 9999):
-            word = ''.join(choice(string.ascii_letters) for _ in range(randint(5,30)))
-            new_hash = kskit.deid_mammogram.gen_uuid(word)
+            patient_id = ''.join(choice(string.ascii_letters) for _ in range(randint(5,30)))
+            guid = ''.join(choice(string.digits) for _ in range(30))
+            new_hash = kskit.deid_mammogram.gen_uuid(patient_id, guid)
+            """Tests for duplicates on 10k hashes generated"""
             self.assertTrue(new_hash not in already_seen)
             already_seen.append(new_hash)
+            """Tests if the operation can be reproduced"""
+            self.assertEquals(kskit.deid_mammogram.gen_uuid(patient_id, guid), new_hash)
     
     def test_levenshtein_distance(self):
         """test function for levenshtein_distance"""
