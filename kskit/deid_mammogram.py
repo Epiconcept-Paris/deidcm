@@ -1,6 +1,8 @@
 import string
 import hashlib
 import json
+import sys
+import re
 import uuid
 from random import choice, randint
 import numpy as np
@@ -66,14 +68,14 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
 
 
 
-def de_identify_ds(ds, PATH_ATTRIBUTES_TO_KEEP):
+def de_identify_ds(ds, RECIPE):
     """Deidentifies the dataset of the DICOM passed in parameter"""
     attributes = filter_DICOM_attributes(dir(ds))   
 
-    with open(PATH_ATTRIBUTES_TO_KEEP) as f:
-        attributes_ref = json.load(f)
+    with open(RECIPE) as f:
+        recipe = json.load(f)
 
-    ds = remove_confidential_attributes(attributes_ref, attributes, ds)
+    ds = remove_confidential_attributes(recipe, attributes, ds)
     ds = add_deid_required_attributes(ds)
     return ds
 
@@ -90,13 +92,12 @@ def filter_DICOM_attributes(attributes):
     return attributes
 
 
-
-def remove_confidential_attributes(attributes_ref, attributes, ds):
+def remove_confidential_attributes(recipe, attributes, ds):
     """Compares the DICOM's attributes to attributes known for being at risk if 
     kept in clear""" 
     for attribute in attributes:
-        if attribute in attributes_ref:
-            spec_attribute = attributes_ref[attribute]
+        if attribute in recipe:
+            spec_attribute = recipe[attribute]
             x_id, y_id = get_id(spec_attribute[0])
             
             #Calculates the age with the Birth Date
@@ -198,24 +199,104 @@ def get_id(id_attribute):
     return (id_attribute[0:6], y_id)
 
 
-def gen_uuid(patient_id: str, guid: str) -> str:
+def apply_deidentification(tag: str, valuerep: str, value: str):
+    """Deidentifies the attribute depending on the deidentification recipe"""
+    rule = get_rule(tag)
+    if rule == 'CONSERVER':
+        return value
+    elif rule == 'EFFACER':
+        return ''
+    elif rule == 'RETIRER':
+        return None
+    elif rule == 'PSEUDONYMISER':
+        return deidentify(tag, valuerep, value)
+
+
+def get_rule(tag: str) -> str:
+    """Gets the rule associated with the given tag"""
+    #rule for 0x50xxxxxx or 0x60xx4000 and 0x60xx3000
+    if re.match('^(0x60[0-9a-f]{2}[3-4]{1}000|0x50[0-9a-f]{6})$', tag):
+        return 'RETIRER' 
+    #normal tag  
+    else:
+        return 'CONSERVER'
+
+
+def deidentify(tag: str, valuerep: str, value: str, id_patient: str):
+    """Applies a deidentification process depending on the value representation
+    (or the tag) of the given attribute"""
+    if valuerep in ['DA', 'DT']:
+        return offset4date(value, '')
+    elif valuerep == 'TM':
+        return hide_time()
+    elif valuerep == 'PN':
+        return f"PATIENT^{gen_dummy_number()}"
+    elif valuerep == 'OB' and tag == '0x00340007':
+        return datetime.strptime('20220101', '%Y%m%d').isoformat()
+    elif valuerep in ['SH', 'LO']:
+        return replace_with_dummy_str(valuerep)
+    elif valuerep == 'UI':
+        return gen_dicom_uid('', value)
+    elif valuerep == 'OB' and tag in ['0x00340005', '0x00340002']:
+        return gen_uuid128(value)
+    elif valuerep == 'UC' and tag == '0x00189367':
+        return gen_uuid128(value).hex()
+
+
+def gen_dicom_uid(patient_id: str, guid: str) -> str:
     """Creates a DICOM GUID based on the patient_id and original guid
     concatenation
     """
     base4hash = f"{patient_id}{guid.replace('.', '')}"
     hash_value = int(hashlib.sha256(base4hash.encode('utf8')).hexdigest(), 16)
-    return f"1.2.826.0.1.3680043.10.866.{str(hash_value)[0:30]}"
+    return f"1.2.826.0.1.3680043.10.866.{str(hash_value)[:30]}"
 
 
-def gen_uuid2():
+def gen_dicom_uid2() -> str:
     """Returns a DICOM UUID build from the Derived UID method (see standard)"""
     return f"2.25.{uuid.uuid1().int}"
 
 
+def gen_uuid128(original_uuid) -> bytes:
+    """Generates and returns a universally unique identifier generated from
+    SHA 256 hash algorithm (256 bits) which is then truncated to a 128 bits
+    uuid"""
+    return hashlib.sha256(original_uuid.encode('utf8')).digest()[:16]
+
+
 def offset4date(date: str, offset: int) -> str:
-    """takes a date and an offset in days. Returns date - offset"""
-    d = datetime.strptime(date, '%Y%m%d') - timedelta(days=offset)
+    """Takes a date YYYYMMDD and an offset in days. Returns (date - offset)"""
+    d = datetime.strptime(date[:8], '%Y%m%d') - timedelta(days=offset)
     return d.strftime('%Y%m%d')
+
+
+def hide_time() -> str:
+    """Overwrites the previous time value with the 000000 dummy value"""
+    return '000000'
+
+
+def replace_with_dummy_str(valuerep: str) -> str:
+    """Generates a random string which length depends on its VR"""
+    if valuerep == 'SH':
+        return gen_dummy_str(16)
+    elif valuerep == 'LO':
+        return gen_dummy_str(64)
+    else:
+        raise ValueError(f"not supported VR : {valuerep} for dummy str")
+
+
+def gen_dummy_str(length: int) -> str:
+    """Generates a random string of a given length"""
+    ''.join(choice(string.ascii_letters) for _ in range(length))
+
+
+def gen_dummy_number(length: int) -> str:
+    """Generates a random string of a given length"""
+    ''.join(choice(string.ascii_numbers) for _ in range(length))
+
+
+def replace_patient_name(number: int) -> str:
+    return f"PATIENT^{number}"
 
 
 def p08_005_update_summary(summary, file_path, ocr_data):
@@ -232,7 +313,12 @@ def p08_005_update_summary(summary, file_path, ocr_data):
     return summary     
 
 if __name__ == "__main__":
-    for i in range(0, 9999):
-            patient_id = ''.join(choice(string.ascii_letters) for _ in range(randint(5,30)))
-            guid = ''.join(choice(string.digits) for _ in range(30))
-            print(gen_uuid(patient_id, guid))
+    get_rule('0x50123456')
+    get_rule('0x5')
+    get_rule('0x50123456')
+    get_rule('0x50123456')
+    get_rule('0x50123456')
+    get_rule('0x50123456')
+    get_rule('0x50123456')
+    get_rule('0x50123456')
+    get_rule('0x50123456')

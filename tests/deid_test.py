@@ -7,6 +7,16 @@ import string
 
 
 class DeidentificationMethodTest(unittest.TestCase):
+    def test_regex(self):
+        """test function for get_rule()"""
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x50ffffff'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x50a23e56'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x50123456'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x60003000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x60004000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x60564000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_rule('0x605d3000'), 'RETIRER')
+    
     def test_offset4date(self):
         """test function for offset4date"""  
         self.assertEqual(kskit.deid_mammogram.offset4date('19930822', 1), '19930821')
@@ -19,17 +29,17 @@ class DeidentificationMethodTest(unittest.TestCase):
         self.assertEqual(kskit.deid_mammogram.offset4date('20090608', 187), '20081203')
     
     def test_gen_uuid(self):
-        """test function for gen_uuid"""
+        """test function for gen_dicom_uid"""
         already_seen = []
         for i in range(0, 9999):
             patient_id = ''.join(choice(string.ascii_letters) for _ in range(randint(5,30)))
             guid = ''.join(choice(string.digits) for _ in range(30))
-            new_hash = kskit.deid_mammogram.gen_uuid(patient_id, guid)
+            new_hash = kskit.deid_mammogram.gen_dicom_uid(patient_id, guid)
             """Tests for duplicates on 10k hashes generated"""
             self.assertTrue(new_hash not in already_seen)
             already_seen.append(new_hash)
             """Tests if the operation can be reproduced"""
-            self.assertEquals(kskit.deid_mammogram.gen_uuid(patient_id, guid), new_hash)
+            self.assertEquals(kskit.deid_mammogram.gen_dicom_uid(patient_id, guid), new_hash)
     
     def test_levenshtein_distance(self):
         """test function for levenshtein_distance"""

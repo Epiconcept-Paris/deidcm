@@ -56,4 +56,4 @@ if __name__ == '__main__':
     """
     show_series(
         '/home/williammadie/images/deid/mg_dcm4build_tests/usable',
-        0x0020000D)
+        0x00187050)
