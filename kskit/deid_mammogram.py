@@ -1,8 +1,10 @@
 import string
 import hashlib
 import json
+import time
 import sys
 import re
+import os
 import uuid
 from random import choice, randint
 import numpy as np
@@ -11,6 +13,9 @@ from datetime import timedelta
 from pydicom.dataset import Dataset
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
+from dicom.dicom2df import dicom2df
+from dicom.df2dicom import df2dicom
+from dicom.utils import write_all_ds
 
 
 def get_text_areas(pixels):
@@ -94,7 +99,8 @@ def filter_DICOM_attributes(attributes):
 
 def remove_confidential_attributes(recipe, attributes, ds):
     """Compares the DICOM's attributes to attributes known for being at risk if 
-    kept in clear""" 
+    kept in clear
+    """ 
     for attribute in attributes:
         if attribute in recipe:
             spec_attribute = recipe[attribute]
@@ -191,6 +197,29 @@ def add_deid_required_attributes(ds):
     """
     return ds
 
+def deidentify_all_files(indir: str, outdir: str, outdir_ds: str) -> None:
+    """Deidentify a folder of dicom.
+
+    Arguments:
+    indir -- the input directory (files to deidentify)
+    outdir -- the output directory (deidentified/resulting files)
+    """
+    df = dicom2df(indir)
+    recipe = os.path.join(
+            '/', 'home', 'williammadie', 'dphome', 'test_reports', 
+            'comparison4deid', 'recipe', 'recipe.json')
+    with open(recipe, 'r') as f:
+        recipe = json.load(f)
+
+    for file in df.index:
+        for attribute in df.columns:
+            tags = list(filter(lambda x: x if x.startswith('0x') else None,
+                attribute.split(('_'))))
+            value = df[attribute][file]
+            df[attribute][file] = apply_deidentification(
+                tags[0], attribute.split(('_'))[2], value, recipe)
+    df2dicom(df, outdir)
+    write_all_ds(outdir, outdir_ds)
 
 
 def get_id(id_attribute):
@@ -199,9 +228,9 @@ def get_id(id_attribute):
     return (id_attribute[0:6], y_id)
 
 
-def apply_deidentification(tag: str, valuerep: str, value: str):
+def apply_deidentification(tag: str, valuerep: str, value: str, recipe: dict):
     """Deidentifies the attribute depending on the deidentification recipe"""
-    rule = get_rule(tag)
+    rule = get_rule(tag, recipe)
     if rule == 'CONSERVER':
         return value
     elif rule == 'EFFACER':
@@ -210,43 +239,56 @@ def apply_deidentification(tag: str, valuerep: str, value: str):
         return None
     elif rule == 'PSEUDONYMISER':
         return deidentify(tag, valuerep, value)
+    else:
+        raise ValueError(f"Unknown rule {rule}")
 
 
-def get_rule(tag: str) -> str:
+def get_rule(tag: str, recipe: dict) -> str:
     """Gets the rule associated with the given tag"""
-    #rule for 0x50xxxxxx or 0x60xx4000 and 0x60xx3000
-    if re.match('^(0x60[0-9a-f]{2}[3-4]{1}000|0x50[0-9a-f]{6})$', tag):
+    #rule for 0x50xxxxxx, 0x60xx4000, 0x60xx3000, 0xggggeeee where gggg is odd
+    if re.match('^(0x60[0-9a-f]{2}[3-4]{1}000|0x50[0-9a-f]{6})$', tag) or \
+        int(tag[2:6], 16) % 2:
         return 'RETIRER' 
     #normal tag  
     else:
-        return 'CONSERVER'
+        try:
+            return recipe[tag][2]
+        except KeyError:
+            return 'RETIRER'
 
 
-def deidentify(tag: str, valuerep: str, value: str, id_patient: str):
-    """Applies a deidentification process depending on the value representation
-    (or the tag) of the given attribute"""
-    if valuerep in ['DA', 'DT']:
-        return offset4date(value, '')
-    elif valuerep == 'TM':
+def deidentify(tag: str, vr: str, value: str, id_patient: str = None) -> None:
+    """deidentify a single attribute of a given tag
+    
+    Applies a deidentification process depending on the value representation
+    (or the tag) of the given attribute.
+
+    Arguments:
+    tag         -- tag of the attribute
+    vr          -- DICOM Value Representation of the attribute
+    value       -- value of the attribute
+    id_patient  -- unique identifier of the patient in a LUT
+    """
+    if vr in ['DA', 'DT']:
+        return offset4date(value, 4) if value != '' else value
+    elif vr == 'TM':
         return hide_time()
-    elif valuerep == 'PN':
-        return f"PATIENT^{gen_dummy_number()}"
-    elif valuerep == 'OB' and tag == '0x00340007':
+    elif vr == 'PN':
+        return f"PATIENT^{gen_dummy_str(8, 0)}"
+    elif vr == 'OB' and tag == '0x00340007':
         return datetime.strptime('20220101', '%Y%m%d').isoformat()
-    elif valuerep in ['SH', 'LO']:
-        return replace_with_dummy_str(valuerep)
-    elif valuerep == 'UI':
+    elif vr in ['SH', 'LO']:
+        return replace_with_dummy_str(vr)
+    elif vr == 'UI':
         return gen_dicom_uid('', value)
-    elif valuerep == 'OB' and tag in ['0x00340005', '0x00340002']:
+    elif vr == 'OB' and tag in ['0x00340005', '0x00340002']:
         return gen_uuid128(value)
-    elif valuerep == 'UC' and tag == '0x00189367':
+    elif vr == 'UC' and tag == '0x00189367':
         return gen_uuid128(value).hex()
 
 
 def gen_dicom_uid(patient_id: str, guid: str) -> str:
-    """Creates a DICOM GUID based on the patient_id and original guid
-    concatenation
-    """
+    """Creates a DICOM GUID based on the patient_id + original guid"""
     base4hash = f"{patient_id}{guid.replace('.', '')}"
     hash_value = int(hashlib.sha256(base4hash.encode('utf8')).hexdigest(), 16)
     return f"1.2.826.0.1.3680043.10.866.{str(hash_value)[:30]}"
@@ -258,9 +300,14 @@ def gen_dicom_uid2() -> str:
 
 
 def gen_uuid128(original_uuid) -> bytes:
-    """Generates and returns a universally unique identifier generated from
+    """Generates a 128-bit UUID
+
+    Generates and returns a universally unique identifier generated from
     SHA 256 hash algorithm (256 bits) which is then truncated to a 128 bits
-    uuid"""
+    uuid
+
+    original_uuid   -- original uuid/value of the DICOM attribute
+    """
     return hashlib.sha256(original_uuid.encode('utf8')).digest()[:16]
 
 
@@ -278,21 +325,24 @@ def hide_time() -> str:
 def replace_with_dummy_str(valuerep: str) -> str:
     """Generates a random string which length depends on its VR"""
     if valuerep == 'SH':
-        return gen_dummy_str(16)
+        return gen_dummy_str(16, 1)
     elif valuerep == 'LO':
-        return gen_dummy_str(64)
+        return gen_dummy_str(64, 1)
     else:
         raise ValueError(f"not supported VR : {valuerep} for dummy str")
 
 
-def gen_dummy_str(length: int) -> str:
-    """Generates a random string of a given length"""
-    ''.join(choice(string.ascii_letters) for _ in range(length))
-
-
-def gen_dummy_number(length: int) -> str:
-    """Generates a random string of a given length"""
-    ''.join(choice(string.ascii_numbers) for _ in range(length))
+def gen_dummy_str(length: int, mode: int) -> str:
+    """Generates a random string of a given length
+    
+    Arguments:
+    length  -- The length of the returned string
+    mode    -- 1 for letters / 0 for numbers
+    """
+    if mode:
+        ''.join(choice(string.ascii_letters) for _ in range(length))
+    else:
+        ''.join(choice(string.ascii_numbers) for _ in range(length))
 
 
 def replace_patient_name(number: int) -> str:
@@ -313,12 +363,13 @@ def p08_005_update_summary(summary, file_path, ocr_data):
     return summary     
 
 if __name__ == "__main__":
-    get_rule('0x50123456')
-    get_rule('0x5')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
-    get_rule('0x50123456')
+    INDIR = os.path.join(
+        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'dicom'
+        )
+    OUTDIR = os.path.join(
+        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'results'
+        )
+    OUTDIR_DS = os.path.join(
+        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'results_ds'
+        )
+    deidentify_all_files(INDIR, OUTDIR, OUTDIR_DS)
