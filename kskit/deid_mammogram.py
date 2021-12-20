@@ -204,22 +204,38 @@ def deidentify_all_files(indir: str, outdir: str, outdir_ds: str) -> None:
     indir -- the input directory (files to deidentify)
     outdir -- the output directory (deidentified/resulting files)
     """
-    df = dicom2df(indir)
+    if False in list(map(lambda x: os.path.exists(x), [indir, outdir])):
+        raise ValueError(f"Path \"{indir}\" or \"{outdir}\" does not exist.")
+
+    for file in os.listdir(outdir):
+        os.remove(os.path.join(outdir, file))
+    
+    df = dicom2df(indir, with_pixels = True)
+    recipe = load_recipe()
+    write_all_ds(os.path.join(
+        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
+        'source'), os.path.join(
+        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
+        'ds'))
+    for file in df.index:
+        for attribute in df.columns:
+            value = df[attribute][file]
+            df[attribute][file] = apply_deidentification(
+                attribute, value, recipe)
+
+    df2dicom(df, outdir)
+    write_all_ds(outdir, outdir_ds)
+
+#TODO: remove optional parameter and make it a required parameter
+def load_recipe(recipe: str = "") -> dict:
     recipe = os.path.join(
             '/', 'home', 'williammadie', 'dphome', 'test_reports', 
             'comparison4deid', 'recipe', 'recipe.json')
-    with open(recipe, 'r') as f:
-        recipe = json.load(f)
-
-    for file in df.index:
-        for attribute in df.columns:
-            tags = list(filter(lambda x: x if x.startswith('0x') else None,
-                attribute.split(('_'))))
-            value = df[attribute][file]
-            df[attribute][file] = apply_deidentification(
-                tags[0], attribute.split(('_'))[2], value, recipe)
-    df2dicom(df, outdir)
-    write_all_ds(outdir, outdir_ds)
+    try:
+        with open(recipe, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise ValueError(f"Recipe file {recipe} cannot be found.")
 
 
 def get_id(id_attribute):
@@ -228,9 +244,25 @@ def get_id(id_attribute):
     return (id_attribute[0:6], y_id)
 
 
-def apply_deidentification(tag: str, valuerep: str, value: str, recipe: dict):
+def apply_deidentification(attribute: str, value: str, recipe: dict):
     """Deidentifies the attribute depending on the deidentification recipe"""
-    rule = get_rule(tag, recipe)
+    attr_el = attribute.split('_')
+    tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
+    valuerep = attr_el[2]
+    rules = list(map(lambda x: get_rule(x, recipe), tags))
+    print(f"RULES : {rules}")
+    if 'RETIRER' in rules:
+        return float("NaN")
+    elif 'EFFACER' in rules:
+        return ''
+    elif 'PSEUDONYMISER' in rules:
+        return deidentify(attribute, tags, valuerep, value)
+    elif 'CONSERVER' in rules:
+        return value
+    else:
+        raise ValueError(f"Unknown rule {rules}")
+    
+    """
     if rule == 'CONSERVER':
         return value
     elif rule == 'EFFACER':
@@ -241,6 +273,7 @@ def apply_deidentification(tag: str, valuerep: str, value: str, recipe: dict):
         return deidentify(tag, valuerep, value)
     else:
         raise ValueError(f"Unknown rule {rule}")
+    """
 
 
 def get_rule(tag: str, recipe: dict) -> str:
@@ -257,7 +290,7 @@ def get_rule(tag: str, recipe: dict) -> str:
             return 'RETIRER'
 
 
-def deidentify(tag: str, vr: str, value: str, id_patient: str = None) -> None:
+def deidentify(tag: str, tags: list, vr: str, value: str) -> None:
     """deidentify a single attribute of a given tag
     
     Applies a deidentification process depending on the value representation
@@ -273,19 +306,23 @@ def deidentify(tag: str, vr: str, value: str, id_patient: str = None) -> None:
         return offset4date(value, 4) if value != '' else value
     elif vr == 'TM':
         return hide_time()
-    elif vr == 'PN':
+    elif vr == 'PN' or any_in(tags, ['0x00100020']): 
         return f"PATIENT^{gen_dummy_str(8, 0)}"
-    elif vr == 'OB' and tag == '0x00340007':
+    elif vr == 'OB' and any_in(tags, ['0x00340007']):
         return datetime.strptime('20220101', '%Y%m%d').isoformat()
     elif vr in ['SH', 'LO']:
         return replace_with_dummy_str(vr)
     elif vr == 'UI':
         return gen_dicom_uid('', value)
-    elif vr == 'OB' and tag in ['0x00340005', '0x00340002']:
+    elif vr == 'OB' and any_in(tags, ['0x00340005', '0x00340002']):
         return gen_uuid128(value)
-    elif vr == 'UC' and tag == '0x00189367':
+    elif vr == 'UC' and any_in(tags, ['0x00189367']):
         return gen_uuid128(value).hex()
 
+
+def any_in(list1: list, list2: list) -> bool:
+    """Check if at least one item in list1 exists in list2"""
+    return not set(list1).isdisjoint(list2)
 
 def gen_dicom_uid(patient_id: str, guid: str) -> str:
     """Creates a DICOM GUID based on the patient_id + original guid"""
@@ -340,9 +377,9 @@ def gen_dummy_str(length: int, mode: int) -> str:
     mode    -- 1 for letters / 0 for numbers
     """
     if mode:
-        ''.join(choice(string.ascii_letters) for _ in range(length))
+        return ''.join(choice(string.ascii_letters) for _ in range(length))
     else:
-        ''.join(choice(string.ascii_numbers) for _ in range(length))
+        return ''.join(choice(string.digits) for _ in range(length))
 
 
 def replace_patient_name(number: int) -> str:
@@ -364,12 +401,12 @@ def p08_005_update_summary(summary, file_path, ocr_data):
 
 if __name__ == "__main__":
     INDIR = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'dicom'
-        )
+        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
+        'source')
     OUTDIR = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'results'
-        )
+        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
+        'final')
     OUTDIR_DS = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test30', 'results_ds'
-        )
+        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
+        'final_ds')
     deidentify_all_files(INDIR, OUTDIR, OUTDIR_DS)
