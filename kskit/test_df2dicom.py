@@ -71,8 +71,8 @@ def test_df2dicom(indir, tmp_dir):
                 
         print(f"\n{nb_diff} difference(s) / {dicom_i+1} tested images\n")
     cleandir(tmp_dir, False)
-        
-    
+
+
 if __name__ == "__main__":
     #dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'dicom2df_test', 'other')
     dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'mg_dcm4build_tests', 'usable')

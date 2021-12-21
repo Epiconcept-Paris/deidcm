@@ -250,13 +250,13 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
     tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
     valuerep = attr_el[2]
     rules = list(map(lambda x: get_rule(x, recipe), tags))
-    print(f"RULES : {rules}")
+    #print(f"RULES : {rules}")
     if 'RETIRER' in rules:
         return float("NaN")
     elif 'EFFACER' in rules:
         return ''
     elif 'PSEUDONYMISER' in rules:
-        return deidentify(attribute, tags, valuerep, value)
+        return deidentify(tags, valuerep, value)
     elif 'CONSERVER' in rules:
         return value
     else:
@@ -290,7 +290,7 @@ def get_rule(tag: str, recipe: dict) -> str:
             return 'RETIRER'
 
 
-def deidentify(tag: str, tags: list, vr: str, value: str) -> None:
+def deidentify(tags: list, vr: str, value: str) -> None:
     """deidentify a single attribute of a given tag
     
     Applies a deidentification process depending on the value representation
