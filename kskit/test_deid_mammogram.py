@@ -1,13 +1,15 @@
 import random
 import string
-import time
 from datetime import datetime as dt
 import os
 import numpy as np
+import pandas as pd
 from PIL import Image, ImageFont, ImageDraw
+from collections import Counter
 from .deid_mammogram import *
 from .dicom2png import dicom2narray
-
+from dicom.dicom2df import dicom2df
+from deid_mammogram import deidentify_all_files
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
     summary = "\nF stands for the FONT path" + \
@@ -468,3 +470,75 @@ Accuracy:                                                       {accuracy} %
             f.write(result)
     else:
         return result
+
+
+def test_deid_attributes(source: str, final: str) -> None:
+    dfs, dff = dicom2df(source), dicom2df(final)
+    dfsattr, dffattr = set(dfs.columns), set(dff.columns)
+    show = lambda x: print(x)
+    not_affected = dfsattr.intersection(dffattr)
+
+    print(f"\nKEPT ELEMENTS ({len(not_affected)}): ")
+    list(map(show, not_affected))
+
+    removed = dfsattr - dffattr
+    print(f"\nREMOVED OR FULLY ANONYMIZED ELEMENTS ({len(removed)}): ")    
+    list(map(show, removed))
+
+    modified_elements = get_modified_elements(dfs, dff)
+    print(f"\nERASED OR DEIDENTIFIED ELEMENTS ({len(modified_elements)}): ")
+    list(map(show, modified_elements))    
+    
+    total = len(not_affected) + len(removed)
+    print(
+        f"\nNb of attr: Source = {len(dfsattr)} | Final = {len(dffattr)}",
+        f"\nTotal (kept + removed) = {total}"
+    )
+
+
+def get_modified_elements(dfs: pd.DataFrame, dff: pd.DataFrame) -> list:
+    modified_elements = []
+    for i in dfs.index:
+        for j in dfs.columns:
+            try:
+                if dfs[j][i] != dff[j][i]: 
+                    if not pd.isna(dfs[j][i]) and not pd.isna(dff[j][i]):
+                        modified_elements.append(j)
+            except KeyError:
+                pass
+    modified_elements = set(modified_elements)
+    
+    #Complementary 
+    mcheck_elements = []
+    for el in modified_elements:
+        attrvalues = []
+        [attrvalues.extend([dfs[el][i], dff[el][i]]) for i in dfs.index]
+        occ_values = dict(Counter(attrvalues))
+        for k in list(occ_values.keys()):
+            irrelevant = False
+            if occ_values[k] % 2 != 0:
+                irrelevant = True
+                break
+        if not irrelevant:
+            mcheck_elements.append(el)
+    
+    return modified_elements - set(mcheck_elements)
+
+
+def is_a_deid_str(val: str):
+    """Check if val is a deid string. 
+    
+    A deid string is 64 char long and the longest english word is 45 
+    letters long so we just have to check.
+    """
+    words = val.split(' ')
+    return len(words) == 1 and len(words[0]) > 45
+        
+
+if __name__ == "__main__":
+    IMG = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1')
+    SOURCE = os.path.join(IMG, 'source')
+    FINAL =  os.path.join(IMG, 'final')
+    OUTDIR_DS =  os.path.join(IMG, 'final_ds')
+    #deidentify_all_files(SOURCE, FINAL, OUTDIR_DS)
+    test_deid_attributes(SOURCE, FINAL)
