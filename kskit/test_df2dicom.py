@@ -19,6 +19,7 @@ def get_ds_lines(ds_list):
         rep.append(lines)
     return rep
 
+
 def prepare_dicom(indir, tmp_dir):
     """
     Create two lists containing lists of lines. The first list contains all the lines
@@ -42,12 +43,14 @@ def prepare_dicom(indir, tmp_dir):
     modified_dicoms.sort()
     return initial_dicoms, modified_dicoms
 
+
 def cleandir(dir2clean, rmdir = False):
     """Remove a directory full of files"""
     files = os.listdir(dir2clean)
     if len(files) != 0:
         [os.remove(os.path.join(dir2clean, file)) for file in files]
     os.rmdir(dir2clean) if rmdir else None 
+
 
 def test_df2dicom(indir, tmp_dir):
     """

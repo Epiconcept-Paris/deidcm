@@ -1,15 +1,23 @@
 import random
 import string
+import itertools
 from datetime import datetime as dt
 import os
+import pydicom
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageFont, ImageDraw
 from collections import Counter
-from .deid_mammogram import *
-from .dicom2png import dicom2narray
+#from .deid_mammogram import *
+#from .dicom2png import dicom2narray
 from dicom.dicom2df import dicom2df
-from deid_mammogram import deidentify_all_files
+from deid_mammogram import deidentify_all_files, gen_uuid128
+from deid_mammogram import replace_with_dummy_str
+from deid_mammogram import gen_dicom_uid
+from test_cases.cases import *
+from datetime import datetime
+from datetime import timedelta
+from dicom.utils import write_all_ds
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
     summary = "\nF stands for the FONT path" + \
@@ -472,73 +480,183 @@ Accuracy:                                                       {accuracy} %
         return result
 
 
-def test_deid_attributes(source: str, final: str) -> None:
-    dfs, dff = dicom2df(source), dicom2df(final)
-    dfsattr, dffattr = set(dfs.columns), set(dff.columns)
-    show = lambda x: print(x)
-    not_affected = dfsattr.intersection(dffattr)
-
-    print(f"\nKEPT ELEMENTS ({len(not_affected)}): ")
-    list(map(show, not_affected))
-
-    removed = dfsattr - dffattr
-    print(f"\nREMOVED OR FULLY ANONYMIZED ELEMENTS ({len(removed)}): ")    
-    list(map(show, removed))
-
-    modified_elements = get_modified_elements(dfs, dff)
-    print(f"\nERASED OR DEIDENTIFIED ELEMENTS ({len(modified_elements)}): ")
-    list(map(show, modified_elements))    
+def generate_test_cases(model_input: str, dir_output: str) -> None:
+    """Generates 10 different test cases for testing the attribute deid
     
-    total = len(not_affected) + len(removed)
-    print(
-        f"\nNb of attr: Source = {len(dfsattr)} | Final = {len(dffattr)}",
-        f"\nTotal (kept + removed) = {total}"
+    -model_input: is a DICOM file used as a base to generate new cases
+    -dir_output: is the destination folder where new cases will be generated
+    """
+    input_file = os.listdir(model_input)
+    if len(input_file) > 1 or len(input_file) == 0: raise ValueError(
+        f"This test only takes 1 file in input, {len(input_file)} were given."
+    )
+    model_ds = pydicom.dcmread(os.path.join(model_input, input_file[0]), force = True)
+    
+    test_cases = []
+    test_cases.append(gen_ui_case(model_ds.copy()))
+    test_cases.append(gen_sq_case(model_ds.copy()))
+    test_cases.append(gen_dadt_case(model_ds.copy()))
+    test_cases.append(gen_shlo_case(model_ds.copy()))
+    test_cases.append(gen_tm_case(model_ds.copy()))
+    test_cases.append(gen_obuc_case(model_ds.copy()))
+    test_cases.append(gen_other_case(model_ds.copy(), rm_tags))
+    test_cases.append(gen_other_case(model_ds.copy(), kp_tags))
+    test_cases.append(gen_other_case(model_ds.copy(), er_tags))
+
+    case_number = 0
+    for ds in test_cases:
+        ds.save_as(os.path.join(dir_output, f"case_{case_number}.dcm"))
+        case_number += 1
+
+
+def gen_ui_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical UI mock values"""
+    initial_prefix_uid = '1.3.6.1.4.1.14519.5.2.1.2135.6389.'
+    suffix_uid = 799402065306178004127703292730
+    for tag in ui_tags:
+        ds.add_new(tag, 'UI', f"{initial_prefix_uid}{suffix_uid}")
+        suffix_uid += 1
+    return ds
+
+
+def gen_sq_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical SQ mock values"""
+    for tag in sq_tags:
+        gen_dummy_sequence(ds, tag)
+    return ds
+
+
+def gen_dummy_sequence(ds: pydicom.Dataset, tag: str) -> None:
+    """Generates a dummy sequence with 3 attributes"""
+    ds.add_new(tag, 'SQ', [])
+    ds[tag].value.append(pydicom.Dataset())
+    ds[tag].value[0].add_new(
+        '0x00080100',
+        'SH',
+        replace_with_dummy_str('SH')
+    )
+    ds[tag].value[0].add_new(
+        '0x00080102',
+        'SH',
+        replace_with_dummy_str('SH')
+    )
+    ds[tag].value[0].add_new(
+        '0x00080104',
+        'LO',
+        replace_with_dummy_str('LO')
+    )
+    return ds
+
+
+def gen_obuc_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical OB/UC mock values"""
+    ds.add_new(
+        '0x00340007',
+        'OB',
+        datetime.strptime(gen_dummy_date(), '%Y%m%d').isoformat().encode('utf8')
+    )
+    ds.add_new('0x00189367', 'UC', gen_uuid128('').hex())
+    for tag in ['0x00340002', '0x00340005']:
+        ds.add_new(tag, 'OB', gen_uuid128(''))
+    return ds
+
+def gen_tm_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical TM mock values"""
+    for tag in tm_tags:
+        ds.add_new(tag, 'TM', gen_dummy_hour())
+    return ds
+
+def gen_dummy_hour() -> str:
+    """Generates a dummy hour formated (HHMMSS)"""
+    hh = random.randint(1, 24)
+    mm, ss = random.randint(1, 60), random.randint(1, 60)
+    add_zero = lambda x: str(x) if len(str(x)) > 1 else f"0{x}"
+    tm = list(map(add_zero, [hh, mm, ss]))
+    return f"{tm[0]}{tm[1]}{tm[2]}"
+
+
+def gen_shlo_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical SH/LO mock values"""
+    for tag in shlo_tags:
+        ds.add_new(tag, 'SH', replace_with_dummy_str('SH'))
+    return ds
+
+
+def gen_dadt_case(ds: pydicom.Dataset) -> pydicom.Dataset:
+    """Generates a test dataset with critical DA/DT mock values"""
+    for tag in dadt_tags:
+        ds.add_new(tag, 'DA', gen_dummy_date())
+    return ds
+
+
+def gen_dummy_date() -> str:
+    offset = random.randint(0, 364)
+    d = datetime.strptime('20220101', '%Y%m%d') + timedelta(days=offset)
+    return d.strftime('%Y%m%d')
+
+
+def gen_other_case(ds: pydicom.Dataset, attributes: list) -> pydicom.Dataset:
+    """Generates a test dataset with critical mock values to REMOVE"""
+    for attr in attributes:
+        vr = attr[1]
+        if vr in ['DA', 'DT']:
+            attrvalue = gen_dummy_date()
+        elif vr == 'TM':
+            attrvalue = gen_dummy_hour()
+        elif vr == 'OB':
+            attrvalue = gen_uuid128('')
+        elif vr in ['SH', 'LO']:
+            attrvalue = replace_with_dummy_str(vr)
+        elif vr == 'UI':
+            attrvalue = gen_dicom_uid('', '')
+        elif vr == 'SQ':
+            gen_dummy_sequence(ds, attr[0])
+        elif vr == 'DS':
+            attrvalue = float(random.randint(0, 999))
+        elif vr == 'IS':
+            attrvalue = random.randint(0, 999)
+        elif vr == 'PN':
+            attrvalue = f"Dr. William MADIE"
+       
+        if vr != 'SQ':
+            ds.add_new(attr[0], vr, attrvalue)
+    return ds
+
+
+def validate_deid_attributes(output: str) -> None:
+    """Checks if the deidentification treats all the required attributes"""
+    results = dict.fromkeys(
+        ['rm', 'kp', 'er', 'ui', 'tm', 'dadt', 'sq', 'shlo', 'obuc'],
+        True
     )
 
+    for file in os.listdir(output):
+        ds = pydicom.dcmread(os.path.join(output, file), force=True)
+        ds_list = itertools.chain(ds.file_meta, ds)
+        for element in ds_list: 
+            if element.tag in rm_tags:
+                results['rm'] = False
+            elif element.tag in er_tags and element.value != '':
+                results['er'] = False
+            if element.tag in shlo_tags and len(element.value) != 16:
+                results['shlo'] = False
+            if element.tag in ui_tags and len(element.value) != 57:
+                results['ui'] = False
+            if element.tag in tm_tags and element.value != '000000':
+                results['tm'] = False
+            if element.tag in dadt_tags and element.value[:4] == '2022':
+                results['dadt'] = False
+    print(results)
 
-def get_modified_elements(dfs: pd.DataFrame, dff: pd.DataFrame) -> list:
-    modified_elements = []
-    for i in dfs.index:
-        for j in dfs.columns:
-            try:
-                if dfs[j][i] != dff[j][i]: 
-                    if not pd.isna(dfs[j][i]) and not pd.isna(dff[j][i]):
-                        modified_elements.append(j)
-            except KeyError:
-                pass
-    modified_elements = set(modified_elements)
-    
-    #Complementary 
-    mcheck_elements = []
-    for el in modified_elements:
-        attrvalues = []
-        [attrvalues.extend([dfs[el][i], dff[el][i]]) for i in dfs.index]
-        occ_values = dict(Counter(attrvalues))
-        for k in list(occ_values.keys()):
-            irrelevant = False
-            if occ_values[k] % 2 != 0:
-                irrelevant = True
-                break
-        if not irrelevant:
-            mcheck_elements.append(el)
-    
-    return modified_elements - set(mcheck_elements)
-
-
-def is_a_deid_str(val: str):
-    """Check if val is a deid string. 
-    
-    A deid string is 64 char long and the longest english word is 45 
-    letters long so we just have to check.
-    """
-    words = val.split(' ')
-    return len(words) == 1 and len(words[0]) > 45
-        
 
 if __name__ == "__main__":
-    IMG = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1')
-    SOURCE = os.path.join(IMG, 'source')
-    FINAL =  os.path.join(IMG, 'final')
-    OUTDIR_DS =  os.path.join(IMG, 'final_ds')
-    #deidentify_all_files(SOURCE, FINAL, OUTDIR_DS)
-    test_deid_attributes(SOURCE, FINAL)
+    IMG_DIR = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'test_deid_2')
+    INPUT = os.path.join(IMG_DIR, 'input')
+    INTERMEDIATE = os.path.join(IMG_DIR, 'intermediate')
+    INTERMEDIATE4DS = os.path.join(IMG_DIR, 'ds')
+    OUTPUT =  os.path.join(IMG_DIR, 'output')
+    OUTPUT4DS =  os.path.join(IMG_DIR, 'final_ds')
+    generate_test_cases(INPUT, INTERMEDIATE)
+    write_all_ds(INTERMEDIATE, INTERMEDIATE4DS)
+    deidentify_all_files(INTERMEDIATE, OUTPUT, OUTPUT4DS)
+    validate_deid_attributes(OUTPUT)

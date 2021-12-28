@@ -6,8 +6,10 @@ import sys
 import re
 import os
 import uuid
+import base64
 from random import choice, randint
 import numpy as np
+import pandas as pd
 from datetime import datetime
 from datetime import timedelta
 from pydicom.dataset import Dataset
@@ -20,7 +22,7 @@ from dicom.utils import write_all_ds
 
 def get_text_areas(pixels):
     """
-    Easy OCR function. Gets an image at the path below and gets the 
+    Easy OCR function. Gets an image at the path below and returns the 
     text of the picture. 
     """
     reader = Reader(['fr'])
@@ -212,11 +214,7 @@ def deidentify_all_files(indir: str, outdir: str, outdir_ds: str) -> None:
     
     df = dicom2df(indir, with_pixels = True)
     recipe = load_recipe()
-    write_all_ds(os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'source'), os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'ds'))
+
     for file in df.index:
         for attribute in df.columns:
             value = df[attribute][file]
@@ -226,17 +224,16 @@ def deidentify_all_files(indir: str, outdir: str, outdir_ds: str) -> None:
     df2dicom(df, outdir)
     write_all_ds(outdir, outdir_ds)
 
-#TODO: remove optional parameter and make it a required parameter
-def load_recipe(recipe: str = "") -> dict:
-    recipe = os.path.join(
-            '/', 'home', 'williammadie', 'dphome', 'test_reports', 
-            'comparison4deid', 'recipe', 'recipe.json')
+
+def load_recipe() -> dict:
+    """Gets the recipe from recipe.json and loads it into a python dict."""
+    recipe = os.path.join(os.path.dirname(__file__), 'dicom', 'recipe.json')
     try:
         with open(recipe, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         raise ValueError(f"Recipe file {recipe} cannot be found.")
-
+    
 
 def get_id(id_attribute):
     """reformats the id stored as a string 0xYYYYZZZZ to a tuple"""
@@ -261,19 +258,6 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
         return value
     else:
         raise ValueError(f"Unknown rule {rules}")
-    
-    """
-    if rule == 'CONSERVER':
-        return value
-    elif rule == 'EFFACER':
-        return ''
-    elif rule == 'RETIRER':
-        return None
-    elif rule == 'PSEUDONYMISER':
-        return deidentify(tag, valuerep, value)
-    else:
-        raise ValueError(f"Unknown rule {rule}")
-    """
 
 
 def get_rule(tag: str, recipe: dict) -> str:
@@ -302,27 +286,31 @@ def deidentify(tags: list, vr: str, value: str) -> None:
     value       -- value of the attribute
     id_patient  -- unique identifier of the patient in a LUT
     """
-    if vr in ['DA', 'DT']:
-        return offset4date(value, 4) if value != '' else value
-    elif vr == 'TM':
-        return hide_time()
-    elif vr == 'PN' or any_in(tags, ['0x00100020']): 
-        return f"PATIENT^{gen_dummy_str(8, 0)}"
-    elif vr == 'OB' and any_in(tags, ['0x00340007']):
-        return datetime.strptime('20220101', '%Y%m%d').isoformat()
-    elif vr in ['SH', 'LO']:
-        return replace_with_dummy_str(vr)
-    elif vr == 'UI':
-        return gen_dicom_uid('', value)
-    elif vr == 'OB' and any_in(tags, ['0x00340005', '0x00340002']):
-        return gen_uuid128(value)
-    elif vr == 'UC' and any_in(tags, ['0x00189367']):
-        return gen_uuid128(value).hex()
+    if not pd.isna(value):
+        if vr in ['DA', 'DT']:
+            return offset4date(value) if value != '' else value
+        elif vr == 'TM':
+            return hide_time()
+        elif vr == 'PN' or any_in(tags, ['0x00100020']): 
+            return f"PATIENT^{gen_dummy_str(8, 0)}"
+        elif vr == 'OB' and any_in(tags, ['0x00340007']):
+            return datetime.strptime('20220101', '%Y%m%d').isoformat()
+        elif vr in ['SH', 'LO']:
+            return replace_with_dummy_str(vr) if value != '' else value
+        elif vr == 'UI':
+            return gen_dicom_uid('', value)
+        elif vr == 'OB' and any_in(tags, ['0x00340005', '0x00340002']):
+            return base64.b64encode(gen_uuid128(value)).decode("UTF-8")
+        elif vr == 'UC' and any_in(tags, ['0x00189367']):
+            return gen_uuid128(value).hex()
+    else:
+        return value
 
 
 def any_in(list1: list, list2: list) -> bool:
     """Check if at least one item in list1 exists in list2"""
     return not set(list1).isdisjoint(list2)
+
 
 def gen_dicom_uid(patient_id: str, guid: str) -> str:
     """Creates a DICOM GUID based on the patient_id + original guid"""
@@ -348,7 +336,7 @@ def gen_uuid128(original_uuid) -> bytes:
     return hashlib.sha256(original_uuid.encode('utf8')).digest()[:16]
 
 
-def offset4date(date: str, offset: int) -> str:
+def offset4date(date: str, offset: int = 100000) -> str:
     """Takes a date YYYYMMDD and an offset in days. Returns (date - offset)"""
     d = datetime.strptime(date[:8], '%Y%m%d') - timedelta(days=offset)
     return d.strftime('%Y%m%d')

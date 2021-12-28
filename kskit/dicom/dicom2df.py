@@ -55,7 +55,6 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     i = 0
     
     if len(element.value) != 0:
-      print(len(element.value))
       for ds in element.value:
         i = i + 1
         for celem in ds:       

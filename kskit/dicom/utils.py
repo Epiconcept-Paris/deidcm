@@ -8,7 +8,7 @@ def write_all_ds(indir: str, outdir: str) -> None:
     counter = 0
     for _ in map(lambda x: write1ds(os.path.join(indir, x), outdir), os.listdir(indir)):
         counter += 1
-    print(f"{counter} / {nb_files} ds affected")
+    print(f"{counter} / {nb_files} datasets have been written")
 
 
 def write1ds(file: str, outdir: str) -> None:

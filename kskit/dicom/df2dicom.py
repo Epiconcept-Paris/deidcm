@@ -15,7 +15,7 @@ def df2dicom(df, outdir):
 
   nb_file = 0
   for index in range(len(df)):
-    print(f"dicom n°{nb_file} has been rebuilt")
+    #print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
     ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
     nb_file += 1
@@ -135,15 +135,15 @@ def decode_unit(value, VR, VM):
     return None
   else:
     integer_types = ['IS','SS','SL','US','UL']
+    known_encodings = ['CS', 'DS', 'FD', 'UN']
     if VM != '1':
-      if (VR in integer_types or VR == 'CS' or VR == 'DS' or VR == 'FD' or VR == 'UN') and VM != '0':
+      if (VR in integer_types or VR in known_encodings) and VM != '0':
         return [decode_unit(e, VR, '1') for e in json.loads(value)]
     else:
       if VR == 'OB' or VR == 'OW' or VR == 'UN':
-        return base64.b64decode(value.encode("UTF-8"))
+        return value.encode('utf8')
       elif VR in integer_types:
         return int(value)
       elif VR == 'FD':
         return float(value)
     return value
-
