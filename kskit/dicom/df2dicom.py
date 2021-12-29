@@ -1,7 +1,7 @@
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
-import base64
+import time
 import pandas as pd
 import json
 

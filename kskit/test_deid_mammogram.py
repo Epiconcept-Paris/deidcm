@@ -1,4 +1,5 @@
 import random
+import time
 import string
 import itertools
 from datetime import datetime as dt
@@ -17,7 +18,7 @@ from deid_mammogram import gen_dicom_uid
 from test_cases.cases import *
 from datetime import datetime
 from datetime import timedelta
-from dicom.utils import write_all_ds
+from dicom.utils import write_all_ds, format_ds_tag
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
     summary = "\nF stands for the FONT path" + \
@@ -555,9 +556,9 @@ def gen_obuc_case(ds: pydicom.Dataset) -> pydicom.Dataset:
         'OB',
         datetime.strptime(gen_dummy_date(), '%Y%m%d').isoformat().encode('utf8')
     )
-    ds.add_new('0x00189367', 'UC', gen_uuid128('').hex())
+    ds.add_new('0x00189367', 'UC', 'I am a personal information')
     for tag in ['0x00340002', '0x00340005']:
-        ds.add_new(tag, 'OB', gen_uuid128(''))
+        ds.add_new(tag, 'OB', b'I am a personal information')
     return ds
 
 def gen_tm_case(ds: pydicom.Dataset) -> pydicom.Dataset:
@@ -633,7 +634,10 @@ def validate_deid_attributes(output: str) -> None:
     for file in os.listdir(output):
         ds = pydicom.dcmread(os.path.join(output, file), force=True)
         ds_list = itertools.chain(ds.file_meta, ds)
-        for element in ds_list: 
+        ds_tags = []
+        tags2keep = list(map(lambda x: format_ds_tag(x[0]), kp_tags))
+        for element in ds_list:
+            ds_tags.append(str(element.tag))
             if element.tag in rm_tags:
                 results['rm'] = False
             elif element.tag in er_tags and element.value != '':
@@ -646,7 +650,38 @@ def validate_deid_attributes(output: str) -> None:
                 results['tm'] = False
             if element.tag in dadt_tags and element.value[:4] == '2022':
                 results['dadt'] = False
-    print(results)
+            
+            if element.tag == '0x00340007' and \
+                element.value.decode('utf-8') != '2022-01-01T00:00:00':
+                results['obuc'] = False
+            elif element.tag in ['0x00340002', '0x00340005'] and \
+                element.value.decode('utf-8') == 'I am a personal information':
+                results['obuc'] = False
+            elif element.tag == '0x00189367' and \
+                element.value == 'I am a personal information':
+                results['obuc'] = False
+
+            if format_ds_tag(str(element.tag)) in sq_tags:
+                for ds in element.value:
+                    for subelement in ds:
+                        if subelement.tag in [
+                                '0x00080100',
+                                '0x00080102',
+                                '0x00080103'
+                        ] and subelement.value == '':
+                            results['sq'] = False
+        
+        for tag in tags2keep:
+            if tag in ds_tags and not set(tags2keep).issubset(set(ds_tags)):
+                results['kp'] = False
+    show_results(results)
+
+
+def show_results(results: dict) -> None:
+    for k, v in results.items():
+        k = k.upper()
+        result = f"Test {k}: Passed" if v else f"Test {k}: Not Passed"
+        print(result)
 
 
 if __name__ == "__main__":
@@ -656,7 +691,7 @@ if __name__ == "__main__":
     INTERMEDIATE4DS = os.path.join(IMG_DIR, 'ds')
     OUTPUT =  os.path.join(IMG_DIR, 'output')
     OUTPUT4DS =  os.path.join(IMG_DIR, 'final_ds')
-    generate_test_cases(INPUT, INTERMEDIATE)
+    generate_test_cases(INPUT, INTERMEDIATE)    
     write_all_ds(INTERMEDIATE, INTERMEDIATE4DS)
     deidentify_all_files(INTERMEDIATE, OUTPUT, OUTPUT4DS)
     validate_deid_attributes(OUTPUT)

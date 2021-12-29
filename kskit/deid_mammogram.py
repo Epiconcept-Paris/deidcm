@@ -2,12 +2,11 @@ import string
 import hashlib
 import json
 import time
-import sys
 import re
 import os
 import uuid
 import base64
-from random import choice, randint
+from random import choice
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -217,7 +216,7 @@ def deidentify_all_files(indir: str, outdir: str, outdir_ds: str) -> None:
 
     for file in df.index:
         for attribute in df.columns:
-            value = df[attribute][file]
+            value = df[attribute][file]  
             df[attribute][file] = apply_deidentification(
                 attribute, value, recipe)
 
@@ -245,19 +244,31 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
     """Deidentifies the attribute depending on the deidentification recipe"""
     attr_el = attribute.split('_')
     tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
-    valuerep = attr_el[2]
+    valuerep = get_vr(attr_el)
     rules = list(map(lambda x: get_rule(x, recipe), tags))
-    #print(f"RULES : {rules}")
+
     if 'RETIRER' in rules:
         return float("NaN")
     elif 'EFFACER' in rules:
         return ''
     elif 'PSEUDONYMISER' in rules:
+        
         return deidentify(tags, valuerep, value)
     elif 'CONSERVER' in rules:
         return value
     else:
         raise ValueError(f"Unknown rule {rules}")
+
+
+def get_vr(attr_el: list) -> str:
+    """Isolates and returns the VR of the attribute"""
+    vr = attr_el[2]
+    if vr != 'SQ':
+        return vr
+    else:
+        detectVR =lambda x: x if str.isupper(x) and x != 'SQ' else None 
+        vr = list(filter(detectVR, attr_el))
+        return vr[0] if len(vr) == 1 else 'SQ'
 
 
 def get_rule(tag: str, recipe: dict) -> str:
@@ -398,3 +409,5 @@ if __name__ == "__main__":
         '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
         'final_ds')
     deidentify_all_files(INDIR, OUTDIR, OUTDIR_DS)
+    
+    

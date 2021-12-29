@@ -18,6 +18,14 @@ def write1ds(file: str, outdir: str) -> None:
         f.write(str(ds))
 
 
+def format_ds_tag(tag: str) -> str:
+    """format a tag from (XXXX, YYYY) to 0xXXXXYYYY or vice versa"""
+    if tag.startswith('0x'):
+        return f"({tag[2:6]}, {tag[6:10]})"
+    else:
+        return "0x" + "".join(filter(str.isdigit, tag[1:-1]))
+
+
 def show_series(indir: str, tag: str) -> None:
     """
     Takes a directory full of dicom files and shows which one belongs to
@@ -49,11 +57,4 @@ def show_series(indir: str, tag: str) -> None:
 
 
 if __name__ == '__main__':
-    """
-    write_all_ds(
-        '/home/williammadie/images/deid/mg_dcm4build_tests/usable',
-        '/home/williammadie/images/deid/mg_dcm4build_tests/ds')
-    """
-    show_series(
-        '/home/williammadie/images/deid/mg_dcm4build_tests/usable',
-        0x00187050)
+    print(format_ds_tag('0x00080033'))
