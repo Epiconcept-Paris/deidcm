@@ -692,6 +692,6 @@ if __name__ == "__main__":
     OUTPUT =  os.path.join(IMG_DIR, 'output')
     OUTPUT4DS =  os.path.join(IMG_DIR, 'final_ds')
     generate_test_cases(INPUT, INTERMEDIATE)    
-    write_all_ds(INTERMEDIATE, INTERMEDIATE4DS)
+    write_all_ds(INTERMEDIATE, INTERMEDIATE4DS, True)
     deidentify_all_files(INTERMEDIATE, OUTPUT, OUTPUT4DS)
     validate_deid_attributes(OUTPUT)

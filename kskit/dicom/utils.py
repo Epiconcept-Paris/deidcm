@@ -2,13 +2,14 @@ from collections import Counter
 import os
 import pydicom
 
-def write_all_ds(indir: str, outdir: str) -> None:
+def write_all_ds(indir: str, outdir: str, silent: bool=False) -> None:
     """Writes the ds of all the dicom in a folder"""
     nb_files = len(os.listdir(indir))
     counter = 0
     for _ in map(lambda x: write1ds(os.path.join(indir, x), outdir), os.listdir(indir)):
         counter += 1
-    print(f"{counter} / {nb_files} datasets have been written")
+    if not silent:
+        print(f"{counter} / {nb_files} datasets have been written")
 
 
 def write1ds(file: str, outdir: str) -> None:

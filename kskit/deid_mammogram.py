@@ -252,7 +252,6 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
     elif 'EFFACER' in rules:
         return ''
     elif 'PSEUDONYMISER' in rules:
-        
         return deidentify(tags, valuerep, value)
     elif 'CONSERVER' in rules:
         return value
@@ -261,7 +260,12 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
 
 
 def get_vr(attr_el: list) -> str:
-    """Isolates and returns the VR of the attribute"""
+    """Isolates and returns the VR of the attribute
+    
+    If the attribute is inside one or more sequence(s), it looks for
+    the last VR. For example: something like '_SQ_..._SQ_..._LO_' will 
+    return 'LO'. In the case of an empty sequence, it will return 'SQ'.
+    """
     vr = attr_el[2]
     if vr != 'SQ':
         return vr
@@ -409,5 +413,3 @@ if __name__ == "__main__":
         '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
         'final_ds')
     deidentify_all_files(INDIR, OUTDIR, OUTDIR_DS)
-    
-    
