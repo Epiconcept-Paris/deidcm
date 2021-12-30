@@ -1,9 +1,9 @@
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
-import time
 import pandas as pd
 import json
+from kskit.dicom.deid_mammogram import apply_deidentification_ocr
 
 def df2dicom(df, outdir):
   """
@@ -17,6 +17,11 @@ def df2dicom(df, outdir):
   for index in range(len(df)):
     #print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
+    ds.add_new(
+      '0x7fe00010',
+      'OW',
+      apply_deidentification_ocr(df['FilePath'][index])
+    )
     ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
     nb_file += 1
 
@@ -88,7 +93,9 @@ def build_dicom(df, index, parent_path = ''):
   seq_attrs, nonseq_attrs, meta_attrs = [], [], []
   child_attr = [col.replace(parent_path, '') for col in df.columns if col.startswith(parent_path)] #name of the column without the parent name
   #filters child_attr into two lists (sequences and not sequences)
-  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr] 
+  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr]
+  if 'FilePath' in nonseq_attrs:
+    nonseq_attrs.remove('FilePath')
 
   ds = Dataset()
 
