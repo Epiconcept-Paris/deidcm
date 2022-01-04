@@ -42,7 +42,7 @@ def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs 
   
 def dico_add(element, line, base = "", with_private = False, with_pixels = False, with_seqs = True):
   tag = f"{element.tag:#0{10}x}"
-  name = f"{element.keyword}_" if element.keyword != '' else ''
+  name = f"{element.keyword}_" if element.keyword != '' else '_'
   parent = "" if base == "" else f"{base}."
   dWith = "" if element.descripWidth == 35 else f"{element.descripWith}" 
   uLength = "" if not element.is_undefined_length else f"1" 
@@ -53,21 +53,28 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
 
   if t == pydicom.sequence.Sequence:
     i = 0
-    for ds in element.value:
-      i = i + 1
-      for celem in ds:
-        dico_add(celem, line, base = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}@{i}", with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
+    
+    if len(element.value) != 0:
+      print(len(element.value))
+      for ds in element.value:
+        i = i + 1
+        for celem in ds:       
+          dico_add(celem, line, base = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}@{i}", with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
+    else:
+      field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}@__empty"
+      line[field_name] = ""
+
   elif (t == list or t == pydicom.multival.MultiValue) and len(element.value) > 0:
-    field_name = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}"
+    field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}"
     line[field_name] = json.dumps([encode_unit(e) for e in element.value])
   else:
-    field_name = f"{parent}{name}{tag}_{element.VR}_{dWith}_{uLength}_{mBytes}_{sVR}"
+    field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}"
     line[field_name] = encode_unit(element.value) 
     
   
-
 def encode_unit(value):
   t = type(value)
+  
   if t == int:
     return str(value)
   if t == float:
@@ -89,5 +96,7 @@ def encode_unit(value):
   elif t == list and len(value)==0:
     return '[]'
   else:
-    raise ValueError(f"cannot encode {t} as unit")
-
+    if value == None:
+      return str(None)
+    else:
+      raise ValueError(f"cannot encode {t} as unit")

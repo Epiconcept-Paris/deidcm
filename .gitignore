@@ -89,3 +89,4 @@ ENV/
 
 # Rope project settings
 .ropeproject
+kskit/test_deid_mammogram.py
