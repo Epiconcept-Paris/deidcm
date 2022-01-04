@@ -4,10 +4,13 @@ SPARK_VERSION=3.0.0
 SBT_OPTS=-Xmx16G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT
 
 init:
-	python -m venv env;\
-	source env/bin/activate;\
-	pip install --upgrade pip;\
-	pip install --upgrade setuptools wheel twine
+	if [ -f env ]; then\
+	  rm -r env;\
+	fi 
+	python3 -m venv env;
+	source env/bin/activate;
+	python3 -m pip install --upgrade pip;
+	python3 -m pip install --upgrade setuptools wheel twine
 
 install:
 	source env/bin/activate;\
