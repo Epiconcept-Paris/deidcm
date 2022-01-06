@@ -18,18 +18,24 @@ from easyocr import Reader
 from kskit.dicom.dicom2df import dicom2df
 
 
-def apply_deidentification_ocr(infile: str) -> None:
+def deidentify_image(infile: str) -> None:
         ds = pydicom.read_file(infile)
         pixels = ds.pixel_array
+        #Image.fromarray(pixels).save("/home/williammadie/images/before.png")
         ocr_data = get_text_areas(pixels)
-        if len(ocr_data):
+        if ocr_data:
             pixels = hide_text(pixels, ocr_data)
-        return numpy2bytes(pixels.copy())
+        #Image.fromarray(pixels).save("/home/williammadie/images/after.png")
+        return numpy2bytes(pixels.copy(), ds)
 
 
-def numpy2bytes(pixels: np.ndarray) -> bytes:
-    pixels[pixels < 300] = 0
-    return pixels.tobytes()
+def numpy2bytes(pixels: np.ndarray, ds: pydicom.Dataset) -> bytes:
+    #pixels[pixels < 300] = 0
+    if ds.BitsAllocated == 8:
+        return pixels.astype(np.uint8).tobytes()
+    elif ds.BitsAllocated == 16:  
+        return pixels.astype(np.uint16).tobytes()
+    #return pixels.tobytes()
 
 
 def get_text_areas(pixels):
@@ -38,7 +44,14 @@ def get_text_areas(pixels):
     text of the picture. 
     """
     reader = Reader(['fr'])
-    return reader.readtext(pixels)
+    ocr_data = reader.readtext(pixels)
+    # ocr data[0][2] is the level of confidence of the result
+    # If the result is near 0, it is very likely that there is no text
+    try:
+        if ocr_data[0][2] > 0.3:
+            return ocr_data
+    except Exception:
+        return []
 
 
 def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
@@ -53,9 +66,9 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     "blur" mode            ==> blur the text areas
     """
     #Create a pillow image from the numpy array
-    pixels = pixels/255
-    im = Image.fromarray(np.uint8((pixels)*255))
-
+    #pixels = pixels/255
+    #im = Image.fromarray(np.uint8((pixels)*255))
+    im = Image.fromarray(pixels)
     #Gets the coordinate of the top-left and the bottom-right points
     for found in ocr_data:
         #This condition avoids common false positives
@@ -85,132 +98,7 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     return np.asarray(im)
 
 
-
-def de_identify_ds(ds, RECIPE):
-    """Deidentifies the dataset of the DICOM passed in parameter"""
-    attributes = filter_DICOM_attributes(dir(ds))   
-
-    with open(RECIPE) as f:
-        recipe = json.load(f)
-
-    ds = remove_confidential_attributes(recipe, attributes, ds)
-    ds = add_deid_required_attributes(ds)
-    return ds
-
-
-def filter_DICOM_attributes(attributes):
-    """Removes python basic attributes from the dataset and keeps only DICOM attributes"""
-    index_attribute = 0
-    while index_attribute < len(attributes):
-        attribute = attributes[index_attribute]
-        if len(attribute) != 0 and attribute[0] not in string.ascii_uppercase:
-            attributes.remove(attributes[index_attribute])
-        else:
-            index_attribute += 1
-    return attributes
-
-
-def remove_confidential_attributes(recipe, attributes, ds):
-    """Compares the DICOM's attributes to attributes known for being at risk if 
-    kept in clear
-    """ 
-    for attribute in attributes:
-        if attribute in recipe:
-            spec_attribute = recipe[attribute]
-            x_id, y_id = get_id(spec_attribute[0])
-            
-            #Calculates the age with the Birth Date
-            if x_id == '0x0010' and y_id == '0x0030':
-                if (0x0010, 0x1010) in ds and ds[0x0010, 0x1010].value == '':
-                    ds[0x0010, 0x1010].value  = get_age(ds[x_id, y_id].value)
-                elif (0x0010, 0x1010) not in ds and ds[x_id, y_id].value != '':
-                    ds.add_new([0x0010, 0x1010], 'AS', get_age(ds[x_id, y_id].value))
-        else:
-            delattr(ds, attribute)
-    return ds
-    """
-    #Zero-length string
-    if deid_mode == 'Z' and ds[x_id, y_id].value not in ['','UNKNOWN']:
-        #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
-        ds[x_id, y_id].value = ''
-    #Delete
-    elif deid_mode == 'X' and ds[x_id, y_id].value not in ['','UNKNOWN']:
-        #print("ATTRIBUT NON ANONYMISE :", attribute, ds[x_id, y_id].value)
-        delattr(ds, attribute)
-    """
-    #TODO: Investigate on the necessity of removing the private tags
-    #ds.remove_private_tags()
-    
-
-
-def get_age(birth_date):
-    """Takes the birth date of the patient and returns its age"""
-    birth_year = int(birth_date[0:4])
-    present_year = datetime.datetime.now().year
-    patient_age = present_year - birth_year
-    if 10 < patient_age and patient_age < 100:
-        patient_age = "0" + str(patient_age) + "Y"
-    elif patient_age < 10:
-        patient_age = "00" + str(patient_age) + "Y"
-    else:
-        patient_age = str(patient_age) + "Y"
-    print(patient_age)
-    return patient_age 
-    
-
-
-def add_deid_required_attributes(ds):
-    """Adds the de-identification attributes required by the DICOM standard"""
-    
-    #PatientIdentityRemoved CS : YES
-    if (0x0012, 0x0062) not in ds:
-        ds.add_new([0x0012, 0x0062], 'CS', 'YES')
-    else:
-        ds[0x0012, 0x0062].value = 'YES'
-    
-    #Deletes the De-identificationMethodSequence attribute and all its sub-attributes
-    if (0x0012, 0x0064) in ds:
-        delattr(ds, 'DeidentificationMethodCodeSequence')
-
-    ds.add_new([0x0012, 0x0064], 'SQ', [])
-    
-    ds[0x0012, 0x0064].value.append(Dataset())
-    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0100), 'SH', '113100')
-    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0102), 'SH', 'DCM')
-    ds[0x0012, 0x0064].value[0].add_new((0x0008, 0x0104), 'LO', 'Basic Application Confidentiality Profile')
-
-    ds[0x0012, 0x0064].value.append(Dataset())
-    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0100), 'SH', '113101')
-    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0102), 'SH', 'DCM')
-    ds[0x0012, 0x0064].value[1].add_new((0x0008, 0x0104), 'LO', 'Clean Pixel Data Option')
-
-    ds[0x0012, 0x0064].value.append(Dataset())
-    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0100), 'SH', '113108')
-    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0102), 'SH', 'DCM')
-    ds[0x0012, 0x0064].value[2].add_new((0x0008, 0x0104), 'LO', 'Retain Patient Characteristics Option')
-
-    #Add the attribute DeidentificationMethod
-    if (0x0012, 0X0063) in ds:
-        delattr(ds, 'DeidentificationMethod')
-    ds.add_new((0x0012, 0X0063), 'LO', 'Per DICOM PS 3.15 AnnexE. Details in 0012,0064')
-
-    #BurnedInAnnotation CS : NO (Indicates whether or not image contains sufficient burned in annotation to identify the patient and date the image was acquired.)
-    #TODO: investigate on the necessity to modify this attribute
-    if (0x0028, 0x0301) not in ds:
-        ds.add_new([0x0028, 0x0301], 'CS', 'YES')
-    else:
-        ds[0x0012, 0x0062].value = 'YES'
-
-    """
-    Print and change nested attributes (core elements)
-    print("Nested attribute 1", ds[0x0008, 0x2218][0][0x0008, 0x0100].value)
-    print("Nested attribute 2", ds[0x0008, 0x2218][0][0x0008, 0x0102].value)
-    print("Nested attribute 3", ds[0x0008, 0x2218][0][0x0008, 0x0104].value)
-    ds[0x0008, 0x2218][0][0x0008, 0x0104].value = 'Foot'
-    """
-    return ds
-
-def deidentify_all_files(indir: str, outdir: str) -> pd.DataFrame:
+def deidentify_attributes(indir: str, outdir: str) -> pd.DataFrame:
     """Deidentify a folder of dicom.
 
     Arguments:
@@ -431,5 +319,5 @@ if __name__ == "__main__":
         '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
         'tmp'    
     )
-    #apply_deidentification_ocr(INDIR, TMP)
-    deidentify_all_files(TMP, OUTDIR)
+    #deidentify_image(INDIR, TMP)
+    deidentify_attributes(TMP, OUTDIR)

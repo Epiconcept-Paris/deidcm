@@ -3,9 +3,9 @@ from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
 import pandas as pd
 import json
-from kskit.dicom.deid_mammogram import apply_deidentification_ocr
+from kskit.dicom.deid_mammogram import deidentify_image
 
-def df2dicom(df, outdir):
+def df2dicom(df, outdir, do_image_deidentification=False):
   """
   Fill up a directory with DICOMs initially contained in a dataframe
   @param dataframe : data structure containing the information needed to
@@ -17,11 +17,12 @@ def df2dicom(df, outdir):
   for index in range(len(df)):
     #print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
-    ds.add_new(
-      '0x7fe00010',
-      'OW',
-      apply_deidentification_ocr(df['FilePath'][index])
-    )
+    if do_image_deidentification:
+      ds.add_new(
+        '0x7fe00010',
+        'OW',
+        deidentify_image(df['FilePath'][index])
+      )
     ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
     nb_file += 1
 

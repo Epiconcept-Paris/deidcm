@@ -4,21 +4,28 @@ import string
 import itertools
 from datetime import datetime as dt
 import os
+from typing import final
 import pydicom
 import numpy as np
 import pandas as pd
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from collections import Counter
 #from .deid_mammogram import *
-#from .dicom2png import dicom2narray
-from dicom.dicom2df import dicom2df
-from deid_mammogram import deidentify_all_files, gen_uuid128
-from deid_mammogram import replace_with_dummy_str
-from deid_mammogram import gen_dicom_uid
-from test_cases.cases import *
+
+from kskit.dicom2png import dicom2narray
+from kskit.dicom.df2dicom import df2dicom
+from kskit.dicom.deid_mammogram import (
+    deidentify_attributes,
+    gen_uuid128,
+    replace_with_dummy_str,
+    gen_dicom_uid,
+    get_text_areas
+)
+from kskit.dicom.utils import write_all_ds, format_ds_tag
+from kskit.test_cases.cases import *
 from datetime import datetime
 from datetime import timedelta
-from dicom.utils import write_all_ds, format_ds_tag
+
 
 def search_false_positives(indir, list_dicom, list_chosen, outdir_intermediate, repetition, nb_images_tested, fp, tn):
     summary = "\nF stands for the FONT path" + \
@@ -636,12 +643,18 @@ def validate_deid_attributes(output: str) -> None:
         ds_list = itertools.chain(ds.file_meta, ds)
         ds_tags = []
         tags2keep = list(map(lambda x: format_ds_tag(x[0]), kp_tags))
+        tags2rm = list(map(lambda x: x[0], rm_tags))
+        tags2er = list(map(lambda x: x[0], er_tags))
         for element in ds_list:
             ds_tags.append(str(element.tag))
-            if element.tag in rm_tags:
+            if element.tag in tags2rm:
                 results['rm'] = False
-            elif element.tag in er_tags and element.value != '':
-                results['er'] = False
+            elif element.tag in tags2er and element.value != '':
+                elements = str(element.value)
+                is_sq_deid = lambda x: True if '' in elements else False
+                res = list(map(is_sq_deid, elements))
+                if False in res:
+                    results['er'] = False
             if element.tag in shlo_tags and len(element.value) != 16:
                 results['shlo'] = False
             if element.tag in ui_tags and len(element.value) != 57:
@@ -684,6 +697,24 @@ def show_results(results: dict) -> None:
         print(result)
 
 
+def run_test_deid_attributes(indir, outdir):
+    tmp = os.path.join(outdir, 'intermediate')
+    tmp_ds = os.path.join(outdir, 'ds')
+    final_ds =  os.path.join(outdir, 'final_ds')
+    final = os.path.join(outdir, 'final')
+    
+    for folder in [tmp, tmp_ds, final_ds, final]:
+        try:
+            os.mkdir(folder)
+        except FileExistsError:
+            pass
+
+    generate_test_cases(indir, tmp)    
+    write_all_ds(tmp, tmp_ds, True)
+    df = deidentify_attributes(tmp, final)
+    df2dicom(df, final)
+    validate_deid_attributes(final)
+
 if __name__ == "__main__":
     IMG_DIR = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'test_deid_2')
     INPUT = os.path.join(IMG_DIR, 'input')
@@ -693,5 +724,6 @@ if __name__ == "__main__":
     OUTPUT4DS =  os.path.join(IMG_DIR, 'final_ds')
     generate_test_cases(INPUT, INTERMEDIATE)    
     write_all_ds(INTERMEDIATE, INTERMEDIATE4DS, True)
-    deidentify_all_files(INTERMEDIATE, OUTPUT, OUTPUT4DS)
+    df = deidentify_attributes(INTERMEDIATE, OUTPUT, OUTPUT4DS)
+    df2dicom(INPUT, OUTPUT)
     validate_deid_attributes(OUTPUT)
