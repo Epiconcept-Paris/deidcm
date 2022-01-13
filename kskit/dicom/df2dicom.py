@@ -1,24 +1,37 @@
+import traceback
+import base64
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
-import base64
 import pandas as pd
 import json
+from kskit.dicom.deid_mammogram import deidentify_image
 
-def df2dicom(df, outdir):
+def df2dicom(df, outdir, do_image_deidentification=False):
   """
   Fill up a directory with DICOMs initially contained in a dataframe
   @param dataframe : data structure containing the information needed to
   reconstruct DICOMs
   @param outdir : output directory where the DICOMs will be generated
   """
-
-  nb_file = 0
-  for index in range(len(df)):
-    print(f"dicom n°{nb_file} has been rebuilt")
+  pixel = ('0x7fe00010', 'OB')
+  for num_file, index in enumerate(range(len(df))):
+    #print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
-    ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
-    nb_file += 1
+    try:
+      if do_image_deidentification:
+        ds.add_new(pixel[0], pixel[1], deidentify_image(df['FilePath'][index]))
+      else:
+        ds.add_new(pixel[0], pixel[1], get_original_img(df['FilePath'][index]))
+    except ValueError:
+      traceback.print_exc()
+      raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
+    ds.save_as(f"{outdir}/dicom_{num_file}.dcm", write_like_original=False)
+
+
+def get_original_img(filepath) -> bytes:
+  """Finds and returns the original image"""
+  return pydicom.read_file(filepath).pixel_array
 
 
 def get_ds_attr(df, parent_path, attr):
@@ -88,7 +101,9 @@ def build_dicom(df, index, parent_path = ''):
   seq_attrs, nonseq_attrs, meta_attrs = [], [], []
   child_attr = [col.replace(parent_path, '') for col in df.columns if col.startswith(parent_path)] #name of the column without the parent name
   #filters child_attr into two lists (sequences and not sequences)
-  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr] 
+  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr]
+  if 'FilePath' in nonseq_attrs:
+    nonseq_attrs.remove('FilePath')
 
   ds = Dataset()
 
@@ -135,15 +150,16 @@ def decode_unit(value, VR, VM):
     return None
   else:
     integer_types = ['IS','SS','SL','US','UL']
+    known_encodings = ['CS', 'DS', 'FD', 'UN']
     if VM != '1':
-      if (VR in integer_types or VR == 'CS' or VR == 'DS' or VR == 'FD' or VR == 'UN') and VM != '0':
+      if (VR in integer_types or VR in known_encodings) and VM != '0':
         return [decode_unit(e, VR, '1') for e in json.loads(value)]
     else:
       if VR == 'OB' or VR == 'OW' or VR == 'UN':
-        return base64.b64decode(value.encode("UTF-8"))
+        #alt if not working: return value.encode('utf8')
+        return base64.b64decode(value.encode('utf8'))
       elif VR in integer_types:
         return int(value)
       elif VR == 'FD':
         return float(value)
     return value
-

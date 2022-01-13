@@ -19,6 +19,7 @@ def get_ds_lines(ds_list):
         rep.append(lines)
     return rep
 
+
 def prepare_dicom(indir, tmp_dir):
     """
     Create two lists containing lists of lines. The first list contains all the lines
@@ -31,8 +32,8 @@ def prepare_dicom(indir, tmp_dir):
     initial_ds = [pydicom.dcmread(os.path.join(indir, file), force=True) for file in os.listdir(indir)]
     
     #DICOM with 2 transformations : dicom2df and df2dicom
-    df = dicom2df(indir, with_private = True, with_pixels = True, with_seqs = True)
-    df2dicom(df, tmp_dir)
+    df = dicom2df(indir, with_private = True, with_pixels = False, with_seqs = True)
+    df2dicom(df, tmp_dir, False)
     
     modified_ds = [pydicom.dcmread(os.path.join(tmp_dir, file), force=True) for file in os.listdir(tmp_dir)]
     
@@ -42,12 +43,14 @@ def prepare_dicom(indir, tmp_dir):
     modified_dicoms.sort()
     return initial_dicoms, modified_dicoms
 
+
 def cleandir(dir2clean, rmdir = False):
     """Remove a directory full of files"""
     files = os.listdir(dir2clean)
     if len(files) != 0:
         [os.remove(os.path.join(dir2clean, file)) for file in files]
     os.rmdir(dir2clean) if rmdir else None 
+
 
 def test_df2dicom(indir, tmp_dir):
     """
@@ -67,12 +70,13 @@ def test_df2dicom(indir, tmp_dir):
 
     for dicom_i in range(len(initial_dicoms)):
         for line in diff.compare(initial_dicoms[dicom_i], modified_dicoms[dicom_i]):
+            print(line)
             nb_diff = nb_diff + 1 if line[0] in ['?', '+', '-'] else nb_diff
                 
         print(f"\n{nb_diff} difference(s) / {dicom_i+1} tested images\n")
     cleandir(tmp_dir, False)
-        
-    
+
+
 if __name__ == "__main__":
     #dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'dicom2df_test', 'other')
     dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'mg_dcm4build_tests', 'usable')

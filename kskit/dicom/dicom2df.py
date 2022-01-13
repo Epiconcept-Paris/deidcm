@@ -38,6 +38,7 @@ def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs 
        (with_private or not element.is_private) and
        (with_seqs or element.VR != "SQ")):
       dico_add(element, line = line, with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
+  line['FilePath'] = dicom_file
   return line;
   
 def dico_add(element, line, base = "", with_private = False, with_pixels = False, with_seqs = True):
@@ -55,7 +56,6 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     i = 0
     
     if len(element.value) != 0:
-      print(len(element.value))
       for ds in element.value:
         i = i + 1
         for celem in ds:       
