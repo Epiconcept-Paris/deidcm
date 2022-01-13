@@ -713,6 +713,7 @@ def run_test_deid_attributes(indir, outdir):
     write_all_ds(tmp, tmp_ds, True)
     df = deidentify_attributes(tmp, final)
     df2dicom(df, final)
+    write_all_ds(final, final_ds, True)
     validate_deid_attributes(final)
 
 if __name__ == "__main__":

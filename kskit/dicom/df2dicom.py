@@ -1,3 +1,5 @@
+import traceback
+import base64
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
@@ -12,19 +14,24 @@ def df2dicom(df, outdir, do_image_deidentification=False):
   reconstruct DICOMs
   @param outdir : output directory where the DICOMs will be generated
   """
-
-  nb_file = 0
-  for index in range(len(df)):
+  pixel = ('0x7fe00010', 'OB')
+  for num_file, index in enumerate(range(len(df))):
     #print(f"dicom n°{nb_file} has been rebuilt")
     ds = build_dicom(df, index, parent_path = '')
-    if do_image_deidentification:
-      ds.add_new(
-        '0x7fe00010',
-        'OW',
-        deidentify_image(df['FilePath'][index])
-      )
-    ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
-    nb_file += 1
+    try:
+      if do_image_deidentification:
+        ds.add_new(pixel[0], pixel[1], deidentify_image(df['FilePath'][index]))
+      else:
+        ds.add_new(pixel[0], pixel[1], get_original_img(df['FilePath'][index]))
+    except ValueError:
+      traceback.print_exc()
+      raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
+    ds.save_as(f"{outdir}/dicom_{num_file}.dcm", write_like_original=False)
+
+
+def get_original_img(filepath) -> bytes:
+  """Finds and returns the original image"""
+  return pydicom.read_file(filepath).pixel_array
 
 
 def get_ds_attr(df, parent_path, attr):
@@ -149,7 +156,8 @@ def decode_unit(value, VR, VM):
         return [decode_unit(e, VR, '1') for e in json.loads(value)]
     else:
       if VR == 'OB' or VR == 'OW' or VR == 'UN':
-        return value.encode('utf8')
+        #alt if not working: return value.encode('utf8')
+        return base64.b64decode(value.encode('utf8'))
       elif VR in integer_types:
         return int(value)
       elif VR == 'FD':

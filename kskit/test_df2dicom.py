@@ -32,8 +32,8 @@ def prepare_dicom(indir, tmp_dir):
     initial_ds = [pydicom.dcmread(os.path.join(indir, file), force=True) for file in os.listdir(indir)]
     
     #DICOM with 2 transformations : dicom2df and df2dicom
-    df = dicom2df(indir, with_private = True, with_pixels = True, with_seqs = True)
-    df2dicom(df, tmp_dir)
+    df = dicom2df(indir, with_private = True, with_pixels = False, with_seqs = True)
+    df2dicom(df, tmp_dir, False)
     
     modified_ds = [pydicom.dcmread(os.path.join(tmp_dir, file), force=True) for file in os.listdir(tmp_dir)]
     
@@ -70,6 +70,7 @@ def test_df2dicom(indir, tmp_dir):
 
     for dicom_i in range(len(initial_dicoms)):
         for line in diff.compare(initial_dicoms[dicom_i], modified_dicoms[dicom_i]):
+            print(line)
             nb_diff = nb_diff + 1 if line[0] in ['?', '+', '-'] else nb_diff
                 
         print(f"\n{nb_diff} difference(s) / {dicom_i+1} tested images\n")

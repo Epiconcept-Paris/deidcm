@@ -18,7 +18,7 @@ from easyocr import Reader
 from kskit.dicom.dicom2df import dicom2df
 
 
-def deidentify_image(infile: str) -> None:
+def deidentify_image(infile: str) -> bytes:
         ds = pydicom.read_file(infile)
         pixels = ds.pixel_array
         #Image.fromarray(pixels).save("/home/williammadie/images/before.png")
@@ -205,7 +205,8 @@ def deidentify(tags: list, vr: str, value: str) -> None:
     """
     if not pd.isna(value):
         if vr in ['DA', 'DT']:
-            return offset4date(value) if value != '' else value
+            #return offset4date(value) if value != '' else value
+            return get_first_day_year(value) if value != '' else value
         elif vr == 'TM':
             return hide_time()
         elif vr == 'PN' or any_in(tags, ['0x00100020']): 
@@ -258,6 +259,10 @@ def offset4date(date: str, offset: int = 100000) -> str:
     d = datetime.strptime(date[:8], '%Y%m%d') - timedelta(days=offset)
     return d.strftime('%Y%m%d')
 
+
+def get_first_day_year(date: str) -> str:
+    """Takes a date YYYYMMDD. Returns YYYY0101"""
+    return f"{date[:4]}0101"
 
 def hide_time() -> str:
     """Overwrites the previous time value with the 000000 dummy value"""
