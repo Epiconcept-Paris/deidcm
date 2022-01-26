@@ -157,7 +157,7 @@ def decode_unit(value, VR, VM):
     else:
       if VR == 'OB' or VR == 'OW' or VR == 'UN':
         #alt if not working: return value.encode('utf8')
-        return base64.b64decode(value.encode('utf8'))
+        return base64.b64encode(value.encode('UTF-8'))
       elif VR in integer_types:
         return int(value)
       elif VR == 'FD':
