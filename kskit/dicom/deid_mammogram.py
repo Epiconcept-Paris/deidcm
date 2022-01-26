@@ -123,6 +123,7 @@ def deidentify_attributes(indir: str, outdir: str) -> pd.DataFrame:
                     value, 
                     recipe
                 )
+    df['PatientIdentityRemoved_0x00120062_CS_1____'] = 'YES'
     return df
 
 
