@@ -1,4 +1,5 @@
 import random
+import base64
 import time
 import string
 import itertools
@@ -560,11 +561,15 @@ def gen_obuc_case(ds: pydicom.Dataset) -> pydicom.Dataset:
     ds.add_new(
         '0x00340007',
         'OB',
-        datetime.strptime(gen_dummy_date(), '%Y%m%d').isoformat().encode('utf8')
+        base64.b64encode(datetime.strptime(gen_dummy_date(), '%Y%m%d').isoformat().encode('UTF-8'))
     )
     ds.add_new('0x00189367', 'UC', 'I am a personal information')
     for tag in ['0x00340002', '0x00340005']:
-        ds.add_new(tag, 'OB', b'I am a personal information')
+        ds.add_new(
+            tag,
+            'OB',
+            base64.b64encode('I am a personal information'.encode('UTF-8'))
+        )
     return ds
 
 def gen_tm_case(ds: pydicom.Dataset) -> pydicom.Dataset:
@@ -597,7 +602,7 @@ def gen_dadt_case(ds: pydicom.Dataset) -> pydicom.Dataset:
 
 
 def gen_dummy_date() -> str:
-    offset = random.randint(0, 364)
+    offset = random.randint(366, 700)
     d = datetime.strptime('20220101', '%Y%m%d') + timedelta(days=offset)
     return d.strftime('%Y%m%d')
 
@@ -654,7 +659,7 @@ def validate_deid_attributes(output: str) -> None:
                 res = list(map(is_sq_deid, elements))
                 if False in res:
                     results['er'] = False
-            if element.tag in shlo_tags and len(element.value) != 16:
+            if element.tag in shlo_tags and len(element.value) not in [16, 64]:
                 results['shlo'] = False
             if element.tag in ui_tags and len(element.value) != 57:
                 results['ui'] = False
@@ -664,10 +669,11 @@ def validate_deid_attributes(output: str) -> None:
                 results['dadt'] = False
             
             if element.tag == '0x00340007' and \
-                element.value.decode('utf-8') != '2022-01-01T00:00:00':
+                base64.b64decode(element.value).decode('utf-8') != '2022-01-01T00:00:00':
                 results['obuc'] = False
             elif element.tag in ['0x00340002', '0x00340005'] and \
-                element.value.decode('utf-8') == 'I am a personal information':
+                base64.b64decode(element.value).decode('utf-8') \
+                    == 'I am a personal information':
                 results['obuc'] = False
             elif element.tag == '0x00189367' and \
                 element.value == 'I am a personal information':

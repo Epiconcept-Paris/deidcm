@@ -252,7 +252,7 @@ def gen_uuid128(original_uuid) -> bytes:
 
     original_uuid   -- original uuid/value of the DICOM attribute
     """
-    return hashlib.sha256(original_uuid.encode('utf8')).digest()[:16]
+    return base64.b64encode(hashlib.sha256(original_uuid.encode('utf8')).hexdigest()[:16].encode('UTF-8'))
 
 
 def offset4date(date: str, offset: int = 100000) -> str:
