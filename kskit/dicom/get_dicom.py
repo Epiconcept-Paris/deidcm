@@ -40,7 +40,7 @@ def info_logger():
   handler.setFormatter(formatter)
   logger.addHandler(handler)
 
-def get_dicom(key, dest, server = "127.0.0.1", port = 11112, title = "ANY", retrieveLevel = 'SERIES'):
+def get_dicom(key, dest, server = "127.0.0.1", port = 11112, title = "ANY", retrieveLevel = 'SERIES', silent = False):
   #info_logger()
   handlers = [(evt.EVT_C_STORE, handle_store)]
   global storage_dest 
@@ -95,7 +95,8 @@ def get_dicom(key, dest, server = "127.0.0.1", port = 11112, title = "ANY", retr
           if status:
               #import pdb; pdb.set_trace() 
               if status.NumberOfCompletedSuboperations >= 1:
-                print(f"{key} downloaded {status.NumberOfCompletedSuboperations} successfully") 
+                if not silent:
+                  print(f"{key} downloaded {status.NumberOfCompletedSuboperations} successfully") 
               elif status.NumberOfCompletedSuboperations == 0:
                 print (f"id {key} not found") 
               else:
