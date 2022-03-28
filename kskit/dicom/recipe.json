@@ -34,13 +34,363 @@
         "AE",
         "CONSERVER"
     ],
-    "0x00181160": [
-        "FilterType",
-        "SH",
+    "0x00189332": [
+        "ExposureInmAs",
+        "FD",
+        "CONSERVER"
+    ],
+    "0x00180088": [
+        "SpacingBetweenSlices",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181153": [
+        "ExposureInuAs",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x001811a2": [
+        "CompressionForce",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00408302": [
+        "EntranceDoseInmGy",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181150": [
+        "ExposureTime",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00181405": [
+        "RelativeXRayExposure",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00400316": [
+        "OrganDose",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187011": [
+        "ExposuresOnDetectorSinceManufactured",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00200012": [
+        "AcquisitionNumber",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00188151": [
+        "XRayTubeCurrentInuA",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x001811a0": [
+        "BodyPartThickness",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181152": [
+        "Exposure",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00188150": [
+        "ExposureTimeInuS",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181151": [
+        "XRayTubeCurrent",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00200013": [
+        "InstanceNumber",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00181510": [
+        "PositionerPrimaryAngle",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00200011": [
+        "SeriesNumber",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x0018700c": [
+        "DateOfLastDetectorCalibration",
+        "DA",
+        "CONSERVER"
+    ],
+    "0x00187062": [
+        "ExposureControlModeDescription",
+        "LT",
+        "CONSERVER"
+    ],
+    "0x00181708": [
+        "CollimatorLowerHorizontalEdge",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00181704": [
+        "CollimatorRightVerticalEdge",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00186000": [
+        "Sensitivity",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181706": [
+        "CollimatorUpperHorizontalEdge",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00080013": [
+        "InstanceCreationTime",
+        "TM",
+        "CONSERVER"
+    ],
+    "0x00187001": [
+        "DetectorTemperature",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x0018700e": [
+        "TimeOfLastDetectorCalibration",
+        "TM",
+        "CONSERVER"
+    ],
+    "0x00280011": [
+        "Columns",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00283002": [
+        "LUTDescriptor",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00400306": [
+        "DistanceSourceToEntrance",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00280120": [
+        "PixelPaddingValue",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00280107": [
+        "LargestImagePixelValue",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00280121": [
+        "PixelPaddingRangeLimit",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00181702": [
+        "CollimatorLeftVerticalEdge",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00283006": [
+        "LUTData",
+        "OW",
+        "CONSERVER"
+    ],
+    "0x00280106": [
+        "SmallestImagePixelValue",
+        "US",
         "CONSERVER"
     ],
     "0x00180060": [
         "KVP",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181111": [
+        "DistanceSourceToPatient",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00185101": [
+        "ViewPosition",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280010": [
+        "Rows",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00181149": [
+        "FieldOfViewDimensions",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00181020": [
+        "SoftwareVersions",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00081090": [
+        "ManufacturerModelName",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00187030": [
+        "FieldOfViewOrigin",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00080100": [
+        "CodeValue",
+        "SH",
+        "PSEUDONYMISER"
+    ],
+    "0x00200020": [
+        "PatientOrientation",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181401": [
+        "AcquisitionDeviceProcessingCode",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00181130": [
+        "TableHeight",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00080104": [
+        "Code Meaning",
+        "LO",
+        "PSEUDONYMISER"
+    ],
+    "0x00181114": [
+        "EstimatedRadiographicMagnificationFactor",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00280030": [
+        "PixelSpacing",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00181164": [
+        "ImagerPixelSpacing",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00080070": [
+        "Manufacturer",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x001811a4": [
+        "PaddleDescription",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00181110": [
+        "DistanceSourceToDetector",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00400301": [
+        "TotalNumberOfExposures",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00400314": [
+        "HalfValueLayer",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187010": [
+        "ExposuresOnDetectorSinceLastCalibration",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00187012": [
+        "DetectorTimeSinceLastExposure",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00281050": [
+        "WindowCenter",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00080102": [
+        "CodingSchemeDesignator",
+        "SH",
+        "EFFACER"
+    ],
+    "0x00280102": [
+        "HighBit",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00280101": [
+        "BitsStored",
+        "US",
+        "CONSERVER"
+    ],
+    "0x0018115e": [
+        "ImageAndFluoroscopyAreaDoseProduct",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00201208": [
+        "NumberOfStudyRelatedInstances",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00281051": [
+        "WindowWidth",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187026": [
+        "DetectorActiveDimensions",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00321001": [
+        "ScheduledStudyStartTime",
+        "TM",
+        "CONSERVER"
+    ],
+    "0x00321000": [
+        "ScheduledStudyStartDate",
+        "DA",
+        "CONSERVER"
+    ],
+    "0x00080012": [
+        "InstanceCreationDate",
+        "DA",
+        "CONSERVER"
+    ],
+    "0x00187060": [
+        "ExposureControlMode",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181190": [
+        "FocalSpots",
         "DS",
         "CONSERVER"
     ],
@@ -49,49 +399,9 @@
         "LT",
         "CONSERVER"
     ],
-    "0x001811a0": [
-        "BodyPartThickness",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00080064": [
-        "ConversionType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00189332": [
-        "ExposureInmAs",
-        "FD",
-        "CONSERVER"
-    ],
-    "0x00187024": [
-        "DetectorActiveShape",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00201002": [
-        "ImagesInAcquisition",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00181110": [
-        "DistanceSourceToDetector",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00187005": [
-        "DetectorConfiguration",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00180088": [
-        "SpacingBetweenSlices",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00187052": [
-        "FilterThicknessMinimum",
-        "DS",
+    "0x00400303": [
+        "ExposedArea",
+        "US",
         "CONSERVER"
     ],
     "0x00181191": [
@@ -104,18 +414,243 @@
         "CS",
         "CONSERVER"
     ],
+    "0x00187004": [
+        "DetectorType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280004": [
+        "PhotometricInterpretation",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00080016": [
+        "SOPClassUID",
+        "UI",
+        "CONSERVER"
+    ],
+    "0x00187020": [
+        "DetectorElementPhysicalSize",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187022": [
+        "DetectorElementSpacing",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00281056": [
+        "VOILUTFunction",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00187034": [
+        "FieldOfViewHorizontalFlip",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00187032": [
+        "FieldOfViewRotation",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187028": [
+        "DetectorActiveOrigin",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00280034": [
+        "PixelAspectRatio",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00187052": [
+        "FilterThicknessMinimum",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x0032000a": [
+        "StudyStatusID",
+        "CS",
+        "CONSERVER"
+    ],
     "0x00187054": [
         "FilterThicknessMaximum",
         "DS",
         "CONSERVER"
     ],
-    "0x00181608": [
-        "ShutterLowerHorizontalEdge",
-        "IS",
+    "0x00187005": [
+        "DetectorConfiguration",
+        "CS",
         "CONSERVER"
     ],
-    "0x00280004": [
-        "PhotometricInterpretation",
+    "0x20500020": [
+        "PresentationLUTShape",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00281052": [
+        "RescaleIntercept",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00281053": [
+        "RescaleSlope",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00080068": [
+        "PresentationIntentType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00281041": [
+        "PixelIntensityRelationshipSign",
+        "SS",
+        "CONSERVER"
+    ],
+    "0x00281040": [
+        "PixelIntensityRelationship",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00200062": [
+        "ImageLaterality",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00080005": [
+        "SpecificCharacterSet",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280100": [
+        "BitsAllocated",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00080060": [
+        "Modality",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280002": [
+        "SamplesPerPixel",
+        "US",
+        "CONSERVER"
+    ],
+    "0x60003000": [
+        "-",
+        "OW",
+        "RETIRER"
+    ],
+    "0x00181147": [
+        "FieldOfViewShape",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00400302": [
+        "EntranceDose",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00281350": [
+        "PartialView",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00200060": [
+        "Laterality",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x20100010": [
+        "ImageDisplayFormat",
+        "ST",
+        "CONSERVER"
+    ],
+    "0x20100030": [
+        "AnnotationDisplayFormatID",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x20100040": [
+        "FilmOrientation",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x20100140": [
+        "Trim",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x20100100": [
+        "BorderDensity",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181700": [
+        "CollimatorShape",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00401003": [
+        "RequestedProcedurePriority",
+        "SH",
+        "CONSERVER"
+    ],
+    "0x00181050": [
+        "SpatialResolution",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00400321": [
+        "FilmConsumptionSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x0018702b": [
+        "DetectorManufacturerModelName",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x0018702a": [
+        "DetectorManufacturerName",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00400252": [
+        "PerformedProcedureStepStatus",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00402004": [
+        "IssueDateOfImagingServiceRequest",
+        "DA",
+        "CONSERVER"
+    ],
+    "0x0040030e": [
+        "ExposureDoseSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00181166": [
+        "Grid",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00201040": [
+        "PositionReferenceIndicator",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00280006": [
+        "PlanarConfiguration",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00187000": [
+        "DetectorConditionsNominalFlag",
         "CS",
         "CONSERVER"
     ],
@@ -124,13 +659,58 @@
         "CS",
         "CONSERVER"
     ],
-    "0x00400318": [
-        "OrganExposed",
+    "0x0018701a": [
+        "DetectorBinning",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00187064": [
+        "ExposureStatus",
         "CS",
         "CONSERVER"
     ],
-    "0x00181704": [
-        "CollimatorRightVerticalEdge",
+    "0x00181531": [
+        "DetectorSecondaryAngle",
+        "DS",
+        "CONSERVER"
+    ],
+    "0x00186031": [
+        "TransducerType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280014": [
+        "UltrasoundColorDataPresent",
+        "US",
+        "CONSERVER"
+    ],
+    "0x00080061": [
+        "ModalitiesInStudy",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00281055": [
+        "WindowCenterWidthExplanation",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00401008": [
+        "ConfidentialityCode",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00500004": [
+        "CalibrationImage",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x0032000c": [
+        "StudyPriorityID",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181608": [
+        "ShutterLowerHorizontalEdge",
         "IS",
         "CONSERVER"
     ],
@@ -149,189 +729,9 @@
         "IS",
         "CONSERVER"
     ],
-    "0x00181149": [
-        "FieldOfViewDimensions",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00187020": [
-        "DetectorElementPhysicalSize",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00187060": [
-        "ExposureControlMode",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00181111": [
-        "DistanceSourceToPatient",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x0018701a": [
-        "DetectorBinning",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00188151": [
-        "XRayTubeCurrentInuA",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181130": [
-        "TableHeight",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00281051": [
-        "WindowWidth",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00187010": [
-        "ImExposureStatus",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x0018700e": [
-        "TimeOfLastDetectorCalibration",
-        "TM",
-        "CONSERVER"
-    ],
-    "0x20100010": [
-        "ImageDisplayFormat",
-        "ST",
-        "CONSERVER"
-    ],
-    "0x00401003": [
-        "RequestedProcedurePriority",
-        "SH",
-        "CONSERVER"
-    ],
-    "0x00187064": [
-        "ExposureStatus",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00400303": [
-        "ExposedArea",
-        "US",
-        "CONSERVER"
-    ],
-    "0x0018700c": [
-        "DateOfLastDetectorCalibration",
-        "DA",
-        "PSEUDONYMISER"
-    ],
-    "0x20100030": [
-        "AnnotationDisplayFormatID",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00080008": [
-        "ImageType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x001811a2": [
-        "CompressionForce",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181153": [
-        "ExposureInuAs",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x0018115e": [
-        "ImageAndFluoroscopyAreaDoseProduct",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00400260": [
-        "PerformedProtocolCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00081032": [
-        "ProcedureCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00280103": [
-        "PixelRepresentation",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00181152": [
-        "Exposure",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00281052": [
-        "RescaleIntercept",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181708": [
-        "CollimatorLowerHorizontalEdge",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00186031": [
-        "TransducerType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00200013": [
-        "InstanceNumber",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00281055": [
-        "WindowCenterWidthExplanation",
-        "LO",
-        "CONSERVER"
-    ],
     "0x00181460": [
         "TomoLayerHeight",
         "DS",
-        "CONSERVER"
-    ],
-    "0x00187028": [
-        "DetectorActiveOrigin",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00187012": [
-        "DetectorTimeSinceLastExposure",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00540220": [
-        "ViewCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00181510": [
-        "PositionerPrimaryAngle",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00280011": [
-        "Columns",
-        "US",
-        "CONSERVER"
-    ],
-    "0x20100040": [
-        "FilmOrientation",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00280100": [
-        "BitsAllocated",
-        "US",
         "CONSERVER"
     ],
     "0x00187014": [
@@ -339,149 +739,9 @@
         "DS",
         "CONSERVER"
     ],
-    "0x00500004": [
-        "CalibrationImage",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00280014": [
-        "UltrasoundColorDataPresent",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00181050": [
-        "SpatialResolution",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00180015": [
-        "BodyPartExamined",
-        "CS",
-        "CONSERVER"
-    ],
     "0x00181156": [
         "RectificationType",
         "CS",
-        "CONSERVER"
-    ],
-    "0x00400301": [
-        "TotalNumberOfExposures",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00280106": [
-        "SmallestImagePixelValue",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00181401": [
-        "AcquisitionDeviceProcessingCode",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x0032000a": [
-        "StudyStatusID",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00187004": [
-        "DetectorType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00400314": [
-        "HalfValueLayer",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00280120": [
-        "PixelPaddingValue",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00281053": [
-        "RescaleSlope",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00401008": [
-        "ConfidentialityCode",
-        "LO",
-        "EFFACER"
-    ],
-    "0x00080013": [
-        "InstanceCreationTime",
-        "TM",
-        "PSEUDONYMISER"
-    ],
-    "0x00080068": [
-        "PresentationIntentType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00400321": [
-        "FilmConsumptionSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00080016": [
-        "SOPClassUID",
-        "UI",
-        "CONSERVER"
-    ],
-    "0x0018702b": [
-        "DetectorManufacturerModelName",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00187001": [
-        "DetectorTemperature",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x20100140": [
-        "Trim",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00082218": [
-        "AnatomicRegionSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00281054": [
-        "RescaleType",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00181147": [
-        "FieldOfViewShape",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x0018702a": [
-        "DetectorManufacturerName",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00281041": [
-        "PixelIntensityRelationshipSign",
-        "SS",
-        "CONSERVER"
-    ],
-    "0x00185101": [
-        "ViewPosition",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00408302": [
-        "EntranceDoseInmGy",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00400306": [
-        "DistanceSourceToEntrance",
-        "DS",
         "CONSERVER"
     ],
     "0x00181530": [
@@ -489,83 +749,8 @@
         "DS",
         "CONSERVER"
     ],
-    "0x00181531": [
-        "DetectorSecondaryAngle",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00200011": [
-        "SeriesNumber",
-        "IS",
-        "CONSERVER"
-    ],
     "0x0018113a": [
         "TableType",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00187030": [
-        "FieldOfViewOrigin",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00201040": [
-        "PositionReferenceIndicator",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00188150": [
-        "ExposureTimeInuS",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181700": [
-        "CollimatorShape",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00181190": [
-        "FocalSpots",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00281040": [
-        "PixelIntensityRelationship",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00080060": [
-        "Modality",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00181114": [
-        "EstimatedRadiographicMagnificationFactor",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x0032000c": [
-        "StudyPriorityID",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00181150": [
-        "ExposureTime",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00187034": [
-        "FieldOfViewHorizontalFlip",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00400302": [
-        "EntranceDose",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00200020": [
-        "PatientOrientation",
         "CS",
         "CONSERVER"
     ],
@@ -574,48 +759,8 @@
         "LT",
         "CONSERVER"
     ],
-    "0x00080005": [
-        "SpecificCharacterSet",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00080070": [
-        "Manufacturer",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00321001": [
-        "ScheduledStudyStartTime",
-        "TM",
-        "CONSERVER"
-    ],
-    "0x00283010": [
-        "VOILUTSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00181702": [
-        "CollimatorLeftVerticalEdge",
-        "IS",
-        "CONSERVER"
-    ],
     "0x00181600": [
         "ShutterShape",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00280006": [
-        "PlanarConfiguration",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00280102": [
-        "HighBit",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00400252": [
-        "PerformedProcedureStepStatus",
         "CS",
         "CONSERVER"
     ],
@@ -624,129 +769,19 @@
         "DS",
         "CONSERVER"
     ],
-    "0x00540410": [
-        "PatientOrientationCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00201208": [
-        "NumberOfStudyRelatedInstances",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00181405": [
-        "RelativeXRayExposure",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00280002": [
-        "SamplesPerPixel",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00321064": [
-        "RequestedProcedureCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00282110": [
-        "LossyImageCompression",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00281056": [
-        "VOILUTFunction",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00280010": [
-        "Rows",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00402004": [
-        "IssueDateOfImagingServiceRequest",
-        "DA",
-        "PSEUDONYMISER"
-    ],
-    "0x00280121": [
-        "PixelPaddingRangeLimit",
-        "US",
-        "CONSERVER"
-    ],
-    "0x00187011": [
-        "ExposuresOnDetectorSinceManufactured",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00187026": [
-        "DetectorActiveDimensions",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x20500020": [
-        "PresentationLUTShape",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00280030": [
-        "PixelSpacing",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181164": [
-        "ImagerPixelSpacing",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00181151": [
-        "XRayTubeCurrent",
-        "IS",
-        "CONSERVER"
-    ],
     "0x00181138": [
         "TableAngle",
         "DS",
         "CONSERVER"
     ],
-    "0x00187000": [
-        "DetectorConditionsNominalFlag",
-        "CS",
+    "0x00186028": [
+        "ReferencePixelPhysicalValueX",
+        "FD",
         "CONSERVER"
     ],
-    "0x00186011": [
-        "SequenceOfUltrasoundRegions",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00281050": [
-        "WindowCenter",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00081090": [
-        "ManufacturerModelName",
-        "LO",
-        "CONSERVER"
-    ],
-    "0x00280301": [
-        "BurnedInAnnotation",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00321000": [
-        "ScheduledStudyStartDate",
-        "DA",
-        "CONSERVER"
-    ],
-    "0x00281350": [
-        "PartialView",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x001811a4": [
-        "PaddleDescription",
-        "LO",
+    "0x00186032": [
+        "PulseRepetitionFrequency",
+        "UL",
         "CONSERVER"
     ],
     "0x00181606": [
@@ -754,100 +789,65 @@
         "IS",
         "CONSERVER"
     ],
-    "0x00181508": [
-        "PositionerType",
-        "CS",
+    "0x00181201": [
+        "TimeOfLastCalibration",
+        "TM",
         "CONSERVER"
     ],
-    "0x00181706": [
-        "CollimatorUpperHorizontalEdge",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00181020": [
-        "SoftwareVersions",
+    "0x00380016": [
+        "RouteOfAdmissions",
         "LO",
         "CONSERVER"
     ],
-    "0x00280101": [
-        "BitsStored",
-        "US",
-        "CONSERVER"
+    "0x00281351": [
+        "PartialViewDescription",
+        "ST",
+        "EFFACER"
     ],
-    "0x00187062": [
-        "ExposureControlModeDescription",
-        "LT",
-        "CONSERVER"
-    ],
-    "0x00080061": [
-        "ModalitiesInStudy",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00181166": [
-        "Grid",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00200012": [
-        "AcquisitionNumber",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00080012": [
-        "InstanceCreationDate",
+    "0x00181200": [
+        "DateOfLastCalibration",
         "DA",
-        "PSEUDONYMISER"
+        "CONSERVER"
     ],
-    "0x20100100": [
-        "BorderDensity",
+    "0x00186016": [
+        "RegionFlags",
+        "UL",
+        "CONSERVER"
+    ],
+    "0x00189559": [
+        "PositionerPrimaryAngleDirection",
         "CS",
         "CONSERVER"
     ],
-    "0x00280107": [
-        "LargestImagePixelValue",
+    "0x00283003": [
+        "LUTExplanation",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x60000100": [
+        "-",
         "US",
+        "RETIRER"
+    ],
+    "0x00186030": [
+        "TransducerFrequency",
+        "UL",
         "CONSERVER"
     ],
-    "0x0040030e": [
-        "ExposureDoseSequence",
-        "SQ",
-        "CONSERVER"
+    "0x60000010": [
+        "-",
+        "US",
+        "RETIRER"
     ],
-    "0x00187032": [
-        "FieldOfViewRotation",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00186000": [
-        "Sensitivity",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00400316": [
-        "OrganDose",
-        "DS",
-        "CONSERVER"
-    ],
-    "0x00280034": [
-        "PixelAspectRatio",
-        "IS",
-        "CONSERVER"
-    ],
-    "0x00200060": [
-        "Laterality",
+    "0x60000040": [
+        "-",
         "CS",
-        "CONSERVER"
+        "RETIRER"
     ],
-    "0x00200062": [
-        "ImageLaterality",
-        "CS",
-        "CONSERVER"
-    ],
-    "0x00187022": [
-        "DetectorElementSpacing",
-        "DS",
-        "CONSERVER"
+    "0x60000050": [
+        "-",
+        "SS",
+        "RETIRER"
     ],
     "0x00189641": [
         "Field of View Dimension(s) in Float",
@@ -870,53 +870,53 @@
         "CONSERVER"
     ],
     "0x00189508": [
-        "Primary Positioner Scan Arc",
+        "PrimaryPositionerScanArc",
         "FL",
         "CONSERVER"
     ],
     "0x00189510": [
-        "Primary Positioner Scan Start Angle",
+        "PrimaryPositionerScanStartAngle",
         "FL",
         "CONSERVER"
     ],
     "0x00189514": [
-        "Primary Positioner Increment Attribute",
+        "PrimaryPositionerIncrementAttribute",
         "FL",
         "CONSERVER"
     ],
     "0x00189518": [
-        "Primary Positioner Increment Sign",
+        "PrimaryPositionerIncrementSign",
         "SS",
         "CONSERVER"
     ],
     "0x00189509": [
-        "Secondary Positioner Scan Arc",
+        "SecondaryPositionerScanArc",
         "FL",
         "CONSERVER"
     ],
     "0x00189511": [
-        "Secondary Positioner Scan Start Angle",
+        "SecondaryPositionerScanStartAngle",
         "FL",
         "CONSERVER"
     ],
     "0x00189515": [
-        "Secondary Positioner Increment",
+        "SecondaryPositionerIncrement",
         "FL",
         "CONSERVER"
     ],
     "0x00189519": [
-        "Secondary Positioner Increment Sign",
+        "SecondaryPositionerIncrementSign",
         "SS",
         "CONSERVER"
     ],
     "0x00281300": [
-        "Breast Implant Present",
+        "BreastImplantPresent",
         "CS",
         "CONSERVER"
     ],
-    "0x7fe00010": [
-        "PixelData",
-        "OW",
+    "0x0018602a": [
+        "ReferencePixelPhysicalValueY",
+        "FD",
         "CONSERVER"
     ],
     "0x00080050": [
@@ -951,7 +951,7 @@
     ],
     "0x001811BB": [
         "AcquisitionFieldOfViewLabel",
-        "-",
+        "LO",
         "PSEUDONYMISER"
     ],
     "0x00189424": [
@@ -1241,7 +1241,7 @@
     ],
     "0x00380300": [
         "CurrentPatientLocation",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x50xxxxxx": [
@@ -1277,7 +1277,7 @@
     "0x00082111": [
         "DerivationDescription",
         "ST",
-        "CONSERVER"
+        "RETIRER"
     ],
     "0x0018700A": [
         "DetectorID",
@@ -1661,7 +1661,7 @@
     ],
     "0x00402400": [
         "ImagingServiceRequestComments",
-        "-",
+        "LT",
         "RETIRER"
     ],
     "0x003A0314": [
@@ -1741,12 +1741,12 @@
     ],
     "0x300A0742": [
         "InterlockDescription",
-        "-",
+        "ST",
         "PSEUDONYMISER"
     ],
     "0x300A0783": [
         "InterlockOriginDescription",
-        "-",
+        "ST",
         "PSEUDONYMISER"
     ],
     "0x40080111": [
@@ -1801,7 +1801,7 @@
     ],
     "0x00100021": [
         "IssuerofPatientID",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00380061": [
@@ -1896,7 +1896,7 @@
     ],
     "0x00101090": [
         "MedicalRecordLocator",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00101080": [
@@ -1941,7 +1941,7 @@
     ],
     "0x00401010": [
         "NamesofIntendedRecipientsofResults",
-        "-",
+        "PN",
         "RETIRER"
     ],
     "0x04000551": [
@@ -2016,7 +2016,7 @@
     ],
     "0x00101000": [
         "OtherPatientIDs",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00101002": [
@@ -2176,7 +2176,7 @@
     ],
     "0x00401004": [
         "PatientTransportArrangements",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00400243": [
@@ -2186,7 +2186,7 @@
     ],
     "0x00400254": [
         "PerformedProcedureStepDescription",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00400250": [
@@ -2206,7 +2206,7 @@
     ],
     "0x00400253": [
         "PerformedProcedureStepID",
-        "-",
+        "SH",
         "RETIRER"
     ],
     "0x00400244": [
@@ -2226,7 +2226,7 @@
     ],
     "0x00400241": [
         "PerformedStationAETitle",
-        "-",
+        "AE",
         "RETIRER"
     ],
     "0x00404030": [
@@ -2396,7 +2396,7 @@
     ],
     "0x00321030": [
         "ReasonforStudy",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x3010005C": [
@@ -2406,12 +2406,12 @@
     ],
     "0x00402001": [
         "ReasonfortheImagingServiceRequest",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00401002": [
         "ReasonfortheRequestedProcedure",
-        "-",
+        "LO",
         "RETIRER"
     ],
     "0x00321066": [
@@ -2556,7 +2556,7 @@
     ],
     "0x00401400": [
         "RequestedProcedureComments",
-        "-",
+        "LT",
         "RETIRER"
     ],
     "0x00321060": [
@@ -2586,7 +2586,7 @@
     ],
     "0x00321032": [
         "RequestingPhysician",
-        "-",
+        "PN",
         "RETIRER"
     ],
     "0x00321033": [
@@ -3141,7 +3141,7 @@
     ],
     "0x300A0734": [
         "TreatmentToleranceViolationDescription",
-        "-",
+        "ST",
         "PSEUDONYMISER"
     ],
     "0x0018100A": [
@@ -3219,59 +3219,19 @@
         "UC",
         "PSEUDONYMISER"
     ],
-    "0x00080104": [
-        "Code Meaning",
-        "LO",
-        "CONSERVER"
+    "0x60000011": [
+        "-",
+        "US",
+        "RETIRER"
     ],
-    "0x00080103": [
-        "CodingSchemeVersion",
-        "SH",
-        "CONSERVER"
-    ],
-    "0x00186030": [
-        "TransducerFrequency",
-        "UL",
-        "CONSERVER"
-    ],
-    "0x00080102": [
-        "CodingSchemeDesignator",
-        "SH",
-        "CONSERVER"
-    ],
-    "0x00540222": [
-        "ViewModifierCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00400008": [
-        "ScheduledProtocolCodeSequence",
-        "SQ",
-        "CONSERVER"
-    ],
-    "0x00080100": [
-        "CodeValue",
-        "SH",
-        "CONSERVER"
-    ],
-    "0x0018602a": [
-        "ReferencePixelPhysicalValueY",
-        "FD",
-        "CONSERVER"
-    ],
-    "0x00540412": [
-        "PatientOrientationModifierCodeSequence",
-        "SQ",
-        "CONSERVER"
+    "0x60000102": [
+        "-",
+        "US",
+        "RETIRER"
     ],
     "0x00186036": [
         "SteeringAngle",
         "FD",
-        "CONSERVER"
-    ],
-    "0x00080105": [
-        "MappingResource",
-        "CS",
         "CONSERVER"
     ],
     "0x0018601A": [
@@ -3279,44 +3239,14 @@
         "UL",
         "CONSERVER"
     ],
-    "0x00081150": [
-        "ReferencedSOPClassUID",
-        "UI",
-        "CONSERVER"
-    ],
-    "0x00186020": [
-        "ReferencedPixelX0",
-        "SL",
-        "CONSERVER"
-    ],
     "0x0018601e": [
         "RegionLocationMaxY1",
         "UL",
         "CONSERVER"
     ],
-    "0x00283002": [
-        "LUTDescriptor",
-        "US",
-        "CONSERVER"
-    ],
     "0x00186012": [
         "RegionSpatialFormat",
         "US",
-        "CONSERVER"
-    ],
-    "0x00283006": [
-        "LUTData",
-        "OW",
-        "CONSERVER"
-    ],
-    "0x00080106": [
-        "ContextGroupVersion",
-        "DT",
-        "CONSERVER"
-    ],
-    "0x0040a170": [
-        "PurposeOfReferencedCodeSequence",
-        "SQ",
         "CONSERVER"
     ],
     "0x00186024": [
@@ -3329,11 +3259,6 @@
         "FD",
         "CONSERVER"
     ],
-    "0x00283003": [
-        "LUTExplanation",
-        "LO",
-        "CONSERVER"
-    ],
     "0x00186014": [
         "RegionDataType",
         "US",
@@ -3342,16 +3267,6 @@
     "0x0018602C": [
         "PhysicalDeltaX",
         "FD",
-        "CONSERVER"
-    ],
-    "0x00186028": [
-        "ReferencePixelPhysicalValueX",
-        "FD",
-        "CONSERVER"
-    ],
-    "0x0028135a": [
-        "SpatialLocationsPreserved",
-        "CS",
         "CONSERVER"
     ],
     "0x00186026": [
@@ -3364,16 +3279,6 @@
         "UL",
         "CONSERVER"
     ],
-    "0x00186032": [
-        "PulseRepetitionFrequency",
-        "UL",
-        "CONSERVER"
-    ],
-    "0x0008010f": [
-        "ContextIdentifier",
-        "CS",
-        "CONSERVER"
-    ],
     "0x00186018": [
         "RegionLocationMinX0",
         "UL",
@@ -3384,9 +3289,164 @@
         "SL",
         "CONSERVER"
     ],
-    "0x00186016": [
-        "RegionFlags",
-        "UL",
+    "0x00080064": [
+        "ConversionType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181160": [
+        "FilterType",
+        "SH",
+        "CONSERVER"
+    ],
+    "0x00080105": [
+        "MappingResource",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00080106": [
+        "ContextGroupVersion",
+        "DT",
+        "CONSERVER"
+    ],
+    "0x0008010f": [
+        "ContextIdentifier",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00201002": [
+        "ImagesInAcquisition",
+        "IS",
+        "CONSERVER"
+    ],
+    "0x00187024": [
+        "DetectorActiveShape",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00080008": [
+        "ImageType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00080103": [
+        "CodingSchemeVersion",
+        "SH",
+        "CONSERVER"
+    ],
+    "0x00081150": [
+        "ReferencedSOPClassUID",
+        "UI",
+        "CONSERVER"
+    ],
+    "0x0028135a": [
+        "SpatialLocationsPreserved",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00540222": [
+        "ViewModifierCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00180015": [
+        "BodyPartExamined",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280301": [
+        "BurnedInAnnotation",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00400318": [
+        "OrganExposed",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00281054": [
+        "RescaleType",
+        "LO",
+        "CONSERVER"
+    ],
+    "0x00282110": [
+        "LossyImageCompression",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00181508": [
+        "PositionerType",
+        "CS",
+        "CONSERVER"
+    ],
+    "0x00280103": [
+        "PixelRepresentation",
+        "US",
+        "CONSERVER"
+    ],
+    "0x7fe00010": [
+        "PixelData",
+        "OW",
+        "PSEUDONYMISER"
+    ],
+    "0x00540220": [
+        "ViewCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00400008": [
+        "ScheduledProtocolCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00540412": [
+        "PatientOrientationModifierCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00186020": [
+        "ReferencedPixelX0",
+        "SL",
+        "CONSERVER"
+    ],
+    "0x0040a170": [
+        "PurposeOfReferencedCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00082218": [
+        "AnatomicRegionSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00081032": [
+        "ProcedureCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00321064": [
+        "RequestedProcedureCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00540410": [
+        "PatientOrientationCodeSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00186011": [
+        "SequenceOfUltrasoundRegions",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00283010": [
+        "VOILUTSequence",
+        "SQ",
+        "CONSERVER"
+    ],
+    "0x00400260": [
+        "PerformedProtocolCodeSequence",
+        "SQ",
         "CONSERVER"
     ]
 }

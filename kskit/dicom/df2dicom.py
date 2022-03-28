@@ -1,32 +1,64 @@
+import os
 import traceback
 import base64
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
+from paramiko.sftp_client import SFTPClient
 import pandas as pd
 import json
-from kskit.dicom.deid_mammogram import deidentify_image
+from tqdm import tqdm
+from kskit.dicom.utils import log
+from kskit.dicom.deid_mammogram import (
+  deidentify_image,
+  deidentify_image_png
+)
 
-def df2dicom(df, outdir, do_image_deidentification=False):
+PIXEL = ('0x7fe0010', 'OB')
+MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
+
+def df2dicom(df, outdir, do_image_deidentification=False, test=False):
   """
-  Fill up a directory with DICOMs initially contained in a dataframe
-  @param dataframe : data structure containing the information needed to
-  reconstruct DICOMs
-  @param outdir : output directory where the DICOMs will be generated
+  Deidentifies DICOM files and generates PNG files for each mammogram alongside
+  a CSV file containing all deidentified tags
   """
-  pixel = ('0x7fe00010', 'OB')
-  for num_file, index in enumerate(range(len(df))):
-    #print(f"dicom n°{nb_file} has been rebuilt")
+  for index in tqdm(range(len(df)), ascii=True):
     ds = build_dicom(df, index, parent_path = '')
+    num_file = df[MAMMO_ID_COL][index]
+    if not test:
+      try:
+        if do_image_deidentification:
+          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
+          # ds.add_new(PIXEL[0], PIXEL[1], deidentify_image(df['FilePath'][index]))
+        else:
+          # ds.add_new(PIXEL[0], PIXEL[1], get_original_img(df['FilePath'][index]))
+          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
+      except ValueError:
+        traceback.print_exc()
+        raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
+    else:
+      filename = os.path.basename(df["FilePath"][index])
+      ds.save_as(f"{outdir}/{filename}", write_like_original=False)
+
+
+def df2hdh(df: pd.DataFrame, outdir: str) -> None:
+  """Special pipeline for HDH. 
+
+  Deidentifies all the mammograms listed in df
+  Write all the deidentified mammograms in outdir
+  Write df as meta.csv in outdir 
+  """
+  pbar = tqdm(total=len(df), ascii=True)
+  for num_file, index in enumerate(range(len(df))):
     try:
-      if do_image_deidentification:
-        ds.add_new(pixel[0], pixel[1], deidentify_image(df['FilePath'][index]))
-      else:
-        ds.add_new(pixel[0], pixel[1], get_original_img(df['FilePath'][index]))
+      deidentify_image_png(df["FilePath"][index], outdir, df[MAMMO_ID_COL][index]) 
     except ValueError:
       traceback.print_exc()
       raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
-    ds.save_as(f"{outdir}/dicom_{num_file}.dcm", write_like_original=False)
+    pbar.update(1)
+  pbar.close()
+  df.to_csv(os.path.join(outdir, 'meta.csv'))
+  # open(os.path.join(outdir, 'OK'), 'w').close()
 
 
 def get_original_img(filepath) -> bytes:
@@ -111,7 +143,12 @@ def build_dicom(df, index, parent_path = ''):
   for attr in nonseq_attrs:
     if not pd.isna(getValue(df, index, parent_path, attr)):
       if attr != 'empty':
-        attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[2], attr.split('_')[3]
+        try:
+          attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[2], attr.split('_')[3]
+        except IndexError:
+          if attr != '':
+            log(f'This attribute is malformed and will be ignored: {attr}', logtype=1)
+          continue
         if '0x0002' in attr_tag:
           meta_attrs.append(attr)
         else:

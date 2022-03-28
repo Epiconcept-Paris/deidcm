@@ -13,23 +13,96 @@ import pandas as pd
 from datetime import datetime
 from datetime import timedelta
 from pydicom.dataset import Dataset
+from pydicom.pixel_data_handlers.util import (
+    apply_color_lut,
+    apply_modality_lut,
+    apply_voi_lut,
+    convert_color_space
+)
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
 from kskit.dicom.dicom2df import dicom2df
 
 
 def deidentify_image(infile: str) -> bytes:
-        ds = pydicom.read_file(infile)
-        pixels = ds.pixel_array
-        #Image.fromarray(pixels).save("/home/williammadie/images/before.png")
-        ocr_data = get_text_areas(pixels)
-        if ocr_data:
-            pixels = hide_text(pixels, ocr_data)
-        #Image.fromarray(pixels).save("/home/williammadie/images/after.png")
-        return numpy2bytes(pixels.copy(), ds)
+    """Deidentifies and returns infile as bytes"""
+    ds = pydicom.read_file(infile)
+    pixels = ds.pixel_array
+    ocr_data = get_text_areas(pixels)
+    pixels = hide_text(pixels, ocr_data) if ocr_data else pixels
+    return numpy2bytes(pixels.copy(), ds)
+
+
+def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
+    """Deidentifies and writes a given mammogram in outdir as filename.png"""
+    ds = pydicom.read_file(infile)
+    """
+    try:
+        print(f'ImageLaterality: {ds[0x00200062].value}')
+        print(f'ViewCodeSeq: CodeValue: {ds[0x00540220][0][0x00080100].value}')
+        print(f'VIEW POSITION: {ds[0x00185101].value}')
+    except:
+        pass
+    """
+    ocr_data = get_text_areas(np.array(get_PIL_image(ds)))
+    pixels = ds.pixel_array
+    pixels = hide_text(pixels, ocr_data) if ocr_data else pixels
+    Image.fromarray(pixels).save(os.path.join(outdir, f'{filename}.png'))
+    return
+
+
+def get_LUT_value(data, window, level):
+    """Apply the RGB Look-Up Table for the given
+       data and window/level value."""
+    return np.piecewise(data,
+                        [data <= (level - 0.5 - (window - 1) / 2),
+                         data > (level - 0.5 + (window - 1) / 2)],
+                        [0, 255, lambda data: ((data - (level - 0.5)) /
+                         (window - 1) + 0.5) * (255 - 0)])
+
+
+def get_PIL_image(dataset):
+    """Get Image object from Python Imaging Library(PIL)"""
+    
+    if ('PixelData' not in dataset):
+        raise TypeError("Cannot show image -- DICOM dataset does not have "
+                        "pixel data")
+    # can only apply LUT if these window info exists
+    if ('WindowWidth' not in dataset) or ('WindowCenter' not in dataset):
+        bits = dataset.BitsAllocated
+        samples = dataset.SamplesPerPixel
+        if bits == 8 and samples == 1:
+            mode = "L"
+        elif bits == 8 and samples == 3:
+            mode = "RGB"
+        elif bits == 16:
+            # not sure about this -- PIL source says is 'experimental'
+            # and no documentation. Also, should bytes swap depending
+            # on endian of file and system??
+            mode = "I;16"
+        else:
+            raise TypeError("Don't know PIL mode for %d BitsAllocated "
+                            "and %d SamplesPerPixel" % (bits, samples))
+        # PIL size = (width, height)
+        size = (dataset.Columns, dataset.Rows)
+        # Recommended to specify all details
+        # by http://www.pythonware.com/library/pil/handbook/image.htm
+        im = Image.frombuffer(mode, size, dataset.PixelData,
+                                  "raw", mode, 0, 1)
+    else:
+        ew = dataset['WindowWidth']
+        ec = dataset['WindowCenter']
+        ww = int(ew.value[0] if ew.VM > 1 else ew.value)
+        wc = int(ec.value[0] if ec.VM > 1 else ec.value)
+        image = get_LUT_value(dataset.pixel_array, ww, wc)
+        # Convert mode to L since LUT has only 256 values:
+        #   http://www.pythonware.com/library/pil/handbook/image.htm
+        im = Image.fromarray(image).convert('L')
+    return im
 
 
 def numpy2bytes(pixels: np.ndarray, ds: pydicom.Dataset) -> bytes:
+    """Returns bytes form of a numpy array built with proper ds' settings"""
     #pixels[pixels < 300] = 0
     if ds.BitsAllocated == 8:
         return pixels.astype(np.uint8).tobytes()
@@ -43,7 +116,7 @@ def get_text_areas(pixels):
     Easy OCR function. Gets an image at the path below and returns the 
     text of the picture. 
     """
-    reader = Reader(['fr'])
+    reader = Reader(['fr'], gpu=False, verbose=False)
     ocr_data = reader.readtext(pixels)
     # ocr data[0][2] is the level of confidence of the result
     # If the result is near 0, it is very likely that there is no text
@@ -66,8 +139,6 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     "blur" mode            ==> blur the text areas
     """
     #Create a pillow image from the numpy array
-    #pixels = pixels/255
-    #im = Image.fromarray(np.uint8((pixels)*255))
     im = Image.fromarray(pixels)
     #Gets the coordinate of the top-left and the bottom-right points
     for found in ocr_data:
@@ -98,7 +169,7 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     return np.asarray(im)
 
 
-def deidentify_attributes(indir: str, outdir: str) -> pd.DataFrame:
+def deidentify_attributes(indir: str, outdir: str, erase_outdir: bool = True) -> pd.DataFrame:
     """Deidentify a folder of dicom.
 
     Arguments:
@@ -108,10 +179,11 @@ def deidentify_attributes(indir: str, outdir: str) -> pd.DataFrame:
     if False in list(map(lambda x: os.path.exists(x), [indir, outdir])):
         raise ValueError(f"Path \"{indir}\" or \"{outdir}\" does not exist.")
 
-    for file in os.listdir(outdir):
-        os.remove(os.path.join(outdir, file))
+    if erase_outdir:
+        for file in os.listdir(outdir):
+            os.remove(os.path.join(outdir, file))
     
-    df = dicom2df(indir, with_pixels = False)
+    df = dicom2df(indir)
     recipe = load_recipe()
 
     for file in df.index:
@@ -308,22 +380,4 @@ def p08_005_update_summary(summary, file_path, ocr_data):
         ocr_words.append(found[1])
     for found in sorted(ocr_words):
         summary += found.lower() + " |"
-    return summary     
-
-if __name__ == "__main__":
-    
-    INDIR = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'source')
-    OUTDIR = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'final')
-    OUTDIR_DS = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'final_ds')
-    TMP = os.path.join(
-        '/', 'home', 'williammadie', 'images', 'deid', 'test_deid_1',
-        'tmp'    
-    )
-    #deidentify_image(INDIR, TMP)
-    deidentify_attributes(TMP, OUTDIR)
+    return summary

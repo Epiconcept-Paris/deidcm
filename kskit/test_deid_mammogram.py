@@ -501,15 +501,15 @@ def generate_test_cases(model_input: str, dir_output: str) -> None:
     model_ds = pydicom.dcmread(os.path.join(model_input, input_file[0]), force = True)
     
     test_cases = []
-    test_cases.append(gen_ui_case(model_ds.copy()))
-    test_cases.append(gen_sq_case(model_ds.copy()))
-    test_cases.append(gen_dadt_case(model_ds.copy()))
-    test_cases.append(gen_shlo_case(model_ds.copy()))
-    test_cases.append(gen_tm_case(model_ds.copy()))
-    test_cases.append(gen_obuc_case(model_ds.copy()))
-    test_cases.append(gen_other_case(model_ds.copy(), rm_tags))
-    test_cases.append(gen_other_case(model_ds.copy(), kp_tags))
-    test_cases.append(gen_other_case(model_ds.copy(), er_tags))
+    test_cases.append(gen_ui_case(model_ds.copy()))             # 0
+    test_cases.append(gen_sq_case(model_ds.copy()))             # 1
+    test_cases.append(gen_dadt_case(model_ds.copy()))           # 2
+    test_cases.append(gen_shlo_case(model_ds.copy()))           # 3
+    test_cases.append(gen_tm_case(model_ds.copy()))             # 4
+    test_cases.append(gen_obuc_case(model_ds.copy()))           # 5
+    test_cases.append(gen_other_case(model_ds.copy(), rm_tags)) # 6
+    test_cases.append(gen_other_case(model_ds.copy(), kp_tags)) # 7
+    test_cases.append(gen_other_case(model_ds.copy(), er_tags)) # 8
 
     case_number = 0
     for ds in test_cases:
@@ -659,40 +659,75 @@ def validate_deid_attributes(output: str) -> None:
                 res = list(map(is_sq_deid, elements))
                 if False in res:
                     results['er'] = False
-            if element.tag in shlo_tags and len(element.value) not in [16, 64]:
-                results['shlo'] = False
-            if element.tag in ui_tags and len(element.value) != 57:
-                results['ui'] = False
-            if element.tag in tm_tags and element.value != '000000':
-                results['tm'] = False
-            if element.tag in dadt_tags and element.value[:4] == '2022':
-                results['dadt'] = False
-            
-            if element.tag == '0x00340007' and \
-                base64.b64decode(element.value).decode('utf-8') != '2022-01-01T00:00:00':
-                results['obuc'] = False
-            elif element.tag in ['0x00340002', '0x00340005'] and \
-                base64.b64decode(element.value).decode('utf-8') \
-                    == 'I am a personal information':
-                results['obuc'] = False
-            elif element.tag == '0x00189367' and \
-                element.value == 'I am a personal information':
-                results['obuc'] = False
 
-            if format_ds_tag(str(element.tag)) in sq_tags:
-                for ds in element.value:
-                    for subelement in ds:
-                        if subelement.tag in [
-                                '0x00080100',
-                                '0x00080102',
-                                '0x00080103'
-                        ] and subelement.value == '':
-                            results['sq'] = False
-        
-        for tag in tags2keep:
-            if tag in ds_tags and not set(tags2keep).issubset(set(ds_tags)):
-                results['kp'] = False
+            if file == 'case_0.dcm':
+                modify_ui(results, ui_tags, element)
+            if file == 'case_1.dcm':
+                modify_sq(results, sq_tags, element)
+            if file == 'case_2.dcm':
+                modify_dadt(results, dadt_tags, element)
+            if file == 'case_3.dcm':
+                modify_shlo(results, shlo_tags, element)
+            if file == 'case_4.dcm':
+                modify_tm(results, tm_tags, element)
+            if file == 'case_5.dcm':
+                modify_obuc(results, element)
+            
+        if file == 'case_7.dcm':
+            modify_kp(results, ds_tags, tags2keep)
+
     show_results(results)
+
+
+def modify_obuc(d: dict, element: pydicom.dataelem.DataElement) -> None:
+    if element.tag == '0x00340007' and \
+        base64.b64decode(element.value).decode('utf-8') != '2022-01-01T00:00:00':
+        d['obuc'] = False
+    elif element.tag in ['0x00340002', '0x00340005'] and \
+        base64.b64decode(element.value).decode('utf-8') \
+            == 'I am a personal information':
+        d['obuc'] = False
+    elif element.tag == '0x00189367' and \
+        element.value == 'I am a personal information':
+        d['obuc'] = False
+
+
+def modify_shlo(d: dict, shlo_tags: list, element: pydicom.dataelem.DataElement) -> None:
+    if element.tag in shlo_tags and len(element.value) not in [16, 64]:
+        results['shlo'] = False
+
+
+def modify_ui(d: dict, ui_tags: list, element: pydicom.dataelem.DataElement) -> None:
+    if element.tag in ui_tags and len(element.value) != 57:
+        results['ui'] = False
+
+
+def modify_dadt(d: dict, dadt_tags: list, element: pydicom.dataelem.DataElement) -> None:
+    if element.tag in dadt_tags and element.value[:4] == '2022':
+        d['dadt'] = False
+
+
+def modify_tm(d: dict, tm_tags: list, element: pydicom.dataelem.DataElement) -> None:
+    if element.tag in tm_tags and element.value != '000000':
+        print(element.tag, element.VR, element.value)
+        d['tm'] = False
+
+
+def modify_kp(d: dict, ds_tags: list, tags2keep: list) -> None:
+    for tag in tags2keep:
+        if tag in ds_tags and not set(tags2keep).issubset(set(ds_tags)):
+            d['kp'] = False
+
+
+def modify_sq(d: dict, sq_tags: list, element: pydicom.dataelem.DataElement) -> None:
+    if format_ds_tag(str(element.tag)) in sq_tags:
+        for ds in element.value:
+            for subelement in ds:
+                if subelement.tag == '0x00080102' and subelement.value != '':
+                    d['sq'] = False
+                elif subelement.tag == '0x00080100' and subelement.value != '':
+                    if len(subelement.value) != 16:
+                        results['sq'] = False
 
 
 def show_results(results: dict) -> None:
@@ -717,7 +752,7 @@ def run_test_deid_attributes(indir, outdir):
     generate_test_cases(indir, tmp)    
     write_all_ds(tmp, tmp_ds, True)
     df = deidentify_attributes(tmp, final)
-    df2dicom(df, final)
+    df2dicom(df, final, test=True)
     write_all_ds(final, final_ds, True)
     validate_deid_attributes(final)
 

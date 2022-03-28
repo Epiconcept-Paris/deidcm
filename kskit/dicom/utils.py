@@ -1,5 +1,8 @@
 from collections import Counter
+from datetime import datetime
+from typing import Union
 import os
+import sys
 import pydicom
 
 def write_all_ds(indir: str, outdir: str, silent: bool=False) -> None:
@@ -55,6 +58,26 @@ def show_series(indir: str, tag: str) -> None:
                 result += f"[{files[key][i]}]"
             print("[", result, "]\n")
     print(f"total : {len(series)}")
+
+
+def d() -> str:
+    now = datetime.now().strftime('%m/%d/%Y %H:%M:%S')
+    return f'[{now}]'
+
+
+def log(txt: Union[str, list], logtype: int=0) -> None:
+    if logtype == 1:
+        logtype = ' (WARNING) '
+    elif logtype == 2:
+        logtype = ' (ERROR) '
+    else:
+        logtype = ' '
+    if type(txt) == str:
+        print(f'{d()}{logtype}{txt}')
+    else:
+        f = lambda x: print(f'{d()}{logtype}{x}')
+        list(map(f, txt))
+    sys.stdout.flush()
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ import pandas as pd
 import json
 import itertools
 import time
-
+from kskit.dicom.utils import log
 
 def write_dicom(infiles):
   i = 0
@@ -36,7 +36,10 @@ def get_success_rate(search_dir):
             ds = pydicom.dcmread(os.path.join(root, file))
             if is_readable(ds.file_meta, ds):
                 success += 1
-    print(f"Successfully retrieved file(s): {success} \nUnreadable file(s): {nb_files - success}")
+    log([
+      f"Successfully retrieved file(s): {success}",
+      f"Unreadable file(s): {nb_files - success}"
+    ])
 
 def search_dicom(search_dir) :
   for root, dirs, files in os.walk(search_dir):
