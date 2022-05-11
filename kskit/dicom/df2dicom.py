@@ -1,24 +1,69 @@
+import os
+import traceback
+import base64
 import pydicom
 from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
-import base64
+from paramiko.sftp_client import SFTPClient
 import pandas as pd
 import json
+from tqdm import tqdm
+from kskit.dicom.utils import log
+from kskit.dicom.deid_mammogram import (
+  deidentify_image,
+  deidentify_image_png
+)
 
-def df2dicom(df, outdir):
-  """
-  Fill up a directory with DICOMs initially contained in a dataframe
-  @param dataframe : data structure containing the information needed to
-  reconstruct DICOMs
-  @param outdir : output directory where the DICOMs will be generated
-  """
+PIXEL = ('0x7fe0010', 'OB')
+MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
 
-  nb_file = 0
-  for index in range(len(df)):
-    print(f"dicom n°{nb_file} has been rebuilt")
+def df2dicom(df, outdir, do_image_deidentification=False, test=False):
+  """
+  Deidentifies DICOM files and generates PNG files for each mammogram alongside
+  a CSV file containing all deidentified tags
+  """
+  for index in tqdm(range(len(df)), ascii=True):
     ds = build_dicom(df, index, parent_path = '')
-    ds.save_as(f"{outdir}/dicom_{nb_file}.dcm", write_like_original=False)
-    nb_file += 1
+    num_file = df[MAMMO_ID_COL][index]
+    if not test:
+      try:
+        if do_image_deidentification:
+          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
+          # ds.add_new(PIXEL[0], PIXEL[1], deidentify_image(df['FilePath'][index]))
+        else:
+          # ds.add_new(PIXEL[0], PIXEL[1], get_original_img(df['FilePath'][index]))
+          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
+      except ValueError:
+        traceback.print_exc()
+        raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
+    else:
+      filename = os.path.basename(df["FilePath"][index])
+      ds.save_as(f"{outdir}/{filename}", write_like_original=False)
+
+
+def df2hdh(df: pd.DataFrame, outdir: str) -> None:
+  """Special pipeline for HDH. 
+
+  Deidentifies all the mammograms listed in df
+  Write all the deidentified mammograms in outdir
+  Write df as meta.csv in outdir 
+  """
+  pbar = tqdm(total=len(df), ascii=True)
+  for num_file, index in enumerate(range(len(df))):
+    try:
+      deidentify_image_png(df["FilePath"][index], outdir, df[MAMMO_ID_COL][index]) 
+    except ValueError:
+      traceback.print_exc()
+      raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
+    pbar.update(1)
+  pbar.close()
+  df.to_csv(os.path.join(outdir, 'meta.csv'))
+  # open(os.path.join(outdir, 'OK'), 'w').close()
+
+
+def get_original_img(filepath) -> bytes:
+  """Finds and returns the original image"""
+  return pydicom.read_file(filepath).pixel_array
 
 
 def get_ds_attr(df, parent_path, attr):
@@ -88,7 +133,9 @@ def build_dicom(df, index, parent_path = ''):
   seq_attrs, nonseq_attrs, meta_attrs = [], [], []
   child_attr = [col.replace(parent_path, '') for col in df.columns if col.startswith(parent_path)] #name of the column without the parent name
   #filters child_attr into two lists (sequences and not sequences)
-  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr] 
+  [seq_attrs.append(attr) if getVR(attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr]
+  if 'FilePath' in nonseq_attrs:
+    nonseq_attrs.remove('FilePath')
 
   ds = Dataset()
 
@@ -96,7 +143,12 @@ def build_dicom(df, index, parent_path = ''):
   for attr in nonseq_attrs:
     if not pd.isna(getValue(df, index, parent_path, attr)):
       if attr != 'empty':
-        attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[2], attr.split('_')[3]
+        try:
+          attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[2], attr.split('_')[3]
+        except IndexError:
+          if attr != '':
+            log(f'This attribute is malformed and will be ignored: {attr}', logtype=1)
+          continue
         if '0x0002' in attr_tag:
           meta_attrs.append(attr)
         else:
@@ -135,15 +187,16 @@ def decode_unit(value, VR, VM):
     return None
   else:
     integer_types = ['IS','SS','SL','US','UL']
+    known_encodings = ['CS', 'DS', 'FD', 'UN']
     if VM != '1':
-      if (VR in integer_types or VR == 'CS' or VR == 'DS' or VR == 'FD' or VR == 'UN') and VM != '0':
+      if (VR in integer_types or VR in known_encodings) and VM != '0':
         return [decode_unit(e, VR, '1') for e in json.loads(value)]
     else:
       if VR == 'OB' or VR == 'OW' or VR == 'UN':
-        return base64.b64decode(value.encode("UTF-8"))
+        #alt if not working: return value.encode('utf8')
+        return base64.b64encode(value.encode('UTF-8'))
       elif VR in integer_types:
         return int(value)
       elif VR == 'FD':
         return float(value)
     return value
-

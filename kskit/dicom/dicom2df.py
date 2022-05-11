@@ -5,7 +5,8 @@ import base64
 import pandas as pd
 import json
 import itertools
-
+import time
+from kskit.dicom.utils import log
 
 def write_dicom(infiles):
   i = 0
@@ -23,7 +24,22 @@ def dicom2df(search_dir, with_private = False, with_pixels = False, with_seqs = 
     lambda f: flat_dicom(f, with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs),
     files
   )
-  return pd.DataFrame(dicos)
+  get_success_rate(search_dir)
+  return pd.DataFrame(filter(lambda x: x, dicos))
+
+def get_success_rate(search_dir):
+    success = 0
+    nb_files = 0
+    for root, dirs, files in os.walk(search_dir):
+        for file in files:
+            nb_files += 1
+            ds = pydicom.dcmread(os.path.join(root, file))
+            if is_readable(ds.file_meta, ds):
+                success += 1
+    log([
+      f"Successfully retrieved file(s): {success}",
+      f"Unreadable file(s): {nb_files - success}"
+    ])
 
 def search_dicom(search_dir) :
   for root, dirs, files in os.walk(search_dir):
@@ -33,13 +49,17 @@ def search_dicom(search_dir) :
 def flat_dicom(dicom_file, with_private = False, with_pixels = False, with_seqs = True):
   ds = pydicom.dcmread(dicom_file, force=True)
   line = {}
-  for element in itertools.chain(ds.file_meta, ds):
-    if ((with_pixels or element.tag != 0x7FE00010) and 
-       (with_private or not element.is_private) and
-       (with_seqs or element.VR != "SQ")):
-      dico_add(element, line = line, with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
-  return line;
-  
+ 
+  if is_readable(ds.file_meta, ds):
+    for element in itertools.chain(ds.file_meta, ds):
+        if ((with_pixels or element.tag != 0x7FE00010) and 
+        (with_private or not element.is_private) and
+        (with_seqs or element.VR != "SQ")):
+            dico_add(element, line = line, with_private = with_private, with_pixels = with_pixels, with_seqs = with_seqs)
+    line['FilePath'] = dicom_file
+  return line
+
+
 def dico_add(element, line, base = "", with_private = False, with_pixels = False, with_seqs = True):
   tag = f"{element.tag:#0{10}x}"
   name = f"{element.keyword}_" if element.keyword != '' else '_'
@@ -55,7 +75,6 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
     i = 0
     
     if len(element.value) != 0:
-      print(len(element.value))
       for ds in element.value:
         i = i + 1
         for celem in ds:       
@@ -70,8 +89,17 @@ def dico_add(element, line, base = "", with_private = False, with_pixels = False
   else:
     field_name = f"{parent}{name}{tag}_{element.VR}_{element.VM}_{dWith}_{uLength}_{mBytes}_{sVR}"
     line[field_name] = encode_unit(element.value) 
-    
-  
+ 
+
+def is_readable(ds_meta, ds):
+  try:
+    for v in itertools.chain(ds_meta, ds):
+      pass
+  except TypeError:
+    return False
+  return True
+
+
 def encode_unit(value):
   t = type(value)
   
