@@ -16,7 +16,11 @@ setup(
     url='https://github.com/Epiconcept-Paris/kskit',
     license="MIT License",
     install_requires=[
-      "easyocr",
+      "paramiko==2.9.2",
+      "fabric==2.6.0"
+      "easyocr==1.4.1",
+      "cryptography==36.0.1",
+      "opencv-python==4.5.4.60"
       "pydicom",
       "Numpy",
       "matplotlib",

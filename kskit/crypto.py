@@ -3,8 +3,6 @@ import secrets
 import base64
 import qrcode
 from PIL import Image
-from pyzbar import pyzbar
-import cv2
 import numpy as np
 import sys
 import os
@@ -18,6 +16,7 @@ def generate_qr_key(dest, nBytes=512):
   return(b64key.decode("ASCII"))
 
 def get_qr_key(png):
+  from pyzbar import pyzbar
   img = Image.open(png)
   key = pyzbar.decode(img)[0].data
   return(key.decode("ASCII"))
@@ -27,6 +26,8 @@ def read_webcam_key(auto_close = True, camera_index = 0):
     Returns a key stored on a qr code presented to the webcam.
     The QR code is expected to be encoded on base64 
   """
+  from pyzbar import pyzbar
+  import cv2
   b64key = ""
   square = []
   font = cv2.FONT_HERSHEY_SIMPLEX
