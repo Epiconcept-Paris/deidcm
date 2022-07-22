@@ -22,6 +22,7 @@ from pydicom.pixel_data_handlers.util import (
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
 from kskit.dicom.dicom2df import dicom2df
+from kskit.dicom.utils import log
 
 
 def deidentify_image(infile: str) -> bytes:
@@ -122,9 +123,36 @@ def get_text_areas(pixels):
     # If the result is near 0, it is very likely that there is no text
     try:
         if ocr_data[0][2] > 0.3:
-            return ocr_data
+            return remove_authorized_words_from(ocr_data)
     except Exception:
         return []
+
+
+def remove_authorized_words_from(ocr_data: list) -> list:
+    """Prevents Authorized Words such as RMLO, LCC, OBLIQUE G to be censored"""
+    authorized_words = load_authorized_words()
+    if ocr_data is None:
+        filtered_ocr_data = ocr_data
+    else:
+        filtered_ocr_data = []
+        for data in ocr_data:
+            if data[1].upper() in authorized_words:
+                log(f'Ignoring word {data[1].upper()}')
+            else:
+                filtered_ocr_data.append(data)
+    return filtered_ocr_data
+
+
+def load_authorized_words() -> list:
+    home_folder = os.environ.get('DP_HOME')
+    if home_folder is None:
+        raise ValueError('cannot load DP_HOME')
+    filepath = os.path.join(home_folder, 'data', 'input', 'epiconcept', 'ocr_deid_ignore.txt')
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'Cannot load {filepath}')
+    with open(filepath, 'r') as f:
+        words = list(map(str.strip, f.readlines()))
+    return words
 
 
 def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
