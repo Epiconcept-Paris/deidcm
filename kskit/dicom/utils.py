@@ -4,6 +4,7 @@ from typing import Union
 import os
 import sys
 import pydicom
+from PIL import Image
 
 def write_all_ds(indir: str, outdir: str, silent: bool=False) -> None:
     """Writes the ds of all the dicom in a folder"""
@@ -61,8 +62,8 @@ def show_series(indir: str, tag: str) -> None:
 
 
 def d() -> str:
-    now = datetime.now().strftime('%m/%d/%Y %H:%M:%S')
-    return f'[{now}]'
+    now = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    return f'{now}'
 
 
 def log(txt: Union[str, list], logtype: int=0) -> None:
@@ -80,5 +81,27 @@ def log(txt: Union[str, list], logtype: int=0) -> None:
     sys.stdout.flush()
 
 
+def reduce_PIL_img_size(im: Image, reduce_factor: int, verbose: bool) -> Image:
+    """Reduce the size of an image by dividing with the given factor"""
+    width, height = im.size
+    print(f"Size before reducing: {im.size}") if verbose else None
+    im.thumbnail((width/reduce_factor, height/reduce_factor), Image.ANTIALIAS)
+    print(f"Size after reducing: {im.size}") if verbose else None
+    return im
+
+
+def get_all_mammograms_words(dicom_path: str, report_path: str) -> None:
+    for file in os.listdir(dicom_path):
+        words = []
+        filepath = os.path.join(dicom_path, file)
+        pixels, ds = dicom2narray(filepath)
+        ocr_data = get_text_areas(pixels)
+        if ocr_data is None:
+            continue
+        words.extend([data[1] for data in ocr_data])
+        with open(report_path, 'a') as f:
+            list(map(lambda x: f.write(f'{x}\n'), words))
+
+
 if __name__ == '__main__':
-    print(format_ds_tag('0x00080033'))
+    print(get_all_mammograms_words('/space/Work/william2/deep.piste/home/data/input/test_deid_ocr', '/space/Work/william2/deep.piste/home/data/input/mammogram_words'))

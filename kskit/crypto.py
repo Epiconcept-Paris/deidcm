@@ -3,6 +3,7 @@ import secrets
 import base64
 import qrcode
 from PIL import Image
+import cv2
 import numpy as np
 import sys
 import os
@@ -27,7 +28,6 @@ def read_webcam_key(auto_close = True, camera_index = 0):
     The QR code is expected to be encoded on base64 
   """
   from pyzbar import pyzbar
-  import cv2
   b64key = ""
   square = []
   font = cv2.FONT_HERSHEY_SIMPLEX

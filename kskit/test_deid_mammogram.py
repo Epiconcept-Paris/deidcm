@@ -71,8 +71,8 @@ def get_random_dicom_ds_array(list_dicom, indir, list_chosen):
 def check_resources(PATH_FONTS, font, size, blur):
     """Checks if all font resources are existing and correct"""
     for f in font:
-        if not os.path.isfile(PATH_FONTS + f):
-            raise TypeError("Font " + f + " does not exist. Please check spelling.") 
+        if not os.path.isfile(os.path.join(PATH_FONTS, f)):
+            raise TypeError(f"Font {f} does not exist. Please check spelling.") 
 
     if max(size) > 5 or min(size) < 1:
         raise ValueError("Possible text sizes are [1, 2, 3, 4, 5]")
@@ -90,14 +90,15 @@ def save_dicom_info(output_ds, file_path, ds, ocr_data, test_words, total_words)
                 "%d/%m/%Y %H:%M:%S"
                 ) + '\n' + file_path + "\nRecognized words :\n")
         ocr_words = []
-        for found in ocr_data:
-            if ' ' in found[1]:
-                new_tuple = (found[0], found[1].replace(' ',''), found[2])
-                ocr_data.remove(found)
-                ocr_data.append(new_tuple)
-            ocr_words.append(found[1])
-        for found in sorted(ocr_words):
-            f.write(found.lower() + " |")
+        if ocr_data is not None:
+            for found in ocr_data:
+                if ' ' in found[1]:
+                    new_tuple = (found[0], found[1].replace(' ',''), found[2])
+                    ocr_data.remove(found)
+                    ocr_data.append(new_tuple)
+                ocr_words.append(found[1])
+            for found in sorted(ocr_words):
+                f.write(found.lower() + " |")
         f.write("\nReal words :\n")
 
         if total_words == len(test_words):
@@ -317,9 +318,10 @@ def is_there_ghost_words(ocr_data):
     Ghost words refers to words or letters recognized by the OCR module 
     where there is actually no word or letter. 
     """
-    for found in ocr_data:
+    if ocr_data is not None:
+        for found in ocr_data:
             return True
-
+    return False
 
 
 def calculate_test_values(
