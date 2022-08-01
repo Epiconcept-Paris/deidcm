@@ -20,7 +20,7 @@ setup(
       "fabric",
       "easyocr",
       "cryptography",
-      "opencv-python",
+      "opencv-python==4.5.5.64",
       "pydicom",
       "Numpy",
       "matplotlib",
