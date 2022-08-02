@@ -759,7 +759,7 @@ def run_test_deid_attributes(indir, outdir):
     validate_deid_attributes(final)
 
 if __name__ == "__main__":
-    IMG_DIR = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'test_deid_2')
+    IMG_DIR = os.path.join('images', 'deid', 'test_deid_2')
     INPUT = os.path.join(IMG_DIR, 'input')
     INTERMEDIATE = os.path.join(IMG_DIR, 'intermediate')
     INTERMEDIATE4DS = os.path.join(IMG_DIR, 'ds')

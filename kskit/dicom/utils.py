@@ -104,4 +104,4 @@ def get_all_mammograms_words(dicom_path: str, report_path: str) -> None:
 
 
 if __name__ == '__main__':
-    print(get_all_mammograms_words('/space/Work/william2/deep.piste/home/data/input/test_deid_ocr', '/space/Work/william2/deep.piste/home/data/input/mammogram_words'))
+    print(get_all_mammograms_words('data/input/test_deid_ocr', 'data/input/mammogram_words'))

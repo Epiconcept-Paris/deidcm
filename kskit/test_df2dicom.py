@@ -78,7 +78,6 @@ def test_df2dicom(indir, tmp_dir):
 
 
 if __name__ == "__main__":
-    #dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'dicom2df_test', 'other')
-    dir_initial_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'mg_dcm4build_tests', 'usable')
-    dir_modified_dcm = os.path.join('/', 'home', 'williammadie', 'images', 'deid', 'df2dicom_test')
+    dir_initial_dcm = os.path.join('images', 'deid', 'mg_dcm4build_tests', 'usable')
+    dir_modified_dcm = os.path.join('images', 'deid', 'df2dicom_test')
     test_df2dicom(dir_initial_dcm, dir_modified_dcm)
