@@ -22,7 +22,8 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False):
   Deidentifies DICOM files and generates PNG files for each mammogram alongside
   a CSV file containing all deidentified tags
   """
-  for index in tqdm(range(len(df)), ascii=True):
+  #for index in tqdm(range(len(df)), ascii=True):
+  for index in range(len(df)):
     ds = build_dicom(df, index, parent_path = '')
     num_file = df[MAMMO_ID_COL][index]
     if not test:
@@ -48,15 +49,15 @@ def df2hdh(df: pd.DataFrame, outdir: str) -> None:
   Write all the deidentified mammograms in outdir
   Write df as meta.csv in outdir 
   """
-  pbar = tqdm(total=len(df), ascii=True)
+  #pbar = tqdm(total=len(df), ascii=True)
   for num_file, index in enumerate(range(len(df))):
     try:
       deidentify_image_png(df["FilePath"][index], outdir, df[MAMMO_ID_COL][index]) 
     except ValueError:
       traceback.print_exc()
       raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
-    pbar.update(1)
-  pbar.close()
+    #pbar.update(1)
+  #pbar.close()
   df.to_csv(os.path.join(outdir, 'meta.csv'))
   # open(os.path.join(outdir, 'OK'), 'w').close()
 
