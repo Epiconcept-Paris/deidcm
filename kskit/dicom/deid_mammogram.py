@@ -47,8 +47,7 @@ def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
     except TypeError:
         dimensions = pixels.shape
         if len(dimensions) == 3 and all(map(lambda x: x > 3, dimensions)):
-            log("3D image, cannot process, kept unchanged")
-            # TODO : Find a way to save a 3D img as a PNG file
+            log("3D image, cannot process, cannot write PNG")
         else:
             raise TypeError(f"Unknown format for pixels : {dimensions}")
     return
