@@ -7,6 +7,7 @@ import base64
 import string
 import hashlib
 import pydicom
+import cv2
 from random import choice
 import numpy as np
 import pandas as pd
@@ -37,18 +38,19 @@ def deidentify_image(infile: str) -> bytes:
 def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
     """Deidentifies and writes a given mammogram in outdir as filename.png"""
     ds = pydicom.read_file(infile)
-    """
-    try:
-        print(f'ImageLaterality: {ds[0x00200062].value}')
-        print(f'ViewCodeSeq: CodeValue: {ds[0x00540220][0][0x00080100].value}')
-        print(f'VIEW POSITION: {ds[0x00185101].value}')
-    except:
-        pass
-    """
     ocr_data = get_text_areas(np.array(get_PIL_image(ds)))
     pixels = ds.pixel_array
     pixels = hide_text(pixels, ocr_data) if ocr_data else pixels
-    Image.fromarray(pixels).save(os.path.join(outdir, f'{filename}.png'))
+    outfile = os.path.join(outdir, f'{filename}.png')
+    try:
+        Image.fromarray(pixels).save(outfile)
+    except TypeError:
+        dimensions = pixels.shape
+        if len(dimensions) == 3 and all(map(lambda x: x > 3, dimensions)):
+            log("3D image, cannot process, kept unchanged")
+            # TODO : Find a way to save a 3D img as a PNG file
+        else:
+            raise TypeError(f"Unknown format for pixels : {dimensions}")
     return
 
 
