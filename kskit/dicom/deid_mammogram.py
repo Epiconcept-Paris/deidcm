@@ -38,7 +38,11 @@ def deidentify_image(infile: str) -> bytes:
 def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
     """Deidentifies and writes a given mammogram in outdir as filename.png"""
     ds = pydicom.read_file(infile)
-    ocr_data = get_text_areas(np.array(get_PIL_image(ds)))
+    img = get_PIL_image(ds)
+    if img is None:
+      return
+    
+    ocr_data = get_text_areas(np.array(img))
     pixels = ds.pixel_array
     pixels = hide_text(pixels, ocr_data) if ocr_data else pixels
     outfile = os.path.join(outdir, f'{filename}.png')
@@ -67,8 +71,9 @@ def get_PIL_image(dataset):
     """Get Image object from Python Imaging Library(PIL)"""
     
     if ('PixelData' not in dataset):
-        raise TypeError("Cannot show image -- DICOM dataset does not have "
-                        "pixel data")
+        return None
+        #raise TypeError("Cannot show image -- DICOM dataset does not have "
+        #                "pixel data")
     # can only apply LUT if these window info exists
     if ('WindowWidth' not in dataset) or ('WindowCenter' not in dataset):
         bits = dataset.BitsAllocated
