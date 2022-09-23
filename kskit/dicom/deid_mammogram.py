@@ -71,9 +71,8 @@ def get_PIL_image(dataset):
     """Get Image object from Python Imaging Library(PIL)"""
     
     if ('PixelData' not in dataset):
+        log("Cannot get image -- DICOM dataset does not have pixel data")
         return None
-        #raise TypeError("Cannot show image -- DICOM dataset does not have "
-        #                "pixel data")
     # can only apply LUT if these window info exists
     if ('WindowWidth' not in dataset) or ('WindowCenter' not in dataset):
         bits = dataset.BitsAllocated
