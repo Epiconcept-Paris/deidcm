@@ -9,6 +9,7 @@ import hashlib
 import pydicom
 import cv2
 from random import choice
+from typing import List
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -217,7 +218,7 @@ def deidentify_attributes(indir: str, outdir: str, erase_outdir: bool = True) ->
 
     for file in df.index:
         for attribute in df.columns:
-            value = df[attribute][file]  
+            value = df[attribute][file]
             if attribute != 'FilePath':
                 df[attribute][file] = apply_deidentification(
                     attribute, 
@@ -249,7 +250,9 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
     attr_el = attribute.split('_')
     tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
     valuerep = get_vr(attr_el)
-    rules = list(map(lambda x: get_rule(x, recipe), tags))
+    rules = list(map(lambda x: get_general_rule(x, recipe["general_rules"]), tags))
+    specific_rules = get_specific_rule(tags, recipe["specific_rules"])
+    rules = [specific_rules] if specific_rules is not None else rules
 
     if 'RETIRER' in rules:
         return float("NaN")
@@ -279,7 +282,7 @@ def get_vr(attr_el: list) -> str:
         return vr[0] if len(vr) == 1 else 'SQ'
 
 
-def get_rule(tag: str, recipe: dict) -> str:
+def get_general_rule(tag: str, recipe: dict) -> str:
     """Gets the rule associated with the given tag"""
     #rule for 0x50xxxxxx, 0x60xx4000, 0x60xx3000, 0xggggeeee where gggg is odd
     if re.match('^(0x60[0-9a-f]{2}[3-4]{1}000|0x50[0-9a-f]{6})$', tag) or \
@@ -292,6 +295,21 @@ def get_rule(tag: str, recipe: dict) -> str:
         except KeyError:
             return 'RETIRER'
 
+
+def get_specific_rule(tags: List[str], recipe: dict) -> str:
+    """Search for specific rules associated with the sequence tag"""
+    if len(tags) == 1:
+        return
+    
+    child_tag = tags[-1]
+    if child_tag not in recipe.keys():
+        return
+
+    if recipe[child_tag]['sequence'] not in tags:
+        return
+    
+    return recipe[child_tag]['rule']
+    
 
 def deidentify(tags: list, vr: str, value: str) -> None:
     """deidentify a single attribute of a given tag
