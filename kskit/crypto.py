@@ -68,7 +68,6 @@ def encrypt(infile, cryptfile, b64key):
   key = base64.decodebytes(b64key.encode("ASCII"))
   if(not isinstance(key, bytes) or len(key) != 32):
     raise ValueError(f"decoded Key must be a 32 byte (256bits) array, but got {type(key)} of length {len(key)}")
-  
   iv = secrets.token_bytes(16)
   aes = AES.new(key, AES.MODE_CBC, iv)
   fsz = os.path.getsize(infile)
