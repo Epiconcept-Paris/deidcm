@@ -1,3 +1,12 @@
+"""This module is a mammograms deidentification toolbox.
+
+This module contains functions related to deidentification of mammograms. It
+fulfills the following purposes:
+
+* deidentifying mammogram's images
+* deidentifying mammogram's metadata
+"""
+
 import re
 import os
 import uuid
@@ -13,7 +22,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from datetime import timedelta
-from pydicom.dataset import Dataset
 from pydicom.pixel_data_handlers.util import (
     apply_color_lut,
     apply_modality_lut,
@@ -27,7 +35,7 @@ from kskit.dicom.utils import log
 
 
 def deidentify_image(infile: str) -> bytes:
-    """Deidentifies and returns infile as bytes"""
+    """Deidentify and return infile as bytes"""
     ds = pydicom.read_file(infile)
     pixels = ds.pixel_array
     ocr_data = get_text_areas(pixels)
@@ -36,7 +44,16 @@ def deidentify_image(infile: str) -> bytes:
 
 
 def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
-    """Deidentifies and writes a given mammogram in outdir as filename.png"""
+    """Deidentify and write a given mammogram's image in outdir as filename.png
+    
+    This function invokes the OCR reader for getting all potentials words on a 
+    mammogram's image. Then, it hides all found words by higlighting them in black. 
+
+    Args:
+        infile: The path of the DICOM file to deidentify.
+        outdir: The path of the directory that will store the output.
+        filename: The name of the resulting PNG file. (don't add the file extension).
+    """
     ds = pydicom.read_file(infile)
     img = get_PIL_image(ds)
     if img is None:
@@ -67,8 +84,19 @@ def get_LUT_value(data, window, level):
                          (window - 1) + 0.5) * (255 - 0)])
 
 
-def get_PIL_image(dataset):
-    """Get Image object from Python Imaging Library(PIL)"""
+def get_PIL_image(dataset: pydicom.dataset.Dataset) -> Image:
+    """Get Image object from Python Imaging Library(PIL)
+    
+    Get the image from the pydicom dataset and convert it from a numpy.ndarray
+    to a PIL image object. If available, the function will use metadata information 
+    contained inside the pydicom dataset for the conversion.  
+
+    Args:
+        dataset: A pydicom dataset which can be obtained from a DICOM file.
+    
+    Returns:
+        Image: A PIL image object.
+    """
     
     if ('PixelData' not in dataset):
         log("Cannot get image -- DICOM dataset does not have pixel data")
@@ -107,7 +135,7 @@ def get_PIL_image(dataset):
     return im
 
 
-def numpy2bytes(pixels: np.ndarray, ds: pydicom.Dataset) -> bytes:
+def numpy2bytes(pixels: np.ndarray, ds: pydicom.dataset.Dataset) -> bytes:
     """Returns bytes form of a numpy array built with proper ds' settings"""
     #pixels[pixels < 300] = 0
     if ds.BitsAllocated == 8:
@@ -117,12 +145,23 @@ def numpy2bytes(pixels: np.ndarray, ds: pydicom.Dataset) -> bytes:
     #return pixels.tobytes()
 
 
-def get_text_areas(pixels):
+def get_text_areas(pixels: np.ndarray, languages: list = ['fr']) -> list:
+    """Read and return words of an image.
+
+    This function takes a pixel array in input and submits it to the easyOCR Reader.
+    This Reader will then return a list of found words. This function implicitly 
+    remove authorized words from the computed list.
+    
+    Args:
+        pixels: An array representing an image.
+        languages:
+            A list of supported languages for the OCR Reader.
+            This allows to submit images with text written in different languages.
+
+    Returns:
+        list: A list of words detected on the submitted image.
     """
-    Easy OCR function. Gets an image at the path below and returns the 
-    text of the picture. 
-    """
-    reader = Reader(['fr'], gpu=False, verbose=False)
+    reader = Reader(languages, gpu=False, verbose=False)
     ocr_data = reader.readtext(pixels)
     # ocr data[0][2] is the level of confidence of the result
     # If the result is near 0, it is very likely that there is no text
@@ -134,7 +173,18 @@ def get_text_areas(pixels):
 
 
 def remove_authorized_words_from(ocr_data: list) -> list:
-    """Prevents Authorized Words such as RMLO, LCC, OBLIQUE G to be censored"""
+    """Remove authorized words from ocr_data list
+
+    This function allows to remove authorized words from easyOCR output.
+    It is useful if you want to keep some text information on your image such
+    as image laterality information (RMLO, LCC, OBLIQUE G...).
+    
+    Args:
+        ocr_data: A list of words and coordinates obtained after submitting an image to easyOCR Reader.
+    
+    Returns:
+        The same list of words and coordinates minus the authorized words elements.
+    """
     authorized_words = load_authorized_words()
     if ocr_data is None:
         filtered_ocr_data = ocr_data
@@ -152,7 +202,7 @@ def load_authorized_words() -> list:
     home_folder = os.environ.get('DP_HOME')
     if home_folder is None:
         raise ValueError('cannot load DP_HOME')
-    filepath = os.path.join(home_folder, 'data', 'input', 'epiconcept', 'ocr_deid_ignore.txt')
+    filepath = os.path.join(home_folder, 'data', 'input', 'ocr_deid_ignore.txt')
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'Cannot load {filepath}')
     with open(filepath, 'r') as f:
@@ -160,16 +210,20 @@ def load_authorized_words() -> list:
     return words
 
 
-def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
-    """
-    Get a NUMPY array, a list of the coordinates of the different text areas 
-    in this array and (optional) a mode which can be : 
-    blur" or "black". It returns the modified NUMPY array.
+def hide_text(pixels: np.ndarray, ocr_data: list, color_value: str = "black", mode: str = "rectangle") -> np.ndarray:
+    """Censor text present on the pixels array representing an image.
+    
+    Take the input image and draw new shapes with PIL package in order to
+    censor OCR-detected words.
 
-    MODES (optional):
-
-    "black" mode (default) ==> add a black rectangle on the text areas
-    "blur" mode            ==> blur the text areas
+    Args:
+        pixels: A pixels array representing an image
+        ocr_data: A list of words and coordinates obtained by easyOCR Reader after submitting an image.
+        color_value: A string indicating the color of the rectangle used for censoring information (`white` or `black`)
+        mode: A string indicating the method for censoring information. (`blur` or `rectangle`)
+    
+    Returns:
+        The deidentified pixels array.
     """
     #Create a pillow image from the numpy array
     im = Image.fromarray(pixels)
@@ -202,15 +256,29 @@ def hide_text(pixels, ocr_data, color_value = None, mode = "black"):
     return np.asarray(im)
 
 
-def deidentify_attributes(indir: str, outdir: str, erase_outdir: bool = True) -> pd.DataFrame:
-    """Deidentify a folder of dicom.
+def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: bool = True) -> pd.DataFrame:
+    """Produce a Pandas dataframe with deidentified information from a folder of DICOM files.
 
-    Arguments:
-    indir -- the input directory (files to deidentify)
-    outdir -- the output directory (deidentified/resulting files)
+    This function creates a Pandas dataframe from all files present in the `indir` folder.
+    Then, it loads the deidentification recipe and iterates through the dataframe to
+    deidentify its content. Finally, it returns the deidentified dataframe object. 
+    
+    It also takes `outdir` and `erase_outdir`
+    arguments for handling output directory auto-cleaning in the context of a data
+    pipeline. If you're not interested in auto-cleaning your output repository, simply
+    specify `outdir` and set `erase_outdir` to `False`.
+
+    Args:
+        indir: The input directory (DICOM files to deidentify)
+        outdir: The output directory (deidentified/resulting files)
+        org_root: An organization root identifier for deidentifying DICOM UIDs.
+        erase_outdir: Empty the output directory if True
+    
+    Returns:
+        A Pandas dataframe containing all metadata/attributes information.
     """
     if False in list(map(lambda x: os.path.exists(x), [indir, outdir])):
-        raise ValueError(f"Path \"{indir}\" or \"{outdir}\" does not exist.")
+        raise ValueError(f"Path {indir} or {outdir} does not exist.")
 
     if erase_outdir:
         for file in os.listdir(outdir):
@@ -226,15 +294,43 @@ def deidentify_attributes(indir: str, outdir: str, erase_outdir: bool = True) ->
                 df[attribute][file] = apply_deidentification(
                     attribute, 
                     value, 
-                    recipe
+                    recipe,
+                    org_root
                 )
     df['PatientIdentityRemoved_0x00120062_CS_1____'] = 'YES'
     return df
 
 
 def load_recipe() -> dict:
-    """Gets the recipe from recipe.json and loads it into a python dict."""
-    recipe = os.path.join(os.path.dirname(__file__), 'recipe.json')
+    """Get the recipe from recipe.json and load it into a python dict.
+    
+    This function reads `recipe.json`. If a user-defined version of the file
+    is detected inside `$DP_HOME/data/input`, it will be used. Otherwise, the
+    inbuilt version of the file will be used.
+
+    Be aware that the inbuilt version of the file does not suit a generic usage.
+    It was created for the Deep.piste study. It is highly recommended to create
+    your own version of `recipe.json`.
+
+    Returns:
+        A Python dictionary with recipe elements.
+    """
+    recipe = None
+
+    # Loads user customized recipe.json file
+    home_folder = os.environ.get('DP_HOME')
+    if home_folder is None:
+        raise ValueError('cannot load DP_HOME')
+    filepath = os.path.join(home_folder, 'data', 'input', 'recipe.json')
+    if not os.path.exists(filepath):
+        log(f"WARNING: No customized recipe.json found at {filepath}. Defaulting to package inbuilt recipe.json")
+    else:
+        recipe = filepath
+
+    # Loads default inbuilt recipe.json file
+    if recipe is None:
+        recipe = os.path.join(os.path.dirname(__file__), 'recipe.json')
+    
     try:
         with open(recipe, 'r') as f:
             return json.load(f)
@@ -248,7 +344,7 @@ def get_id(id_attribute):
     return (id_attribute[0:6], y_id)
 
 
-def apply_deidentification(attribute: str, value: str, recipe: dict):
+def apply_deidentification(attribute: str, value: str, recipe: dict, org_root: str):
     """Deidentifies the attribute depending on the deidentification recipe"""
     attr_el = attribute.split('_')
     tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
@@ -260,7 +356,7 @@ def apply_deidentification(attribute: str, value: str, recipe: dict):
     elif 'EFFACER' in rules:
         return ''
     elif 'PSEUDONYMISER' in rules:
-        return deidentify(tags, valuerep, value)
+        return deidentify(tags, valuerep, value, org_root)
     elif 'CONSERVER' in rules:
         return value
     else:
@@ -284,7 +380,15 @@ def get_vr(attr_el: list) -> str:
 
 
 def get_rule(tag: str, recipe: dict) -> str:
-    """Gets the rule associated with the given tag"""
+    """Get the rule associated with the given tag in `recipe.json`
+    
+    Args:
+        tag: A DICOM tag
+        recipe: A Python dictionary containing recipe elements. See `load_recipe()`
+
+    Returns:
+        The action associated to this DICOM tag in the provided recipe. It can be anything among deidentification actions (CONSERVER, RETIRER EFFACER, PSEUDONYMISER)
+    """
     #rule for 0x50xxxxxx, 0x60xx4000, 0x60xx3000, 0xggggeeee where gggg is odd
     if re.match('^(0x60[0-9a-f]{2}[3-4]{1}000|0x50[0-9a-f]{6})$', tag) or \
         int(tag[2:6], 16) % 2:
@@ -297,7 +401,7 @@ def get_rule(tag: str, recipe: dict) -> str:
             return 'RETIRER'
 
 
-def deidentify(tags: list, vr: str, value: str) -> None:
+def deidentify(tags: list, vr: str, value: str, org_root: str) -> None:
     """deidentify a single attribute of a given tag
     
     Applies a deidentification process depending on the value representation
@@ -322,7 +426,7 @@ def deidentify(tags: list, vr: str, value: str) -> None:
         elif vr in ['SH', 'LO']:
             return replace_with_dummy_str(vr) if value != '' else value
         elif vr == 'UI':
-            return gen_dicom_uid('', value)
+            return gen_dicom_uid('', value, org_root)
         elif vr == 'OB' and any_in(tags, ['0x00340005', '0x00340002']):
             return base64.b64encode(gen_uuid128(value)).decode("UTF-8")
         elif vr == 'UC' and any_in(tags, ['0x00189367']):
@@ -336,11 +440,18 @@ def any_in(list1: list, list2: list) -> bool:
     return not set(list1).isdisjoint(list2)
 
 
-def gen_dicom_uid(patient_id: str, guid: str) -> str:
-    """Creates a DICOM GUID based on the patient_id + original guid"""
+def gen_dicom_uid(patient_id: str, guid: str, org_root: str) -> str:
+    """Create a DICOM GUID based on the patient_id + original guid
+    
+    Args:
+        patient_id: An identifier generated for each patient of your project.
+        guid: The DICOM UID to deidentify.
+        org_root: An organization root identifier for deidentifying DICOM UIDs.
+
+    """
     base4hash = f"{patient_id}{guid.replace('.', '')}"
     hash_value = int(hashlib.sha256(base4hash.encode('utf8')).hexdigest(), 16)
-    return f"1.2.826.0.1.3680043.10.866.{str(hash_value)[:30]}"
+    return f"{org_root}.{str(hash_value)[:30]}"
 
 
 def gen_dicom_uid2() -> str:

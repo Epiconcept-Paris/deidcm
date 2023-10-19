@@ -21,6 +21,7 @@ setup(
       "easyocr",
       "cryptography",
       "opencv-python==4.5.5.64",
+      "opencv-python-headless==4.5.4.60",
       "pydicom",
       "Numpy",
       "matplotlib",
@@ -42,4 +43,3 @@ setup(
     ],
     packages=find_packages(exclude=('tests', 'docs'))
 )
-
