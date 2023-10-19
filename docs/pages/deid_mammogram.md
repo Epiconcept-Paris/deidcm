@@ -16,7 +16,7 @@
 
 ??? example
     ```py title="get_PIL_image.py" linenums="1"
-    from kskit.dicom.deid_mammogram import hide_text
+    from kskit.dicom.deid_mammogram import get_PIL_image
     import pydicom
 
     ds = pydicom.read_file("my-mammogram.dcm")
@@ -44,7 +44,8 @@
     For more information, see [NEMA DICOM Standards Documentation](https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_9.2.html){:target="_blank"}.
 
 ??? example
-    Let's test our recipe by adding an attribute. This attribute is in our recipe:
+    Let's test our recipe by adding one of its attribute into a pydicom dataset.
+    The attribute in our recipe looks like this:
     ```json
     "0x00209161": [
         "ConcatenationUID",
@@ -56,6 +57,7 @@
     **Step n°1**: We add the new DICOM UID to our pydicom dataset
     ```py linenums="1"
     import pydicom
+
     ds = pydicom.read_file("my-mammogram.dcm")
     ds.add_new("0x00209161", "UI", "1.123.123.1234.123456.12345678")
     ds.save_as("my-modified-mammogram.dcm")
@@ -68,6 +70,8 @@
 
     **Step n°2**: We deidentify the folder containing our test mammogram
     ```py linenums="1"
+    from kskit.dicom.deid_mammogram import deidentify_attributes
+
     df = deidentify_attributes("/path/to/mammogram/folder", "/path/to/outdir", org_root="9.9.9.9.9", erase_outdir=False)
     print(df.ConcatenationUID_0x00209161_UI_1____)
     ```
@@ -109,7 +113,7 @@
 ??? example
     **Example n°1**: Retrieve a rule for a tag inside the recipe
     
-    ```py title="get_tag_for_known_rule.py" linenums="1"
+    ```py title="get_rule_for_known_tag.py" linenums="1"
     from kskit.dicom.deid_mammogram import load_recipe, get_rule
 
     recipe = load_recipe()

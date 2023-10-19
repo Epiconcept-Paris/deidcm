@@ -32,6 +32,16 @@ plugins:
           # retrieved with mkdocstring
           heading_level: 6
 
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Epiconcept-Paris/kskit/
+    - icon: fontawesome/brands/linkedin
+      link: https://fr.linkedin.com/company/epiconcept
+
+copyright: Copyright &copy; 2023 Epiconcept
+
+
 theme:
   name: material
   favicon: img/epiconcept-logo.png

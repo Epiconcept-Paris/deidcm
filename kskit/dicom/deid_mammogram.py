@@ -46,7 +46,7 @@ def deidentify_image(infile: str) -> bytes:
 def deidentify_image_png(infile: str, outdir: str, filename: str) -> None:
     """Deidentify and write a given mammogram's image in outdir as filename.png
     
-    This function invokes the OCR reader for getting all potentials words on a 
+    This function invokes the OCR reader for getting all potential words on a 
     mammogram's image. Then, it hides all found words by higlighting them in black. 
 
     Args:
