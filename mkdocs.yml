@@ -1,0 +1,82 @@
+site_name: kskit
+#TODO: add site_url: https://my-website-name.com here
+# It is mandatory for deployment
+site_description: Reusable tools for mammograms de-identification
+site_author: Francisco ORCHARD, William MADIE
+
+repo_url: https://github.com/Epiconcept-Paris/kskit/
+
+nav:
+  - Home: index.md
+  - Quickstart: 'pages/quickstart.md'
+  - Mammogram Deidentification: 'pages/deid_mammogram.md'
+  - License: 'pages/license.md'
+  - About: 'pages/about.md'
+
+# Warning: don't add plugins while in serve mode. It will throw errors.
+plugins:
+- search:
+    lang: en
+# Documentation auto-generation from package's docstrings
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          docstring_style: google
+          show_source: false
+          # This refers to the docstring of the module. If true, it shows this
+          # docstring.
+          show_root_heading: true
+          show_root_full_path: false
+          # This changes the heading level of function signatures
+          # retrieved with mkdocstring
+          heading_level: 6
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Epiconcept-Paris/kskit/
+    - icon: fontawesome/brands/linkedin
+      link: https://fr.linkedin.com/company/epiconcept
+
+copyright: Copyright &copy; 2023 Epiconcept
+
+
+theme:
+  name: material
+  favicon: img/epiconcept-logo.png
+  logo: img/epiconcept-logo-xl.png
+  palette:    
+    # Palette toggle for light mode
+    - scheme: default
+      primary: cyan
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: cyan
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+
+  features:
+    - content.code.copy
+    - search.suggest
+    - search.share
+
+# This section enables syntax highlighting on code blocks
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  # This enables callout boxes with intuitive colors (note, warning, danger)
+  - admonition
+  # Useful for having {:target="_blank"} to external links
+  - attr_list
