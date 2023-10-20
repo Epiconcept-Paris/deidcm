@@ -25,6 +25,17 @@ kskit image deidentifier can also work with a list of **authorized words**. This
 Attributes or Metadata Deidentification is the process of removing sensible text information that can be used to identify an individual from a DICOM file attributes dataset. Expand the following section to see an example of DICOM attributes dataset.
 
 ??? example
+    **What does a DICOM attributes dataset look like?**
+    
+    Let's visualize it. In order to do so, you'll need a DICOM file.
+    ```py title="visualize_dicom_dataset.py" linenums="1"
+    import pydicom
+
+    ds = pydicom.read_file("my_mammogram.dcm")
+    print(ds)
+    ```
+
+    Now, you should obtain an output like the following one:
     ```bash
     Dataset.file_meta -------------------------------
     (0002, 0000) File Meta Information Group Length  UL: 208

@@ -11,7 +11,7 @@ nav:
   - Quickstart: 'pages/quickstart.md'
   - Mammogram Deidentification: 'pages/deid_mammogram.md'
   - License: 'pages/license.md'
-  - About: 'pages/about.md'
+  - About Epiconcept: 'pages/about_epiconcept.md'
 
 # Warning: don't add plugins while in serve mode. It will throw errors.
 plugins:
