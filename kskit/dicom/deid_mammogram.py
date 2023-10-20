@@ -18,6 +18,7 @@ import hashlib
 import pydicom
 import cv2
 from random import choice
+from typing import List
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -289,7 +290,7 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
 
     for file in df.index:
         for attribute in df.columns:
-            value = df[attribute][file]  
+            value = df[attribute][file]
             if attribute != 'FilePath':
                 df[attribute][file] = apply_deidentification(
                     attribute, 
@@ -349,7 +350,9 @@ def apply_deidentification(attribute: str, value: str, recipe: dict, org_root: s
     attr_el = attribute.split('_')
     tags = list(filter(lambda x: x if x.startswith('0x') else None, attr_el))
     valuerep = get_vr(attr_el)
-    rules = list(map(lambda x: get_rule(x, recipe), tags))
+    rules = list(map(lambda x: get_general_rule(x, recipe["general_rules"]), tags))
+    specific_rules = get_specific_rule(tags, recipe["specific_rules"])
+    rules = [specific_rules] if specific_rules is not None else rules
 
     if 'RETIRER' in rules:
         return float("NaN")
@@ -379,7 +382,7 @@ def get_vr(attr_el: list) -> str:
         return vr[0] if len(vr) == 1 else 'SQ'
 
 
-def get_rule(tag: str, recipe: dict) -> str:
+def get_general_rule(tag: str, recipe: dict) -> str:
     """Get the rule associated with the given tag in `recipe.json`
     
     Args:
@@ -401,7 +404,33 @@ def get_rule(tag: str, recipe: dict) -> str:
             return 'RETIRER'
 
 
-def deidentify(tags: list, vr: str, value: str, org_root: str) -> None:
+def get_specific_rule(tags: List[str], recipe: dict) -> str:
+    """Extract the specific rule from a list of tags in `recipe.json` if there is one.
+    
+    Args:
+        tags: A list of DICOM tags. The parent attribute is always before the child attribute. 
+            For instance, if we take ['AAA', 'BBB', 'CCC'], 'AAA' is a sequence containing 'BBB' and 'BBB'
+            is a sequence containing the attribute 'CCC'.  
+        recipe: A Python dictionary containing recipe elements. See `load_recipe()`
+
+    Returns:
+        The action associated to this DICOM tag in the provided recipe. Same values as `get_general_rules`. 
+            It can also return `None` if no specific rules are defined for tags inside the list.
+    """
+    if len(tags) == 1:
+        return
+    
+    child_tag = tags[-1]
+    if child_tag not in recipe.keys():
+        return
+
+    if recipe[child_tag]['sequence'] not in tags:
+        return
+    
+    return recipe[child_tag]['rule']
+    
+
+def deidentify(tags: list, vr: str, value: str) -> None:
     """deidentify a single attribute of a given tag
     
     Applies a deidentification process depending on the value representation

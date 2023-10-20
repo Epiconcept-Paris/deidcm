@@ -8,14 +8,14 @@ import string
 
 class DeidentificationMethodTest(unittest.TestCase):
     def test_regex(self):
-        """test function for get_rule()"""
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x50ffffff'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x50a23e56'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x50123456'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x60003000'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x60004000'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x60564000'), 'RETIRER')
-        self.assertEqual(kskit.deid_mammogram.get_rule('0x605d3000'), 'RETIRER')
+        """test function for get_general_rule()"""
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x50ffffff'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x50a23e56'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x50123456'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x60003000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x60004000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x60564000'), 'RETIRER')
+        self.assertEqual(kskit.deid_mammogram.get_general_rule('0x605d3000'), 'RETIRER')
     
     def test_offset4date(self):
         """test function for offset4date"""  

@@ -100,7 +100,7 @@
     {'0x00020000': ['FileMetaInformationGroupLength', 'UL', 'CONSERVER'], '0x00020001': ['FileMetaInformationVersion', 'OB', 'CONSERVER']}
     ```
 
-::: kskit.dicom.deid_mammogram.get_rule
+::: kskit.dicom.deid_mammogram.get_general_rule
 
 !!! note
     This function is implicitly called by [deidentify_attributes][kskit.dicom.deid_mammogram.deidentify_attributes] each time
@@ -113,11 +113,11 @@
 ??? example
     **Example n°1**: Retrieve a rule for a tag inside the recipe
     
-    ```py title="get_rule_for_known_tag.py" linenums="1"
-    from kskit.dicom.deid_mammogram import load_recipe, get_rule
+    ```py title="get_general_rule_for_known_tag.py" linenums="1"
+    from kskit.dicom.deid_mammogram import load_recipe, get_general_rule
 
     recipe = load_recipe()
-    rule = get_rule("0x00020000", recipe)
+    rule = get_general_rule("0x00020000", recipe)
     ```
     ```bash
     CONSERVER
@@ -125,12 +125,14 @@
 
     **Example n°2**: Retrieve a rule for a tag that is not declared inside the recipe
     
-    ```py title="get_rule_for_unknown_tag.py" linenums="1"
-    from kskit.dicom.deid_mammogram import load_recipe, get_rule
+    ```py title="get_general_rule_for_unknown_tag.py" linenums="1"
+    from kskit.dicom.deid_mammogram import load_recipe, get_general_rule
 
     recipe = load_recipe()
-    rule = get_rule("0x00026666", recipe)
+    rule = get_general_rule("0x00026666", recipe)
     ```
     ```bash
     RETIRER
     ```
+
+::: kskit.dicom.deid_mammogram.get_specific_rule

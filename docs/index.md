@@ -68,9 +68,9 @@ Attributes or Metadata Deidentification is the process of removing sensible text
     (0008, 0070) Manufacturer                        LO: ''
     (0008, 0090) Referring Physician's Name          PN: ''
     (0008, 2218)  Anatomic Region Sequence  1 item(s) ---- 
-    (0008, 0100) Code Value                          SH: '76752008'
-    (0008, 0102) Coding Scheme Designator            SH: 'SCT'
-    (0008, 0104) Code Meaning                        LO: 'Breast'
+        (0008, 0100) Code Value                          SH: '76752008'
+        (0008, 0102) Coding Scheme Designator            SH: 'SCT'
+        (0008, 0104) Code Meaning                        LO: 'Breast'
     ---------
     (0010, 0010) Patient's Name                      PN: 'D1-0002'
     (0010, 0020) Patient ID                          LO: 'D1-0002'
@@ -80,37 +80,37 @@ Attributes or Metadata Deidentification is the process of removing sensible text
     (0012, 0062) Patient Identity Removed            CS: 'YES'
     (0012, 0063) De-identification Method            LO: 'Per DICOM PS 3.15 AnnexE. Details in 0012,0064'
     (0012, 0064)  De-identification Method Code Sequence  8 item(s) ---- 
-    (0008, 0100) Code Value                          SH: '113100'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Basic Application Confidentiality Profile'
-    ---------
-    (0008, 0100) Code Value                          SH: '113101'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Clean Pixel Data Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113104'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Clean Structured Content Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113105'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Clean Descriptors Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113107'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Retain Longitudinal Temporal Information Modified Dates Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113108'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Retain Patient Characteristics Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113109'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Retain Device Identity Option'
-    ---------
-    (0008, 0100) Code Value                          SH: '113111'
-    (0008, 0102) Coding Scheme Designator            SH: 'DCM'
-    (0008, 0104) Code Meaning                        LO: 'Retain Safe Private Option'
+        (0008, 0100) Code Value                          SH: '113100'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Basic Application Confidentiality Profile'
+        ---------
+        (0008, 0100) Code Value                          SH: '113101'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Clean Pixel Data Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113104'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Clean Structured Content Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113105'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Clean Descriptors Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113107'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Retain Longitudinal Temporal Information Modified Dates Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113108'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Retain Patient Characteristics Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113109'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Retain Device Identity Option'
+        ---------
+        (0008, 0100) Code Value                          SH: '113111'
+        (0008, 0102) Coding Scheme Designator            SH: 'DCM'
+        (0008, 0104) Code Meaning                        LO: 'Retain Safe Private Option'
     ---------
     (0013, 0010) Private Creator                     LO: 'CTP'
     (0013, 1010) Private tag data                    LO: 'CMMD'
@@ -161,32 +161,115 @@ Attributes or Metadata Deidentification is the process of removing sensible text
 !!! info
     The previous dataset has been obtained from the public dataset [*The Chinese Mammography Database (CMMD): An online mammography database with biopsy confirmed types for machine diagnosis of breast*](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70230508#702305083240e43d037c47eba3f5325d0a08c9ac){:target="_blank"}. This dataset is accessible through the [*The Cancer Imaging Archive (TCIA) Retriever tool*](https://imaging.cancer.gov/informatics/cancer_imaging_archive.htm){:target="_blank"}.
 
+### The customizable recipe
+
 The attributes deidentifier is based on a **customizable recipe** which is a file describing deidentification actions for each DICOM attribute. The recipe file is written in [JSON](https://json.org/json-fr.html){:target="_blank"}:
 
 ```json
 {
-    "0x00020000": [
-        "FileMetaInformationGroupLength",
-        "UL",
-        "CONSERVER"
-    ],
-    "0x001811BB": [
-        "AcquisitionFieldOfViewLabel",
-        "LO",
-        "PSEUDONYMISER"
-    ],
-    "0x001021B0": [
-        "AdditionalPatientHistory",
-        "LT",
-        "RETIRER"
-    ]
-    "0x00080032": [
-        "AcquisitionTime",
-        "TM",
-        "EFFACER"
-    ]
+    "general_rules": {
+        "0x00020000": [
+            "FileMetaInformationGroupLength",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x001811BB": [
+            "AcquisitionFieldOfViewLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x001021B0": [
+            "AdditionalPatientHistory",
+            "LT",
+            "RETIRER"
+        ]
+        "0x00080032": [
+            "AcquisitionTime",
+            "TM",
+            "EFFACER"
+        ]
+    },
+    "specific_rules": {
+        "0x00080100": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        },
+        "0x00080104": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        },
+        "0x00080102": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        }
+    }
 }
 ```
+
+### General and Specific Rules
+
+The recipe file contains 2 types of rules:
+
+|  **Type of Rules** |                     **Description**                    |
+|:------------------:|:------------------------------------------------------:|
+|  **General Rules** |   A basic rule. It can be defined for any attribute.   |
+| **Specific Rules** | A rule used to target a child attribute of a sequence. |
+
+**How do we use these rules?**
+
+- In practice, we'll mostly use **general rules**. They allow us to apply a given deidentification action on a targeted attribute.
+- **Specific rules** find their use when we want to target an generic attribute inside a sequence. By generic, we refer to an attribute that is used several
+    times in the dataset but inside different sequences. Let's see an example:
+
+!!! example
+    In the following dataset, we have **2 sequences** that hold very different types of information. However, these sequences use the same children attributes.
+    ```bash
+    (0012, 0064)  My First Sequence  3 item(s) ---- 
+        (0008, 0100) Code Value                          SH: 'A1'
+        (0008, 0102) Coding Scheme Designator            SH: 'Mam'
+        (0008, 0104) Code Meaning                        LO: 'Mammogram'
+        ---------
+        (0008, 0100) Code Value                          SH: 'A2'
+        (0008, 0102) Coding Scheme Designator            SH: 'MamR'
+        (0008, 0104) Code Meaning                        LO: 'Mammogram Reader'
+        ---------
+        (0008, 0100) Code Value                          SH: 'A3'
+        (0008, 0102) Coding Scheme Designator            SH: 'SE'
+        (0008, 0104) Code Meaning                        LO: 'Study Exam'
+    ---------
+    (0013, 0242)  My Second Sequence  1 item(s) ---- 
+        (0008, 0100) Code Value                          SH: 'BT-67'
+        (0008, 0102) Coding Scheme Designator            SH: 'XRC'
+        (0008, 0104) Code Meaning                        LO: 'ACQUISITION: X-RAY CHEST'
+    ---------
+    ```
+
+    **Case n°1**: Delete all `Code Meaning` attributes
+
+    We set a general rule for the attribute `Code Meaning` with the action `RETIRER`.
+
+    **Case n°2**: Delete all `Code Meaning` attributes **except those inside** `My Second Sequence` 
+
+    - We set a general rule for the attribute `Code Meaning` with the action `RETIRER`.
+    - We set a specific rule for the attribute `Code Meaning` inside `My Second Sequence`.
+
+
+!!! warning
+    If a **general rule** is defined for a given sequence. The rule applied to the children will be the strictest between the sequence rule and the sequence child rule.
+
+!!! warning
+    If a **general rule** is defined for a given sequence and children have **specific rules**, the **specific rules** will override the **general rule**
+
+``` mermaid
+graph TD
+A[Tag 0x00540220 in 0x00080100 SQ] --> B{General Rule?};
+B -->|Yes| C{Specific Rule?};
+C -->|Yes| D[Apply specific rule];
+C -->|No| E[Apply the strictest rule between general rules];
+B -->|No| Z[Apply the strictest rule: REMOVE];
+```
+
+### Define your own recipe
 
 A `recipe.json` file is already available inside kskit package. However, it is possible to define your own `recipe.json`.
 
@@ -199,12 +282,21 @@ In order to do define your own `recipe.json`, you'll have to create the file `$D
 
 ```json
 {
-    "HEXADECIMAL_DICOM_TAG_ATTRIBUTE": [
-        "AttributeName",
-        "AttributeType",
-        "DeidentificationAction"
-    ]
-    ...
+    "general_rules": {
+        "HEXADECIMAL_DICOM_TAG_ATTRIBUTE": [
+            "AttributeName",
+            "AttributeType",
+            "DeidentificationAction"
+        ],
+        ...
+    },
+    "specific_rules": {
+        "HEXADECIMAL_DICOM_TAG_OF_CHILD_ATTRIBUTE": {
+            "sequence": "HEXADECIMAL_DICOM_TAG_OF_SEQUENCE_ATTRIBUTE",
+            "rule": "DeidentificationAction"
+        },
+        ...
+    }
 }
 ```
 

@@ -42,24 +42,22 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False):
       ds.save_as(f"{outdir}/{filename}", write_like_original=False)
 
 
-def df2hdh(df: pd.DataFrame, outdir: str) -> None:
+def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
   """Special pipeline for HDH. 
 
   Deidentifies all the mammograms listed in df
   Write all the deidentified mammograms in outdir
   Write df as meta.csv in outdir 
   """
-  #pbar = tqdm(total=len(df), ascii=True)
-  for num_file, index in enumerate(range(len(df))):
-    try:
-      deidentify_image_png(df["FilePath"][index], outdir, df[MAMMO_ID_COL][index]) 
-    except ValueError:
-      traceback.print_exc()
-      raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
-    #pbar.update(1)
-  #pbar.close()
+  if not exclude_images:
+    for num_file, index in enumerate(range(len(df))):    
+      try:
+        deidentify_image_png(df["FilePath"][index], outdir, df[MAMMO_ID_COL][index]) 
+      except ValueError:
+        traceback.print_exc()
+        raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
   df.to_csv(os.path.join(outdir, 'meta.csv'))
-  # open(os.path.join(outdir, 'OK'), 'w').close()
+  exit()
 
 
 def get_original_img(filepath) -> bytes:
