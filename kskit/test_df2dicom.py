@@ -52,7 +52,7 @@ def cleandir(dir2clean, rmdir = False):
     os.rmdir(dir2clean) if rmdir else None 
 
 
-def test_df2dicom(indir, tmp_dir):
+def df2dicom_test(indir, tmp_dir):
     """
     Compare rebuild dicoms with their original version. Param :
     @indir : directory where are located the dicoms
@@ -80,4 +80,4 @@ def test_df2dicom(indir, tmp_dir):
 if __name__ == "__main__":
     dir_initial_dcm = os.path.join('images', 'deid', 'mg_dcm4build_tests', 'usable')
     dir_modified_dcm = os.path.join('images', 'deid', 'df2dicom_test')
-    test_df2dicom(dir_initial_dcm, dir_modified_dcm)
+    df2dicom_test(dir_initial_dcm, dir_modified_dcm)

@@ -2,7 +2,7 @@ import os
 import traceback
 import base64
 import pydicom
-from pydicom.dataset import Dataset
+from pydicom.dataset import Dataset, FileMetaDataset
 from pydicom.sequence import Sequence
 from paramiko.sftp_client import SFTPClient
 import pandas as pd
@@ -11,35 +11,48 @@ from tqdm import tqdm
 from kskit.dicom.utils import log
 from kskit.dicom.deid_mammogram import (
   deidentify_image,
-  deidentify_image_png
+  deidentify_image_png,
+  gen_dicom_uid
 )
 
 PIXEL = ('0x7fe0010', 'OB')
 MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
 
-def df2dicom(df, outdir, do_image_deidentification=False, test=False):
+def df2dicom(df, outdir, org_root, do_image_deidentification=False, test=False, output_file_format="png"):
   """
   Deidentifies DICOM files and generates PNG files for each mammogram alongside
   a CSV file containing all deidentified tags
   """
-  #for index in tqdm(range(len(df)), ascii=True):
   for index in range(len(df)):
     ds = build_dicom(df, index, parent_path = '')
     num_file = df[MAMMO_ID_COL][index]
-    if not test:
+    deid_uid_file = gen_dicom_uid('', num_file, org_root)
+    img_path = df["FilePath"][index]
+    outfile = os.path.basename(img_path)
+
+    # Backward compatibility with old tests in kskit package
+    # This parameter should not be True otherwise
+    if test:
+      ds.save_as(f"{outdir}/{outfile}", enforce_file_format=False)
+      continue
+
+    if output_file_format == "png":
+      if do_image_deidentification:
+        deidentify_image_png(img_path, outdir, num_file)
+      else:
+        pixels = get_original_img(img_path)
+        outfile_png = os.path.join(outdir, f'{num_file}.png')
+        Image.fromarray(pixels).save(outfile_png)
+
+    if output_file_format == "dcm":
       try:
         if do_image_deidentification:
-          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
-          # ds.add_new(PIXEL[0], PIXEL[1], deidentify_image(df['FilePath'][index]))
+          ds.add_new(PIXEL[0], PIXEL[1], deidentify_image(img_path))
         else:
-          # ds.add_new(PIXEL[0], PIXEL[1], get_original_img(df['FilePath'][index]))
-          deidentify_image_png(df["FilePath"][index], outdir, num_file) 
-      except ValueError:
-        traceback.print_exc()
-        raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
-    else:
-      filename = os.path.basename(df["FilePath"][index])
-      ds.save_as(f"{outdir}/{filename}", write_like_original=False)
+          ds.add_new(PIXEL[0], PIXEL[1], get_original_img(img_path))
+        ds.save_as(f"{outdir}/{outfile}", enforce_file_format=False)
+      except:
+        raise ValueError(f"The file {img_path} may be corrupted")
 
 
 def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
@@ -57,7 +70,6 @@ def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
         traceback.print_exc()
         raise ValueError(f"The file {df['FilePath'][index]} may be corrupted")
   df.to_csv(os.path.join(outdir, 'meta.csv'))
-  exit()
 
 
 def get_original_img(filepath) -> bytes:
@@ -109,7 +121,7 @@ def getVR(column_name):
 
 def add_file_meta(df, ds, meta_attrs, index, parent_path):
   """Creates and returns a dataset containing the meta-information of the dicom file"""
-  ds.file_meta = Dataset()
+  ds.file_meta = FileMetaDataset()
   for attr in meta_attrs:
     if not pd.isna(getValue(df, index, parent_path, attr)):
       attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[2], attr.split('_')[3]

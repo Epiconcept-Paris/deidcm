@@ -39,7 +39,9 @@ setup(
       "imageio",
       "tqdm",
       "pillow",
-      "gdcm"
+      "gdcm",
+      "pytest",
+      "coverage"
     ],
     packages=find_packages(exclude=('tests', 'docs'))
 )
