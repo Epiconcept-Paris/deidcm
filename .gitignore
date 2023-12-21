@@ -93,3 +93,6 @@ kskit/test_deid_mammogram.py
 
 # MkDocs Documentation
 site/
+
+# VScode files
+.vscode/
