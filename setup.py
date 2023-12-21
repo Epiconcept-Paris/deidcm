@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README.md') as f:
+with open('README.md', encoding="utf-8") as f:
     readme = f.read()
 
 setup(
@@ -16,32 +16,38 @@ setup(
     url='https://github.com/Epiconcept-Paris/kskit',
     license="MIT License",
     install_requires=[
-      "paramiko",
-      "fabric",
-      "easyocr",
-      "cryptography",
-      "opencv-python==4.5.5.64",
-      "opencv-python-headless==4.5.4.60",
-      "pydicom",
-      "Numpy",
-      "matplotlib",
-      "pynetdicom",
-      "requests",
-      "xmltodict", 
-      "pandas",
-      "pyarrow",
-      "python-barcode[images]",
-      "qrcode",
-      "pyzbar[scripts]",
-      "opencv-python",
-      "pycryptodome",
-      "H5py",
-      "imageio",
-      "tqdm",
-      "pillow",
-      "gdcm",
-      "pytest",
-      "coverage"
+        "paramiko",
+        "fabric",
+        "easyocr",
+        "cryptography",
+        "opencv-python==4.5.5.64",
+        "opencv-python-headless==4.5.4.60",
+        "pydicom",
+        "Numpy",
+        "matplotlib",
+        "pynetdicom",
+        "requests",
+        "xmltodict",
+        "pandas",
+        "pyarrow",
+        "python-barcode[images]",
+        "qrcode",
+        "pyzbar[scripts]",
+        "opencv-python",
+        "pycryptodome",
+        "H5py",
+        "imageio",
+        "tqdm",
+        "pillow",
+        "gdcm"
     ],
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    extras_require={
+        "quality-tools": [
+            "pylint",
+            "autopep8",
+            "pytest",
+            "coverage"
+        ]
+    }
 )

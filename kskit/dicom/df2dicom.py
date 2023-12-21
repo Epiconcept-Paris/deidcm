@@ -1,3 +1,8 @@
+"""
+Reusable tools for deidentification purposes
+"""
+
+
 import os
 import traceback
 import base64
@@ -104,26 +109,26 @@ def build_seq(df, index, parent_path, seq_attr):
 
     for ds_attr in get_ds_attr(df, parent_path, seq_attr):
         ds = build_dicom(df, index, parent_path+seq_attr+ds_attr)
-        if ds != None:
+        if ds is not None:
             seq.append(ds)
         else:
             return [], 1
     return seq, 0
 
 
-def getSeq_attr(attrs):
+def get_seq_attr(attrs):
     """Gets and returns a list of unique names of the sequence attributes without the @child_attribute"""
     nom_seq = set([attr.split('@')[0]
                   for attr in attrs])  # extract the part before the @
     return list(nom_seq)  # keep only unique values
 
 
-def getValue(df, index, parent_path, child_path):
+def get_value(df, index, parent_path, child_path):
     """Gets and returns the value of a given attribute name"""
     return df[parent_path+child_path][index]
 
 
-def getVR(column_name):
+def get_vr(column_name):
     """Returns the type as it is defined in the pydicom definition"""
     return pydicom.sequence.Sequence if 'SQ' in column_name else ''
 
@@ -132,21 +137,23 @@ def add_file_meta(df, ds, meta_attrs, index, parent_path):
     """Creates and returns a dataset containing the meta-information of the dicom file"""
     ds.file_meta = FileMetaDataset()
     for attr in meta_attrs:
-        if not pd.isna(getValue(df, index, parent_path, attr)):
-            attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[
+        if not pd.isna(get_value(df, index, parent_path, attr)):
+            attr_tag, attr_vr, attr_vm = attr.split('_')[1], attr.split('_')[
+
                 2], attr.split('_')[3]
             attr_value = decode_unit(
-                getValue(df, index, parent_path, attr), attr_VR, attr_VM)
-            ds.file_meta.add_new(attr_tag, attr_VR, attr_value)
 
-            # Fills 2 ds.properties needed in order to save the dicom file
-            if '0x00020010' in attr_tag:
-                if '1.2.840.10008.1.2.1' in attr_value:
-                    ds.is_little_endian, ds.is_implicit_VR = True, False
-                elif ('1.2.840.10008.1.2.2' in attr_value) or ('1.2.840.10008.1.2.99' in attr_value):
-                    ds.is_little_endian, ds.is_implicit_VR = False, False
-                else:
-                    ds.is_little_endian, ds.is_implicit_VR = True, True
+                get_value(df, index, parent_path, attr), attr_vr, attr_vm)
+            ds.file_meta.add_new(attr_tag, attr_vr, attr_value)
+
+        # Fills 2 ds.properties needed in order to save the dicom file
+        if '0x00020010' in attr_tag:
+            if '1.2.840.10008.1.2.1' in attr_value:
+                ds.is_little_endian, ds.is_implicit_VR = True, False
+            elif ('1.2.840.10008.1.2.2' in attr_value) or ('1.2.840.10008.1.2.99' in attr_value):
+                ds.is_little_endian, ds.is_implicit_VR = False, False
+            else:
+                ds.is_little_endian, ds.is_implicit_VR = True, True
     return ds
 
 
@@ -156,7 +163,7 @@ def build_dicom(df, index, parent_path=''):
     child_attr = [col.replace(parent_path, '') for col in df.columns if col.startswith(
         parent_path)]  # name of the column without the parent name
     # filters child_attr into two lists (sequences and not sequences)
-    [seq_attrs.append(attr) if getVR(
+    [seq_attrs.append(attr) if get_vr(
         attr) == pydicom.sequence.Sequence else nonseq_attrs.append(attr) for attr in child_attr]
     if 'FilePath' in nonseq_attrs:
         nonseq_attrs.remove('FilePath')
@@ -165,10 +172,10 @@ def build_dicom(df, index, parent_path=''):
 
     # NON-SEQUENCE ATTRIBUTES
     for attr in nonseq_attrs:
-        if not pd.isna(getValue(df, index, parent_path, attr)):
+        if not pd.isna(get_value(df, index, parent_path, attr)):
             if attr != 'empty':
                 try:
-                    attr_tag, attr_VR, attr_VM = attr.split('_')[1], attr.split('_')[
+                    attr_tag, attr_vr, attr_vm = attr.split('_')[1], attr.split('_')[
                         2], attr.split('_')[3]
                 except IndexError:
                     if attr != '':
@@ -178,20 +185,20 @@ def build_dicom(df, index, parent_path=''):
                 if '0x0002' in attr_tag:
                     meta_attrs.append(attr)
                 else:
-                    ds.add_new(attr_tag, attr_VR, decode_unit(
-                        getValue(df, index, parent_path, attr), attr_VR, attr_VM))
+                    ds.add_new(attr_tag, attr_vr, decode_unit(
+                        get_value(df, index, parent_path, attr), attr_vr, attr_vm))
             else:
                 return None
 
     # SEQUENCE ATTRIBUTES
-    for attr in getSeq_attr(seq_attrs):
+    for attr in get_seq_attr(seq_attrs):
         # If the sequence is present in the DICOM, test_sequence would take a value != NaN
         for test in child_attr:
             if attr in test:
                 test_sequence = test
 
         # If test_sequence == NaN, the sequence does not appear in this DICOM.
-        if not pd.isna(getValue(df, index, parent_path, test_sequence)):
+        if not pd.isna(get_value(df, index, parent_path, test_sequence)):
             seq, empty_but_present = build_seq(df, index, parent_path, attr)
 
             if not empty_but_present:
@@ -208,22 +215,23 @@ def build_dicom(df, index, parent_path=''):
     return ds
 
 
-def decode_unit(value, VR, VM):
+def decode_unit(value, vr, vm):
+    """convert DICOM type to Python type"""
     # if the value is None : no need to decode
     if value == str(None):
         return None
     else:
         integer_types = ['IS', 'SS', 'SL', 'US', 'UL']
         known_encodings = ['CS', 'DS', 'FD', 'UN']
-        if VM != '1':
-            if (VR in integer_types or VR in known_encodings) and VM != '0':
-                return [decode_unit(e, VR, '1') for e in json.loads(value)]
+        if vm != '1':
+            if (vr in integer_types or vr in known_encodings) and vm != '0':
+                return [decode_unit(e, vr, '1') for e in json.loads(value)]
         else:
-            if VR == 'OB' or VR == 'OW' or VR == 'UN':
+            if vr == 'OB' or vr == 'OW' or vr == 'UN':
                 # alt if not working: return value.encode('utf8')
                 return base64.b64encode(value.encode('UTF-8'))
-            elif VR in integer_types:
+            elif vr in integer_types:
                 return int(value)
-            elif VR == 'FD':
+            elif vr == 'FD':
                 return float(value)
         return value

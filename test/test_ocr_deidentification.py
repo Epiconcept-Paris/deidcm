@@ -29,6 +29,6 @@ class OcrDeidentificationTest(unittest.TestCase):
             deidentify_image_png(sample_mammo_path, outdirpath, 'removeme')
             self.assertTrue("removeme.png" in os.listdir(outdirpath))
             try:
-                im = Image.open(os.path.join(outdirpath, "removeme.png"))
+                Image.open(os.path.join(outdirpath, "removeme.png"))
             except IOError:
                 self.fail("Expected image file cannot be opened")
