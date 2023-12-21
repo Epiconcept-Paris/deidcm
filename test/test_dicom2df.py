@@ -14,7 +14,7 @@ class Dicom2dfTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """this method is called before once before running all tests"""
+        """this method is called once before running all tests"""
         super(Dicom2dfTest, cls).setUpClass()
         cls.test_assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         cls.test_mammo_dir = os.path.join(

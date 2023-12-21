@@ -73,7 +73,7 @@ def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
     Write df as meta.csv in outdir 
     """
     if not exclude_images:
-        for num_file, index in enumerate(range(len(df))):
+        for _, index in enumerate(range(len(df))):
             try:
                 deidentify_image_png(
                     df["FilePath"][index], outdir, df[MAMMO_ID_COL][index])
@@ -117,7 +117,10 @@ def build_seq(df, index, parent_path, seq_attr):
 
 
 def get_seq_attr(attrs):
-    """Gets and returns a list of unique names of the sequence attributes without the @child_attribute"""
+    """
+    Gets and returns a list of unique names of the sequence attributes 
+    without the @child_attribute
+    """
     nom_seq = set([attr.split('@')[0]
                   for attr in attrs])  # extract the part before the @
     return list(nom_seq)  # keep only unique values

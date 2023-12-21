@@ -28,12 +28,19 @@ class MetadataDeidentificationTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """this method is called before once before running all tests"""
+        """this method is called once before running all tests"""
         super(MetadataDeidentificationTest, cls).setUpClass()
-        cls.recipe = load_recipe()
         cls.test_assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         cls.test_mammo_dir = os.path.join(
             cls.test_assets_dir, 'sample_mammograms')
+        cls.dp_home = os.path.join(cls.test_assets_dir, 'dp_home')
+        os.environ['DP_HOME'] = cls.dp_home
+        cls.recipe = load_recipe()
+
+    @classmethod
+    def tearDownClass(cls):
+        """this method is called once after running all tests"""
+        os.environ.pop('DP_HOME')
 
     def test_regex(self):
         """test function for get_general_rule()"""
@@ -97,7 +104,7 @@ class MetadataDeidentificationTest(unittest.TestCase):
             df = deidentify_attributes(
                 self.test_mammo_dir,
                 outdirpath,
-                org_root="9.9.9.9.9",
+                org_root=ORG_ROOT,
                 erase_outdir=False
             )
 
