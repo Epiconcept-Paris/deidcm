@@ -622,7 +622,7 @@ def gen_other_case(ds: pydicom.Dataset, attributes: list) -> pydicom.Dataset:
         elif vr in ['SH', 'LO']:
             attrvalue = replace_with_dummy_str(vr)
         elif vr == 'UI':
-            attrvalue = gen_dicom_uid('', '')
+            attrvalue = gen_dicom_uid('', '', '')
         elif vr == 'SQ':
             gen_dummy_sequence(ds, attr[0])
         elif vr == 'DS':

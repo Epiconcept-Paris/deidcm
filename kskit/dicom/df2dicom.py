@@ -15,15 +15,17 @@ from pydicom.sequence import Sequence
 from PIL import Image
 from kskit.dicom.utils import log
 from kskit.dicom.deid_mammogram import (
-    deidentify_image,
-    deidentify_image_png
+    deidentify_image_ndarray,
+    deidentify_image_png,
+    save_deidentified_image_png,
+    numpy2bytes
 )
 
 PIXEL = ('0x7fe0010', 'OB')
 MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
 
 
-def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_file_format="png"):
+def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_file_formats=None):
     """
     Deidentifies DICOM files and generates PNG files for each mammogram alongside
     a CSV file containing all deidentified tags
@@ -40,29 +42,36 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_fil
             ds.save_as(f"{outdir}/{outfile}", write_like_original=False)
             continue
 
-        outfile_with_format = os.path.join(
-            outdir, f'{num_file}.{output_file_format}')
+        outpath = os.path.join(outdir, num_file)
 
-        if output_file_format == "png":
+        if output_file_formats is None:
+            output_file_formats = ["png"]
+        else:
+            output_file_formats = [f.lower() for f in output_file_formats]
+
+        if do_image_deidentification:
+            ds = pydicom.read_file(img_path)
+            pixels = deidentify_image_ndarray(ds)
+
+        if "png" in output_file_formats:
             if do_image_deidentification:
-                deidentify_image_png(img_path, outdir, num_file)
+                save_deidentified_image_png(pixels, outpath)
             else:
                 pixels = get_original_img(img_path)
-                Image.fromarray(pixels).save(outfile_with_format)
-        elif output_file_format == "dcm":
+                Image.fromarray(pixels).save(f'{outpath}.png')
+      
+        if "dcm" in output_file_formats:
             if do_image_deidentification:
-                ds.add_new(PIXEL[0], PIXEL[1], deidentify_image(img_path))
+                ds.add_new(PIXEL[0], PIXEL[1], numpy2bytes(pixels, ds))
             else:
                 ds.add_new(PIXEL[0], PIXEL[1], get_original_img(img_path))
             try:
                 # write_like_original=False in order to force pydicom to write
                 #  correct DICOM headers at file writing time
-                ds.save_as(outfile_with_format, write_like_original=False)
+                ds.save_as(f'{outpath}.dcm', write_like_original=False)
             except (ValueError, AttributeError):
                 traceback.print_exc()
                 raise ValueError(f"DICOM file may be malformed")
-        else:
-            raise TypeError(f"Unsupported File format: {output_file_format}")
 
 
 def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:

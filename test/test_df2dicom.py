@@ -46,11 +46,11 @@ class Df2dicom(unittest.TestCase):
                 self.df,
                 outdirpath,
                 do_image_deidentification=False,
-                output_file_format="png"
+                output_file_formats=["png"]
             )
             # Is there a PNG file in the output directory
-            self.assertTrue(
-                f"{self.outfile}.png" in os.listdir(outdirpath),
+            self.assertIn(
+                f"{self.outfile}.png", os.listdir(outdirpath),
                 msg=f'list files in outdir: {os.listdir(outdirpath)}'
             )
             try:
@@ -65,11 +65,11 @@ class Df2dicom(unittest.TestCase):
                 self.df,
                 outdirpath,
                 do_image_deidentification=True,
-                output_file_format="png"
+                output_file_formats=["png"]
             )
             # Is there a PNG file in the output directory
-            self.assertTrue(
-                f"{self.outfile}.png" in os.listdir(outdirpath),
+            self.assertIn(
+                f"{self.outfile}.png", os.listdir(outdirpath),
                 msg=f'list files in outdir: {os.listdir(outdirpath)}'
             )
             try:
@@ -84,11 +84,11 @@ class Df2dicom(unittest.TestCase):
                 self.df,
                 outdirpath,
                 do_image_deidentification=True,
-                output_file_format="dcm"
+                output_file_formats=["dcm"]
             )
             # Is there a DCM file in the output directory
-            self.assertTrue(
-                f"{self.outfile}.dcm" in os.listdir(outdirpath),
+            self.assertIn(
+                f"{self.outfile}.dcm", os.listdir(outdirpath),
                 msg=f'list files in outdir: {os.listdir(outdirpath)}'
             )
             try:
@@ -104,11 +104,11 @@ class Df2dicom(unittest.TestCase):
                 self.df,
                 outdirpath,
                 do_image_deidentification=False,
-                output_file_format="dcm"
+                output_file_formats=["dcm"]
             )
             # Is there a DCM file in the output directory
-            self.assertTrue(
-                f"{self.outfile}.dcm" in os.listdir(outdirpath),
+            self.assertIn(
+                f"{self.outfile}.dcm",  os.listdir(outdirpath),
                 msg=f'list files in outdir: {os.listdir(outdirpath)}'
             )
             try:
@@ -117,13 +117,31 @@ class Df2dicom(unittest.TestCase):
             except (InvalidDicomError, TypeError):
                 self.fail("Expected dicom file cannot be opened")
 
+    def test_df2dicom_multiformat(self):
+        """df2dicom with image deidentification and output in DCM and PNG"""
+        with tempfile.TemporaryDirectory() as outdirpath:
+            df2dicom(
+                self.df,
+                outdirpath,
+                do_image_deidentification=False,
+                output_file_formats=["png", "dcm"]
+            )
+            self.assertIn(
+                f"{self.outfile}.dcm", os.listdir(outdirpath),
+                "outdir should contain a dicom file"
+            )
+            self.assertIn(
+                f"{self.outfile}.png", os.listdir(outdirpath),
+                "outdir should contain a png file"
+            )
+
     def test_df2hdh_deid_img(self):
         """nominal case"""
         with tempfile.TemporaryDirectory() as outdirpath:
             df2hdh(df=self.df, outdir=outdirpath, exclude_images=False)
 
             self.assertIn('meta.csv', os.listdir(outdirpath))
-            self.assertIn(f'{SAMPLE_SOP_INSTANCE_UID}.png',
+            self.assertIn(f'{self.outfile}.png',
                           os.listdir(outdirpath))
 
     def test_df2hdh_meta_only(self):
@@ -132,7 +150,7 @@ class Df2dicom(unittest.TestCase):
             df2hdh(df=self.df, outdir=outdirpath, exclude_images=True)
 
             self.assertIn('meta.csv', os.listdir(outdirpath))
-            self.assertNotIn(f'{SAMPLE_SOP_INSTANCE_UID}.png',
+            self.assertNotIn(f'{self.outfile}.png',
                              os.listdir(outdirpath))
 
             meta_csv = os.path.join(outdirpath, 'meta.csv')

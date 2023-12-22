@@ -17,7 +17,7 @@ from kskit.dicom.deid_mammogram import (
     deidentify_attributes,
 )
 
-from kskit.test_deid_mammogram import (
+from kskit.deid_verification import (
     levenshtein_distance
 )
 
