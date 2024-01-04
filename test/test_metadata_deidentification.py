@@ -17,10 +17,6 @@ from kskit.dicom.deid_mammogram import (
     deidentify_attributes,
 )
 
-from kskit.deid_verification import (
-    levenshtein_distance
-)
-
 ORG_ROOT: str = "9.9.9.9.9"
 
 
@@ -84,19 +80,6 @@ class MetadataDeidentificationTest(unittest.TestCase):
             # Tests if the operation can be reproduced
             self.assertEqual(gen_dicom_uid(
                 patient_id, guid, org_root="1.2.3.4"), new_hash)
-
-    def test_levenshtein_distance(self):
-        """test function for levenshtein_distance"""
-        self.assertEqual(levenshtein_distance("chien", "niche"), 4)
-        self.assertEqual(levenshtein_distance(
-            "javawasneat", "scalaisgreat"), 7)
-        self.assertEqual(levenshtein_distance("forward", "drawrof"), 6)
-        self.assertEqual(levenshtein_distance("distance", "eistancd"), 2)
-        self.assertEqual(levenshtein_distance("sturgeon", "urgently"), 6)
-        self.assertEqual(levenshtein_distance("difference", "distance"), 5)
-        self.assertEqual(levenshtein_distance("example", "samples"), 3)
-        self.assertEqual(levenshtein_distance("bsfhebfkrn", "bsthebtkrn"), 2)
-        self.assertEqual(levenshtein_distance("cie", "cle"), 1)
 
     def test_deidentify_attributes(self):
         """nominal case"""

@@ -14,6 +14,7 @@ import json
 import base64
 import string
 import hashlib
+import warnings
 from random import choice
 from typing import List
 from datetime import datetime
@@ -173,7 +174,14 @@ def get_text_areas(pixels: np.ndarray, languages: list = ['fr']) -> list:
     try:
         if ocr_data[0][2] > 0.3:
             return remove_authorized_words_from(ocr_data)
-    except Exception:
+    except ValueError:
+        warnings.warn(
+            "Cannot load authorized words file. To suppress this warning, \
+            please create an empty ocr_deid_ignore.txt", RuntimeWarning)
+        return ocr_data
+    # If ocr_data is empty, trying to access for
+    # checking level of confidence will raise IndexError
+    except IndexError:
         return []
 
 
