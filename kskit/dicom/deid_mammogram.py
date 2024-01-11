@@ -19,6 +19,7 @@ from random import choice
 from typing import List
 from datetime import datetime
 from datetime import timedelta
+from functools import lru_cache
 
 import pydicom
 from pydicom import Dataset
@@ -211,6 +212,7 @@ def remove_authorized_words_from(ocr_data: list) -> list:
     return filtered_ocr_data
 
 
+@lru_cache
 def load_authorized_words() -> list:
     home_folder = os.environ.get('DP_HOME')
     if home_folder is None:
@@ -219,7 +221,7 @@ def load_authorized_words() -> list:
                             'epiconcept', 'ocr_deid_ignore.txt')
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'Cannot load {filepath}')
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding="utf8") as f:
         words = list(map(str.strip, f.readlines()))
     return words
 
@@ -316,6 +318,7 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
     return df
 
 
+@lru_cache
 def load_recipe() -> dict:
     """Get the recipe from recipe.json and load it into a python dict.
 

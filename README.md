@@ -63,3 +63,15 @@ coverage report -i
 ```py
 coverage html -i
 ```
+
+### Documentation
+
+Run development server
+```py
+mkdocs serve
+```
+
+Deploy documentation to GitHub Pages
+```py
+mkdocs gh-deploy
+```
