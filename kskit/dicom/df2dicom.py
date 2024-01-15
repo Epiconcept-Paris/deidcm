@@ -8,21 +8,24 @@ import traceback
 import base64
 import json
 
-import pydicom
-from pydicom.dataset import Dataset
-from pydicom.sequence import Sequence
 import pandas as pd
-
+import pydicom
+from pydicom.dataset import Dataset, FileMetaDataset
+from pydicom.sequence import Sequence
+from PIL import Image
 from kskit.dicom.utils import log
 from kskit.dicom.deid_mammogram import (
-    deidentify_image_png
+    deidentify_image_ndarray,
+    deidentify_image_png,
+    save_deidentified_image_png,
+    numpy2bytes
 )
 
 PIXEL = ('0x7fe0010', 'OB')
 MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
 
 
-def df2dicom(df, outdir, do_image_deidentification=False, test=False):
+def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_file_formats=None):
     """
     Deidentifies DICOM files and generates PNG files for each mammogram alongside
     a CSV file containing all deidentified tags
@@ -30,32 +33,56 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False):
     for index in range(len(df)):
         ds = build_dicom(df, index, parent_path='')
         num_file = df[MAMMO_ID_COL][index]
-        if not test:
-            try:
-                if do_image_deidentification:
-                    deidentify_image_png(
-                        df["FilePath"][index], outdir, num_file)
-                else:
-                    deidentify_image_png(
-                        df["FilePath"][index], outdir, num_file)
-            except ValueError:
-                traceback.print_exc()
-                raise ValueError(
-                    f"The file {df['FilePath'][index]} may be corrupted")
+        img_path = df["FilePath"][index]
+        outfile = os.path.basename(img_path)
+
+        # Backward compatibility with old tests in kskit package
+        # This parameter should not be True otherwise
+        if test:
+            ds.save_as(f"{outdir}/{outfile}", write_like_original=False)
+            continue
+
+        outpath = os.path.join(outdir, num_file)
+
+        if output_file_formats is None:
+            output_file_formats = ["png"]
         else:
-            filename = os.path.basename(df["FilePath"][index])
-            ds.save_as(f"{outdir}/{filename}", write_like_original=False)
+            output_file_formats = [f.lower() for f in output_file_formats]
+
+        if do_image_deidentification:
+            ds = pydicom.read_file(img_path)
+            pixels = deidentify_image_ndarray(ds)
+
+        if "png" in output_file_formats:
+            if do_image_deidentification:
+                save_deidentified_image_png(pixels, outpath)
+            else:
+                pixels = get_original_img(img_path)
+                Image.fromarray(pixels).save(f'{outpath}.png')
+      
+        if "dcm" in output_file_formats:
+            if do_image_deidentification:
+                ds.add_new(PIXEL[0], PIXEL[1], numpy2bytes(pixels, ds))
+            else:
+                ds.add_new(PIXEL[0], PIXEL[1], get_original_img(img_path))
+            try:
+                # write_like_original=False in order to force pydicom to write
+                #  correct DICOM headers at file writing time
+                ds.save_as(f'{outpath}.dcm', write_like_original=False)
+            except (ValueError, AttributeError):
+                traceback.print_exc()
+                raise ValueError(f"DICOM file may be malformed")
 
 
 def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
-    """Special pipeline for HDH.
+    """Special pipeline for HDH. 
 
     Deidentifies all the mammograms listed in df
     Write all the deidentified mammograms in outdir
-    Write df as meta.csv in outdir
+    Write df as meta.csv in outdir 
     """
     if not exclude_images:
-        for num_file, index in enumerate(range(len(df))):
+        for _, index in enumerate(range(len(df))):
             try:
                 deidentify_image_png(
                     df["FilePath"][index], outdir, df[MAMMO_ID_COL][index])
@@ -99,7 +126,10 @@ def build_seq(df, index, parent_path, seq_attr):
 
 
 def get_seq_attr(attrs):
-    """Gets and returns a list of unique names of the sequence attributes without the @child_attribute"""
+    """
+    Gets and returns a list of unique names of the sequence attributes 
+    without the @child_attribute
+    """
     nom_seq = set([attr.split('@')[0]
                   for attr in attrs])  # extract the part before the @
     return list(nom_seq)  # keep only unique values
@@ -117,23 +147,25 @@ def get_vr(column_name):
 
 def add_file_meta(df, ds, meta_attrs, index, parent_path):
     """Creates and returns a dataset containing the meta-information of the dicom file"""
-    ds.file_meta = Dataset()
+    ds.file_meta = FileMetaDataset()
     for attr in meta_attrs:
         if not pd.isna(get_value(df, index, parent_path, attr)):
             attr_tag, attr_vr, attr_vm = attr.split('_')[1], attr.split('_')[
+
                 2], attr.split('_')[3]
             attr_value = decode_unit(
+
                 get_value(df, index, parent_path, attr), attr_vr, attr_vm)
             ds.file_meta.add_new(attr_tag, attr_vr, attr_value)
 
-            # Fills 2 ds.properties needed in order to save the dicom file
-            if '0x00020010' in attr_tag:
-                if '1.2.840.10008.1.2.1' in attr_value:
-                    ds.is_little_endian, ds.is_implicit_VR = True, False
-                elif ('1.2.840.10008.1.2.2' in attr_value) or ('1.2.840.10008.1.2.99' in attr_value):
-                    ds.is_little_endian, ds.is_implicit_VR = False, False
-                else:
-                    ds.is_little_endian, ds.is_implicit_VR = True, True
+        # Fills 2 ds.properties needed in order to save the dicom file
+        if '0x00020010' in attr_tag:
+            if '1.2.840.10008.1.2.1' in attr_value:
+                ds.is_little_endian, ds.is_implicit_VR = True, False
+            elif ('1.2.840.10008.1.2.2' in attr_value) or ('1.2.840.10008.1.2.99' in attr_value):
+                ds.is_little_endian, ds.is_implicit_VR = False, False
+            else:
+                ds.is_little_endian, ds.is_implicit_VR = True, True
     return ds
 
 

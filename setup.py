@@ -48,7 +48,9 @@ setup(
     extras_require={
         "quality-tools": [
             "pylint",
-            "autopep8"
+            "autopep8",
+            "pytest",
+            "coverage"
         ]
     }
 )
