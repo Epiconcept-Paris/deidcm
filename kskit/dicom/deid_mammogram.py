@@ -203,7 +203,7 @@ def load_authorized_words() -> list:
     home_folder = os.environ.get('DP_HOME')
     if home_folder is None:
         raise ValueError('cannot load DP_HOME')
-    filepath = os.path.join(home_folder, 'data', 'input', 'ocr_deid_ignore.txt')
+    filepath = os.path.join(home_folder, 'data', 'input', 'epiconcept', 'ocr_deid_ignore.txt')
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'Cannot load {filepath}')
     with open(filepath, 'r') as f:
@@ -430,7 +430,7 @@ def get_specific_rule(tags: List[str], recipe: dict) -> str:
     return recipe[child_tag]['rule']
     
 
-def deidentify(tags: list, vr: str, value: str) -> None:
+def deidentify(tags: list, vr: str, value: str, org_root: str) -> None:
     """deidentify a single attribute of a given tag
     
     Applies a deidentification process depending on the value representation

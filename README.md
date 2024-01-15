@@ -48,3 +48,16 @@ deidentify_image_png(
     "output-filename"
 )
 ```
+## Tools for developers
+
+## Installation
+
+```bash
+pip install -e .[quality-tools]
+```
+
+## Usage
+
+Format your files with `python3 -m autopep8 --in-place file/to/format`
+
+Lint your files with `python3 -m pylint file/to/lint`
