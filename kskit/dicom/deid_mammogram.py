@@ -226,7 +226,7 @@ def load_authorized_words() -> list:
     return words
 
 
-def hide_text(pixels: np.ndarray, ocr_data: list, color_value: str = "black", mode: str = "rectangle") -> np.ndarray:
+def hide_text(pixels: np.ndarray, ocr_data: list, color_value: str = "black", mode: str = "rectangle", margin = 300) -> np.ndarray:
     """Censor text present on the pixels array representing an image.
 
     Take the input image and draw new shapes with PIL package in order to
@@ -249,6 +249,21 @@ def hide_text(pixels: np.ndarray, ocr_data: list, color_value: str = "black", mo
         if found[1] != "" and len(found[1]) > 1:
             x1, y1 = int(found[0][0][0]), int(found[0][0][1])
             x2, y2 = int(found[0][2][0]), int(found[0][2][1])
+            
+            if x1 < x2:
+                x1 = x1 - margin
+                x2 = x2 + margin
+            else: 
+                x1 = x1 + margin
+                x2 = x2 - margin
+
+            if y1 < y2:
+                y1 = y1 - margin
+                y2 = y2 + margin
+            else: 
+                y1 = y1 + margin
+                y2 = y2 - margin
+
             box = (x1, y1, x2, y2)
 
             # Applies a hiding effect
