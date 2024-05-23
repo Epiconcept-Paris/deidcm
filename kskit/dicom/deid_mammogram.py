@@ -323,7 +323,7 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
         for attribute in df.columns:
             value = df[attribute][file]
             if attribute != 'FilePath':
-                df[attribute][file] = apply_deidentification(
+                df.loc[file, attribute] = apply_deidentification(
                     attribute,
                     value,
                     recipe,

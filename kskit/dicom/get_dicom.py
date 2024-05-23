@@ -11,7 +11,7 @@ from pynetdicom.sop_class import (
     StudyRootQueryRetrieveInformationModelGet,
     PatientStudyOnlyQueryRetrieveInformationModelGet,
     PlannedImagingAgentAdministrationSRStorage,
-    PerformedImagingAgestAdministrationSRStorage,
+    PerformedImagingAgentAdministrationSRStorage,
     EncapsulatedSTLStorage,
 )
 

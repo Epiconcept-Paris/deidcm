@@ -20,12 +20,10 @@ setup(
         "fabric",
         "easyocr",
         "cryptography",
-        "easyocr==1.4.1",
-       # "torch==1.11.0",
-       # "torchvision==0.12.0"
-        "opencv-python==4.5.1.48",
-        "opencv-python-headless==4.5.1.48",
-        "pynetdicom",#==1.5.7",
+        "easyocr",  # ==1.4.1
+        "opencv-python",  # ==4.5.1.48
+        "opencv-python-headless",  # ==4.5.1.48
+        "pynetdicom",  # ==1.5.7",
         "Numpy",
         "matplotlib",
         "requests",
