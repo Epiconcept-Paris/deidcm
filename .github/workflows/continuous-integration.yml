@@ -1,0 +1,39 @@
+name: kskit Continuous Integration
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  codebase-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.x']
+    
+    steps:
+      -
+        name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      -
+        name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      -
+        name: Ensure Default Package Manager is up to date
+        run: python3 -m pip install --upgrade pip setuptools wheel
+      -
+        name: Install kskit prerequisites for Ubuntu
+        run: sudo apt-get install zbar-tools
+      -
+        name: Install kskit Package
+        run: |
+          cd kskit
+          pip install -e .[quality-tools]
+      -
+        name: Test with Pytest
+        run: pytest
