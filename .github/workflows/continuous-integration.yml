@@ -31,9 +31,7 @@ jobs:
         run: sudo apt-get install zbar-tools
       -
         name: Install kskit Package
-        run: |
-          cd kskit
-          pip install -e .[quality-tools]
+        run: pip install -e .[quality-tools]
       -
         name: Test with Pytest
         run: pytest
