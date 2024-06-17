@@ -1,0 +1,3468 @@
+{
+    "general_rules": {
+        "0x00020000": [
+            "FileMetaInformationGroupLength",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00020001": [
+            "FileMetaInformationVersion",
+            "OB",
+            "CONSERVER"
+        ],
+        "0x00020002": [
+            "MediaStorageSOPClassUID",
+            "UI",
+            "CONSERVER"
+        ],
+        "0x00020010": [
+            "TransferSyntaxUID",
+            "UI",
+            "CONSERVER"
+        ],
+        "0x00020012": [
+            "ImplementationClassUID",
+            "UI",
+            "CONSERVER"
+        ],
+        "0x00020013": [
+            "ImplementationVersionName",
+            "SH",
+            "CONSERVER"
+        ],
+        "0x00020016": [
+            "SourceApplicationEntityTitle",
+            "AE",
+            "CONSERVER"
+        ],
+        "0x00189332": [
+            "ExposureInmAs",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00180088": [
+            "SpacingBetweenSlices",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181153": [
+            "ExposureInuAs",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x001811a2": [
+            "CompressionForce",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00408302": [
+            "EntranceDoseInmGy",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181150": [
+            "ExposureTime",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181405": [
+            "RelativeXRayExposure",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00400316": [
+            "OrganDose",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187011": [
+            "ExposuresOnDetectorSinceManufactured",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00200012": [
+            "AcquisitionNumber",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00188151": [
+            "XRayTubeCurrentInuA",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x001811a0": [
+            "BodyPartThickness",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181152": [
+            "Exposure",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00188150": [
+            "ExposureTimeInuS",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181151": [
+            "XRayTubeCurrent",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00200013": [
+            "InstanceNumber",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181510": [
+            "PositionerPrimaryAngle",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00200011": [
+            "SeriesNumber",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x0018700c": [
+            "DateOfLastDetectorCalibration",
+            "DA",
+            "CONSERVER"
+        ],
+        "0x00187062": [
+            "ExposureControlModeDescription",
+            "LT",
+            "CONSERVER"
+        ],
+        "0x00181708": [
+            "CollimatorLowerHorizontalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181704": [
+            "CollimatorRightVerticalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00186000": [
+            "Sensitivity",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181706": [
+            "CollimatorUpperHorizontalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00080013": [
+            "InstanceCreationTime",
+            "TM",
+            "CONSERVER"
+        ],
+        "0x00187001": [
+            "DetectorTemperature",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x0018700e": [
+            "TimeOfLastDetectorCalibration",
+            "TM",
+            "CONSERVER"
+        ],
+        "0x00280011": [
+            "Columns",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00283002": [
+            "LUTDescriptor",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00400306": [
+            "DistanceSourceToEntrance",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00280120": [
+            "PixelPaddingValue",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00280107": [
+            "LargestImagePixelValue",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00280121": [
+            "PixelPaddingRangeLimit",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00181702": [
+            "CollimatorLeftVerticalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00283006": [
+            "LUTData",
+            "OW",
+            "CONSERVER"
+        ],
+        "0x00280106": [
+            "SmallestImagePixelValue",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00180060": [
+            "KVP",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181111": [
+            "DistanceSourceToPatient",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00185101": [
+            "ViewPosition",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280010": [
+            "Rows",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00181149": [
+            "FieldOfViewDimensions",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181020": [
+            "SoftwareVersions",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00081090": [
+            "ManufacturerModelName",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00187030": [
+            "FieldOfViewOrigin",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00080100": [
+            "CodeValue",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x00200020": [
+            "PatientOrientation",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181401": [
+            "AcquisitionDeviceProcessingCode",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00181130": [
+            "TableHeight",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00080104": [
+            "Code Meaning",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00181114": [
+            "EstimatedRadiographicMagnificationFactor",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00280030": [
+            "PixelSpacing",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181164": [
+            "ImagerPixelSpacing",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00080070": [
+            "Manufacturer",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x001811a4": [
+            "PaddleDescription",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00181110": [
+            "DistanceSourceToDetector",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00400301": [
+            "TotalNumberOfExposures",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00400314": [
+            "HalfValueLayer",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187010": [
+            "ExposuresOnDetectorSinceLastCalibration",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00187012": [
+            "DetectorTimeSinceLastExposure",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00281050": [
+            "WindowCenter",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00080102": [
+            "CodingSchemeDesignator",
+            "SH",
+            "EFFACER"
+        ],
+        "0x00280102": [
+            "HighBit",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00280101": [
+            "BitsStored",
+            "US",
+            "CONSERVER"
+        ],
+        "0x0018115e": [
+            "ImageAndFluoroscopyAreaDoseProduct",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00201208": [
+            "NumberOfStudyRelatedInstances",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00281051": [
+            "WindowWidth",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187026": [
+            "DetectorActiveDimensions",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00321001": [
+            "ScheduledStudyStartTime",
+            "TM",
+            "CONSERVER"
+        ],
+        "0x00321000": [
+            "ScheduledStudyStartDate",
+            "DA",
+            "CONSERVER"
+        ],
+        "0x00080012": [
+            "InstanceCreationDate",
+            "DA",
+            "CONSERVER"
+        ],
+        "0x00187060": [
+            "ExposureControlMode",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181190": [
+            "FocalSpots",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187006": [
+            "DetectorDescription",
+            "LT",
+            "CONSERVER"
+        ],
+        "0x00400303": [
+            "ExposedArea",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00181191": [
+            "AnodeTargetMaterial",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187050": [
+            "FilterMaterial",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187004": [
+            "DetectorType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280004": [
+            "PhotometricInterpretation",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00080016": [
+            "SOPClassUID",
+            "UI",
+            "CONSERVER"
+        ],
+        "0x00187020": [
+            "DetectorElementPhysicalSize",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187022": [
+            "DetectorElementSpacing",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00281056": [
+            "VOILUTFunction",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187034": [
+            "FieldOfViewHorizontalFlip",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187032": [
+            "FieldOfViewRotation",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187028": [
+            "DetectorActiveOrigin",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00280034": [
+            "PixelAspectRatio",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00187052": [
+            "FilterThicknessMinimum",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x0032000a": [
+            "StudyStatusID",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187054": [
+            "FilterThicknessMaximum",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187005": [
+            "DetectorConfiguration",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x20500020": [
+            "PresentationLUTShape",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00281052": [
+            "RescaleIntercept",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00281053": [
+            "RescaleSlope",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00080068": [
+            "PresentationIntentType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00281041": [
+            "PixelIntensityRelationshipSign",
+            "SS",
+            "CONSERVER"
+        ],
+        "0x00281040": [
+            "PixelIntensityRelationship",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00200062": [
+            "ImageLaterality",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00080005": [
+            "SpecificCharacterSet",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280100": [
+            "BitsAllocated",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00080060": [
+            "Modality",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280002": [
+            "SamplesPerPixel",
+            "US",
+            "CONSERVER"
+        ],
+        "0x60003000": [
+            "-",
+            "OW",
+            "RETIRER"
+        ],
+        "0x00181147": [
+            "FieldOfViewShape",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00400302": [
+            "EntranceDose",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00281350": [
+            "PartialView",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00200060": [
+            "Laterality",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x20100010": [
+            "ImageDisplayFormat",
+            "ST",
+            "CONSERVER"
+        ],
+        "0x20100030": [
+            "AnnotationDisplayFormatID",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x20100040": [
+            "FilmOrientation",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x20100140": [
+            "Trim",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x20100100": [
+            "BorderDensity",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181700": [
+            "CollimatorShape",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00401003": [
+            "RequestedProcedurePriority",
+            "SH",
+            "CONSERVER"
+        ],
+        "0x00181050": [
+            "SpatialResolution",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00400321": [
+            "FilmConsumptionSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x0018702b": [
+            "DetectorManufacturerModelName",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x0018702a": [
+            "DetectorManufacturerName",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00400252": [
+            "PerformedProcedureStepStatus",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00402004": [
+            "IssueDateOfImagingServiceRequest",
+            "DA",
+            "CONSERVER"
+        ],
+        "0x0040030e": [
+            "ExposureDoseSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00181166": [
+            "Grid",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00201040": [
+            "PositionReferenceIndicator",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00280006": [
+            "PlanarConfiguration",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00187000": [
+            "DetectorConditionsNominalFlag",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280300": [
+            "QualityControlImage",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x0018701a": [
+            "DetectorBinning",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187064": [
+            "ExposureStatus",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181531": [
+            "DetectorSecondaryAngle",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00186031": [
+            "TransducerType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280014": [
+            "UltrasoundColorDataPresent",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00080061": [
+            "ModalitiesInStudy",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00281055": [
+            "WindowCenterWidthExplanation",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00401008": [
+            "ConfidentialityCode",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00500004": [
+            "CalibrationImage",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x0032000c": [
+            "StudyPriorityID",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181608": [
+            "ShutterLowerHorizontalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00187016": [
+            "DetectorActivationOffsetFromExposure",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181604": [
+            "ShutterRightVerticalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181602": [
+            "ShutterLeftVerticalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181460": [
+            "TomoLayerHeight",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00187014": [
+            "DetectorActiveTime",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181156": [
+            "RectificationType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181530": [
+            "DetectorPrimaryAngle",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x0018113a": [
+            "TableType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00187008": [
+            "DetectorMode",
+            "LT",
+            "CONSERVER"
+        ],
+        "0x00181600": [
+            "ShutterShape",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181511": [
+            "PositionerSecondaryAngle",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00181138": [
+            "TableAngle",
+            "DS",
+            "CONSERVER"
+        ],
+        "0x00186028": [
+            "ReferencePixelPhysicalValueX",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00186032": [
+            "PulseRepetitionFrequency",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00181606": [
+            "ShutterUpperHorizontalEdge",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00181201": [
+            "TimeOfLastCalibration",
+            "TM",
+            "CONSERVER"
+        ],
+        "0x00380016": [
+            "RouteOfAdmissions",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00281351": [
+            "PartialViewDescription",
+            "ST",
+            "EFFACER"
+        ],
+        "0x00181200": [
+            "DateOfLastCalibration",
+            "DA",
+            "CONSERVER"
+        ],
+        "0x00186016": [
+            "RegionFlags",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00189559": [
+            "PositionerPrimaryAngleDirection",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00283003": [
+            "LUTExplanation",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x60000100": [
+            "-",
+            "US",
+            "RETIRER"
+        ],
+        "0x00186030": [
+            "TransducerFrequency",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x60000010": [
+            "-",
+            "US",
+            "RETIRER"
+        ],
+        "0x60000040": [
+            "-",
+            "CS",
+            "RETIRER"
+        ],
+        "0x60000050": [
+            "-",
+            "SS",
+            "RETIRER"
+        ],
+        "0x00189641": [
+            "Field of View Dimension(s) in Float",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189330": [
+            "X-Ray Tube Current in mA",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00189328": [
+            "Exposure Time in ms",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00180012": [
+            "Contrast/Bolus Agent Sequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00189508": [
+            "PrimaryPositionerScanArc",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189510": [
+            "PrimaryPositionerScanStartAngle",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189514": [
+            "PrimaryPositionerIncrementAttribute",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189518": [
+            "PrimaryPositionerIncrementSign",
+            "SS",
+            "CONSERVER"
+        ],
+        "0x00189509": [
+            "SecondaryPositionerScanArc",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189511": [
+            "SecondaryPositionerScanStartAngle",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189515": [
+            "SecondaryPositionerIncrement",
+            "FL",
+            "CONSERVER"
+        ],
+        "0x00189519": [
+            "SecondaryPositionerIncrementSign",
+            "SS",
+            "CONSERVER"
+        ],
+        "0x00281300": [
+            "BreastImplantPresent",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x0018602a": [
+            "ReferencePixelPhysicalValueY",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00080050": [
+            "AccessionNumber",
+            "SH",
+            "EFFACER"
+        ],
+        "0x00184000": [
+            "AcquisitionComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00400555": [
+            "AcquisitionContextSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x00080022": [
+            "AcquisitionDate",
+            "DA",
+            "EFFACER"
+        ],
+        "0x0008002A": [
+            "AcquisitionDateTime",
+            "DT",
+            "EFFACER"
+        ],
+        "0x00181400": [
+            "AcquisitionDeviceProcessingDescription",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x001811BB": [
+            "AcquisitionFieldOfViewLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00189424": [
+            "AcquisitionProtocolDescription",
+            "LT",
+            "RETIRER"
+        ],
+        "0x00080032": [
+            "AcquisitionTime",
+            "TM",
+            "EFFACER"
+        ],
+        "0x00404035": [
+            "ActualHumanPerformersSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x001021B0": [
+            "AdditionalPatientHistory",
+            "LT",
+            "RETIRER"
+        ],
+        "0x0040A353": [
+            "Address",
+            "-",
+            "RETIRER"
+        ],
+        "0x00380010": [
+            "AdmissionID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00380020": [
+            "AdmittingDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00081084": [
+            "AdmittingDiagnosesCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081080": [
+            "AdmittingDiagnosesDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00380021": [
+            "AdmittingTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00001000": [
+            "AffectedSOPInstanceUID",
+            "UI",
+            "RETIRER"
+        ],
+        "0x00102110": [
+            "Allergies",
+            "LO",
+            "RETIRER"
+        ],
+        "0x40000010": [
+            "Arbitrary",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040A078": [
+            "AuthorObserverSequence",
+            "LO",
+            "RETIRER"
+        ],
+        "0x22000005": [
+            "BarcodeValue",
+            "LT",
+            "EFFACER"
+        ],
+        "0x300A00C3": [
+            "BeamDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x300A00DD": [
+            "BolusDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00101081": [
+            "BranchofService",
+            "-",
+            "RETIRER"
+        ],
+        "0x0016004D": [
+            "CameraOwnerName",
+            "UT",
+            "RETIRER"
+        ],
+        "0x00181007": [
+            "CassetteID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00120060": [
+            "ClinicalTrialCoordinatingCenterName",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00120082": [
+            "ClinicalTrialProtocolEthicsCommitteeApprovalNumber",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00120081": [
+            "ClinicalTrialProtocolEthicsCommitteeName",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00120020": [
+            "ClinicalTrialProtocolID",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00120021": [
+            "ClinicalTrialProtocolName",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00120072": [
+            "ClinicalTrialSeriesDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00120071": [
+            "ClinicalTrialSeriesID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00120030": [
+            "ClinicalTrialSiteID",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00120031": [
+            "ClinicalTrialSiteName",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00120010": [
+            "ClinicalTrialSponsorName",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00120040": [
+            "ClinicalTrialSubjectID",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00120042": [
+            "ClinicalTrialSubjectReadingID",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00120051": [
+            "ClinicalTrialTimePointDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00120050": [
+            "ClinicalTrialTimePointID",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00400310": [
+            "CommentsonRadiationDose",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00400280": [
+            "CommentsonthePerformedProcedureStep",
+            "ST",
+            "RETIRER"
+        ],
+        "0x300A02EB": [
+            "CompensatorDescription",
+            "LT",
+            "RETIRER"
+        ],
+        "0x00209161": [
+            "ConcatenationUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x3010000F": [
+            "ConceptualVolumeCombinationDescription",
+            "ST",
+            "EFFACER"
+        ],
+        "0x30100017": [
+            "ConceptualVolumeDescription",
+            "ST",
+            "EFFACER"
+        ],
+        "0x30100006": [
+            "ConceptualVolumeUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00403001": [
+            "ConfidentialityConstraintonPatientDataDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x30100013": [
+            "ConstituentConceptualVolumeUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0008009C": [
+            "ConsultingPhysicianName",
+            "PN",
+            "EFFACER"
+        ],
+        "0x0008009D": [
+            "ConsultingPhysicianIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x0050001B": [
+            "ContainerComponentID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x0040051A": [
+            "ContainerDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00400512": [
+            "ContainerIdentifier",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00700086": [
+            "ContentCreatorIdentificationCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00700084": [
+            "ContentCreatorName",
+            "PN",
+            "PSEUDONYMISER"
+        ],
+        "0x00080023": [
+            "ContentDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A730": [
+            "ContentSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x00080033": [
+            "ContentTime",
+            "TM",
+            "PSEUDONYMISER"
+        ],
+        "0x00180010": [
+            "Contrast/BolusAgent",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x0018A003": [
+            "ContributionDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00102150": [
+            "CountryofResidence",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040A307": [
+            "CurrentObserver",
+            "-",
+            "RETIRER"
+        ],
+        "0x00380300": [
+            "CurrentPatientLocation",
+            "LO",
+            "RETIRER"
+        ],
+        "0x50xxxxxx": [
+            "CurveData",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080025": [
+            "CurveDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00080035": [
+            "CurveTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x0040A07C": [
+            "CustodialOrganizationSequence",
+            "LO",
+            "RETIRER"
+        ],
+        "0xFFFCFFFC": [
+            "DataSetTrailingPadding",
+            "-",
+            "RETIRER"
+        ],
+        "0x0018937F": [
+            "DecompositionDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x00082111": [
+            "DerivationDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x0018700A": [
+            "DetectorID",
+            "SH",
+            "CONSERVER"
+        ],
+        "0x3010001B": [
+            "DeviceAlternateIdentifier",
+            "UC",
+            "EFFACER"
+        ],
+        "0x00500020": [
+            "DeviceDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x3010002D": [
+            "DeviceLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00181000": [
+            "DeviceSerialNumber",
+            "LO",
+            "EFFACER"
+        ],
+        "0x0016004B": [
+            "DeviceSettingDescription",
+            "OB",
+            "RETIRER"
+        ],
+        "0x00181002": [
+            "DeviceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0xFFFAFFFA": [
+            "DigitalSignaturesSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x04000100": [
+            "DigitalSignatureUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00209164": [
+            "DimensionOrganizationUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00380040": [
+            "DischargeDiagnosisDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x4008011A": [
+            "DistributionAddress",
+            "-",
+            "RETIRER"
+        ],
+        "0x40080119": [
+            "DistributionName",
+            "-",
+            "RETIRER"
+        ],
+        "0x300A0016": [
+            "DoseReferenceDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x300A0013": [
+            "DoseReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x3010006E": [
+            "DosimetricObjectiveUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00189517": [
+            "EndAcquisitionDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x30100037": [
+            "EntityDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x30100035": [
+            "EntityLabel",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x30100038": [
+            "EntityLongLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x30100036": [
+            "EntityName",
+            "LO",
+            "RETIRER"
+        ],
+        "0x300A0676": [
+            "EquipmentFrameofReferenceDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00102160": [
+            "EthnicGroup",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00404011": [
+            "ExpectedCompletionDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00080058": [
+            "FailedSOPInstanceUIDList",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0070031A": [
+            "FiducialUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00402017": [
+            "FillerOrderNumber/ImagingServiceRequest",
+            "-",
+            "EFFACER"
+        ],
+        "0x30080054": [
+            "FirstTreatmentDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0196": [
+            "FixationDeviceDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x00340002": [
+            "FlowIdentifier",
+            "OB",
+            "PSEUDONYMISER"
+        ],
+        "0x00340001": [
+            "FlowIdentifierSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x3010007F": [
+            "FractionationNotes",
+            "-",
+            "EFFACER"
+        ],
+        "0x300A0072": [
+            "FractionGroupDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x00209158": [
+            "FrameComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00200052": [
+            "FrameofReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00340007": [
+            "FrameOriginTimestamp",
+            "OB",
+            "PSEUDONYMISER"
+        ],
+        "0x00181008": [
+            "GantryID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00181005": [
+            "GeneratorID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00160076": [
+            "GPSAltitude",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160075": [
+            "GPSAltitudeRef",
+            "US",
+            "RETIRER"
+        ],
+        "0x0016008C": [
+            "GPSAreaInformation",
+            "OB",
+            "RETIRER"
+        ],
+        "0x0016008D": [
+            "GPSDateStamp",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00160088": [
+            "GPSDestBearing",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160087": [
+            "GPSDestBearingRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x0016008A": [
+            "GPSDestDistance",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160089": [
+            "GPSDestDistanceRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160084": [
+            "GPSDestLatitude",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160083": [
+            "GPSDestLatitudeRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160086": [
+            "GPSDestLongitude",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160085": [
+            "GPSDestLongitudeRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x0016008E": [
+            "GPSDifferential",
+            "IS",
+            "RETIRER"
+        ],
+        "0x0016007B": [
+            "GPSDOP",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160081": [
+            "GPSImgDirection",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160080": [
+            "GPSImgDirectionRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160072": [
+            "GPSLatitude",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160071": [
+            "GPSLatitudeRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160074": [
+            "GPSLongitude",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00160073": [
+            "GPSLongitudeRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160082": [
+            "GPSMapDatum",
+            "UT",
+            "RETIRER"
+        ],
+        "0x0016007A": [
+            "GPSMeasureMode",
+            "CS",
+            "RETIRER"
+        ],
+        "0x0016008B": [
+            "GPSProcessingMethod",
+            "OB",
+            "RETIRER"
+        ],
+        "0x00160078": [
+            "GPSSatellites",
+            "UT",
+            "RETIRER"
+        ],
+        "0x0016007D": [
+            "GPSSpeed",
+            "DS",
+            "RETIRER"
+        ],
+        "0x0016007C": [
+            "GPSSpeedRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160079": [
+            "GPSStatus",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160077": [
+            "GPSTimeStamp",
+            "DT",
+            "RETIRER"
+        ],
+        "0x0016007F": [
+            "GPSTrack",
+            "DS",
+            "RETIRER"
+        ],
+        "0x0016007E": [
+            "GPSTrackRef",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00160070": [
+            "GPSVersionID",
+            "OB",
+            "RETIRER"
+        ],
+        "0x00700001": [
+            "GraphicAnnotationSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x00404037": [
+            "HumanPerformerName",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404036": [
+            "HumanPerformerOrganization",
+            "-",
+            "RETIRER"
+        ],
+        "0x00880200": [
+            "IconImageSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00084000": [
+            "IdentifyingComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00204000": [
+            "ImageComments",
+            "LT",
+            "RETIRER"
+        ],
+        "0x00284000": [
+            "ImagePresentationComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00402400": [
+            "ImagingServiceRequestComments",
+            "LT",
+            "RETIRER"
+        ],
+        "0x003A0314": [
+            "ImpedanceMeasurementDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x40080300": [
+            "Impressions",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080015": [
+            "InstanceCoercionDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00080014": [
+            "InstanceCreatorUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x04000600": [
+            "InstanceOriginStatus",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080081": [
+            "InstitutionAddress",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00081040": [
+            "InstitutionalDepartmentName",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00081041": [
+            "InstitutionalDepartmentTypeCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00080082": [
+            "InstitutionCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00080080": [
+            "InstitutionName",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00101050": [
+            "InsurancePlanIdentification",
+            "-",
+            "RETIRER"
+        ],
+        "0x3010004D": [
+            "IntendedPhaseEndDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x3010004C": [
+            "IntendedPhaseStartDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x00401011": [
+            "IntendedRecipientsofResultsIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x300A0741": [
+            "InterlockDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0742": [
+            "InterlockDescription",
+            "ST",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0783": [
+            "InterlockOriginDescription",
+            "ST",
+            "PSEUDONYMISER"
+        ],
+        "0x40080111": [
+            "InterpretationApproverSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x4008010C": [
+            "InterpretationAuthor",
+            "-",
+            "RETIRER"
+        ],
+        "0x40080115": [
+            "InterpretationDiagnosisDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x40080202": [
+            "InterpretationIDIssuer",
+            "-",
+            "RETIRER"
+        ],
+        "0x40080102": [
+            "InterpretationRecorder",
+            "-",
+            "RETIRER"
+        ],
+        "0x4008010B": [
+            "InterpretationText",
+            "-",
+            "RETIRER"
+        ],
+        "0x4008010A": [
+            "InterpretationTranscriber",
+            "-",
+            "RETIRER"
+        ],
+        "0x00083010": [
+            "IrradiationEventUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00380011": [
+            "IssuerofAdmissionID",
+            "-",
+            "RETIRER"
+        ],
+        "0x00380014": [
+            "IssuerofAdmissionIDSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00100021": [
+            "IssuerofPatientID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00380061": [
+            "IssuerofServiceEpisodeID",
+            "-",
+            "RETIRER"
+        ],
+        "0x00380064": [
+            "IssuerofServiceEpisodeIDSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00400513": [
+            "IssueroftheContainerIdentifierSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x00400562": [
+            "IssueroftheSpecimenIdentifierSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x22000002": [
+            "LabelText",
+            "-",
+            "EFFACER"
+        ],
+        "0x00281214": [
+            "LargePaletteColorLookupTableUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x001021D0": [
+            "LastMenstrualDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x0016004F": [
+            "LensMake",
+            "UT",
+            "RETIRER"
+        ],
+        "0x00160050": [
+            "LensModel",
+            "UT",
+            "RETIRER"
+        ],
+        "0x00160051": [
+            "LensSerialNumber",
+            "UT",
+            "RETIRER"
+        ],
+        "0x0016004E": [
+            "LensSpecification",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00500021": [
+            "LongDeviceDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x04000404": [
+            "MAC",
+            "OB",
+            "RETIRER"
+        ],
+        "0x0016002B": [
+            "MakerNote",
+            "OB",
+            "RETIRER"
+        ],
+        "0x0018100B": [
+            "ManufacturerDeviceClassUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30100043": [
+            "ManufacturerDeviceIdentifier",
+            "ST",
+            "EFFACER"
+        ],
+        "0x00020003": [
+            "MediaStorageSOPInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00102000": [
+            "MedicalAlerts",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00101090": [
+            "MedicalRecordLocator",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00101080": [
+            "MilitaryRank",
+            "-",
+            "RETIRER"
+        ],
+        "0x04000550": [
+            "ModifiedAttributesSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00203406": [
+            "ModifiedImageDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x00203401": [
+            "ModifyingDeviceID",
+            "-",
+            "RETIRER"
+        ],
+        "0x30080056": [
+            "MostRecentTreatmentDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x0018937B": [
+            "Multi-energyAcquisitionDescription",
+            "UT",
+            "RETIRER"
+        ],
+        "0x003A0310": [
+            "MultiplexGroupUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00081060": [
+            "NameofPhysiciansReadingStudy",
+            "PN",
+            "RETIRER"
+        ],
+        "0x00401010": [
+            "NamesofIntendedRecipientsofResults",
+            "PN",
+            "RETIRER"
+        ],
+        "0x04000551": [
+            "NonconformingModifiedAttributesSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x04000552": [
+            "NonconformingDataElementValue",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040A192": [
+            "ObservationDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x0040A402": [
+            "ObservationSubjectUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A193": [
+            "ObservationTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x0040A171": [
+            "ObservationUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00102180": [
+            "Occupation",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00081072": [
+            "OperatorIdentificationSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x00081070": [
+            "OperatorsName",
+            "PN",
+            "EFFACER"
+        ],
+        "0x00402010": [
+            "OrderCallbackPhoneNumber",
+            "-",
+            "RETIRER"
+        ],
+        "0x00402011": [
+            "OrderCallbackTelecomInformation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00402008": [
+            "OrderEnteredBy",
+            "-",
+            "RETIRER"
+        ],
+        "0x00402009": [
+            "OrderEntererLocation",
+            "-",
+            "RETIRER"
+        ],
+        "0x04000561": [
+            "OriginalAttributesSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00101000": [
+            "OtherPatientIDs",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00101002": [
+            "OtherPatientIDsSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00101001": [
+            "OtherPatientNames",
+            "PN",
+            "RETIRER"
+        ],
+        "0x60xx4000": [
+            "OverlayComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x60xx3000": [
+            "OverlayData",
+            "OB/OW",
+            "RETIRER"
+        ],
+        "0x00080024": [
+            "OverlayDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00080034": [
+            "OverlayTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x300A0760": [
+            "OverrideDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x00281199": [
+            "PaletteColorLookupTableUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A07A": [
+            "ParticipantSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00101040": [
+            "PatientAddress",
+            "-",
+            "RETIRER"
+        ],
+        "0x00101010": [
+            "PatientAge",
+            "AS",
+            "RETIRER"
+        ],
+        "0x00100030": [
+            "PatientBirthDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x00101005": [
+            "PatientBirthName",
+            "-",
+            "RETIRER"
+        ],
+        "0x00100032": [
+            "PatientBirthTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00380400": [
+            "PatientInstitutionResidence",
+            "-",
+            "RETIRER"
+        ],
+        "0x00100050": [
+            "PatientInsurancePlanCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00101060": [
+            "PatientMotherBirthName",
+            "-",
+            "RETIRER"
+        ],
+        "0x00100010": [
+            "PatientName",
+            "PN",
+            "PSEUDONYMISER"
+        ],
+        "0x00100101": [
+            "PatientPrimaryLanguageCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00100102": [
+            "PatientPrimaryLanguageModifierCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x001021F0": [
+            "PatientReligiousPreference",
+            "-",
+            "RETIRER"
+        ],
+        "0x00100040": [
+            "PatientSex",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00102203": [
+            "PatientSexNeutered",
+            "-",
+            "EFFACER"
+        ],
+        "0x00101020": [
+            "PatientSize",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00102155": [
+            "PatientTelecomInformation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00102154": [
+            "PatientTelephoneNumbers",
+            "-",
+            "RETIRER"
+        ],
+        "0x00101030": [
+            "PatientWeight",
+            "DS",
+            "RETIRER"
+        ],
+        "0x00104000": [
+            "PatientComments",
+            "LT",
+            "RETIRER"
+        ],
+        "0x00100020": [
+            "PatientID",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0650": [
+            "PatientSetupUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00380500": [
+            "PatientState",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00401004": [
+            "PatientTransportArrangements",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00400243": [
+            "PerformedLocation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00400254": [
+            "PerformedProcedureStepDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00400250": [
+            "PerformedProcedureStepEndDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00404051": [
+            "PerformedProcedureStepEndDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00400251": [
+            "PerformedProcedureStepEndTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00400253": [
+            "PerformedProcedureStepID",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00400244": [
+            "PerformedProcedureStepStartDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00404050": [
+            "PerformedProcedureStepStartDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00400245": [
+            "PerformedProcedureStepStartTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00400241": [
+            "PerformedStationAETitle",
+            "AE",
+            "RETIRER"
+        ],
+        "0x00404030": [
+            "PerformedStationGeographicLocationCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00400242": [
+            "PerformedStationName",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404028": [
+            "PerformedStationNameCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081050": [
+            "PerformingPhysicianName",
+            "PN",
+            "RETIRER"
+        ],
+        "0x00081052": [
+            "PerformingPhysicianIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00401102": [
+            "PersonAddress",
+            "-",
+            "RETIRER"
+        ],
+        "0x00401104": [
+            "PersonTelecomInformation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00401103": [
+            "PersonTelephoneNumbers",
+            "-",
+            "RETIRER"
+        ],
+        "0x00401101": [
+            "PersonIdentificationCodeSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A123": [
+            "PersonName",
+            "PN",
+            "PSEUDONYMISER"
+        ],
+        "0x00081048": [
+            "PhysiciansofRecord",
+            "PN",
+            "RETIRER"
+        ],
+        "0x00081049": [
+            "PhysiciansofRecordIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081062": [
+            "PhysiciansReadingStudyIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x40080114": [
+            "PhysicianApprovingInterpretation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00402016": [
+            "PlacerOrderNumber/ImagingServiceRequest",
+            "-",
+            "EFFACER"
+        ],
+        "0x00181004": [
+            "PlateID",
+            "-",
+            "RETIRER"
+        ],
+        "0x001021C0": [
+            "PregnancyStatus",
+            "US",
+            "RETIRER"
+        ],
+        "0x00400012": [
+            "Pre-Medication",
+            "-",
+            "RETIRER"
+        ],
+        "0x300A000E": [
+            "PrescriptionDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x3010007B": [
+            "PrescriptionNotes",
+            "-",
+            "EFFACER"
+        ],
+        "0x30100081": [
+            "PrescriptionNotesSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x00701101": [
+            "PresentationDisplayCollectionUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00701102": [
+            "PresentationSequenceCollectionUID",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x30100061": [
+            "PriorTreatmentDoseDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0xggggeeee) where gggg is od": [
+            "Privateattributes",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404052": [
+            "ProcedureStepCancellationDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00181030": [
+            "ProtocolName",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0619": [
+            "RadiationDoseIdentificationLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0623": [
+            "RadiationDoseIn-VivoMeasurementLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A067D": [
+            "RadiationGenerationModeDescription",
+            "-",
+            "EFFACER"
+        ],
+        "0x300A067C": [
+            "RadiationGenerationModeLabel",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x300C0113": [
+            "ReasonforOmissionDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040100A": [
+            "ReasonforRequestedProcedureCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00321030": [
+            "ReasonforStudy",
+            "LO",
+            "RETIRER"
+        ],
+        "0x3010005C": [
+            "ReasonforSuperseding",
+            "-",
+            "EFFACER"
+        ],
+        "0x00402001": [
+            "ReasonfortheImagingServiceRequest",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00401002": [
+            "ReasonfortheRequestedProcedure",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00321066": [
+            "ReasonforVisit",
+            "-",
+            "RETIRER"
+        ],
+        "0x00321067": [
+            "ReasonforVisitCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x300A073A": [
+            "RecordedRTControlPointDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x3010000B": [
+            "ReferencedConceptualVolumeUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x04000402": [
+            "ReferencedDigitalSignatureSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x300A0083": [
+            "ReferencedDoseReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x3010006F": [
+            "ReferencedDosimetricObjectiveUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30100031": [
+            "ReferencedFiducialsUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30060024": [
+            "ReferencedFrameofReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00404023": [
+            "ReferencedGeneralPurposeScheduledProcedureStepTransactionUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00081140": [
+            "ReferencedImageSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x0040A172": [
+            "ReferencedObservationUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00380004": [
+            "ReferencedPatientAliasSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00101100": [
+            "ReferencedPatientPhotoSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081120": [
+            "ReferencedPatientSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081111": [
+            "ReferencedPerformedProcedureStepSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x04000403": [
+            "ReferencedSOPInstanceMACSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00081155": [
+            "ReferencedSOPInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00041511": [
+            "ReferencedSOPInstanceUIDinFile",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00081110": [
+            "ReferencedStudySequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x00080092": [
+            "ReferringPhysicianAddress",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00080090": [
+            "ReferringPhysicianName",
+            "PN",
+            "EFFACER"
+        ],
+        "0x00080094": [
+            "ReferringPhysicianTelephoneNumbers",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00080096": [
+            "ReferringPhysicianIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00102152": [
+            "RegionofResidence",
+            "-",
+            "RETIRER"
+        ],
+        "0x300600C2": [
+            "RelatedFrameofReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00400275": [
+            "RequestAttributesSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00321070": [
+            "RequestedContrastAgent",
+            "-",
+            "RETIRER"
+        ],
+        "0x00401400": [
+            "RequestedProcedureComments",
+            "LT",
+            "RETIRER"
+        ],
+        "0x00321060": [
+            "RequestedProcedureDescription",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00401001": [
+            "RequestedProcedureID",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00401005": [
+            "RequestedProcedureLocation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00189937": [
+            "RequestedSeriesDescription",
+            "-",
+            "RETIRER"
+        ],
+        "0x00001001": [
+            "RequestedSOPInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00321032": [
+            "RequestingPhysician",
+            "PN",
+            "RETIRER"
+        ],
+        "0x00321033": [
+            "RequestingService",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00189185": [
+            "RespiratoryMotionCompensationTechniqueDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00102299": [
+            "ResponsibleOrganization",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00102297": [
+            "ResponsiblePerson",
+            "PN",
+            "RETIRER"
+        ],
+        "0x40084000": [
+            "ResultsComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x40080118": [
+            "ResultsDistributionListSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x40080042": [
+            "ResultsIDIssuer",
+            "-",
+            "RETIRER"
+        ],
+        "0x300E0008": [
+            "ReviewerName",
+            "PN",
+            "EFFACER"
+        ],
+        "0x30060028": [
+            "ROIDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x30060038": [
+            "ROIGenerationDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x300600A6": [
+            "ROIInterpreter",
+            "PN",
+            "EFFACER"
+        ],
+        "0x30060026": [
+            "ROIName",
+            "LO",
+            "EFFACER"
+        ],
+        "0x30060088": [
+            "ROIObservationDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x30060085": [
+            "ROIObservationLabel",
+            "SH",
+            "RETIRER"
+        ],
+        "0x300A0615": [
+            "RTAccessoryDeviceSlotID",
+            "LO",
+            "EFFACER"
+        ],
+        "0x300A0611": [
+            "RTAccessoryHolderSlotID",
+            "LO",
+            "EFFACER"
+        ],
+        "0x3010005A": [
+            "RTPhysicianIntentNarrative",
+            "UT",
+            "EFFACER"
+        ],
+        "0x300A0006": [
+            "RTPlanDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0004": [
+            "RTPlanDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x300A0002": [
+            "RTPlanLabel",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0003": [
+            "RTPlanName",
+            "LO",
+            "RETIRER"
+        ],
+        "0x300A0007": [
+            "RTPlanTime",
+            "TM",
+            "PSEUDONYMISER"
+        ],
+        "0x30100054": [
+            "RTPrescriptionLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A062A": [
+            "RTToleranceSetLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x30100056": [
+            "RTTreatmentApproachLabel",
+            "LO",
+            "EFFACER"
+        ],
+        "0x3010003B": [
+            "RTTreatmentPhaseUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00404034": [
+            "ScheduledHumanPerformersSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x0038001E": [
+            "ScheduledPatientInstitutionResidence",
+            "-",
+            "RETIRER"
+        ],
+        "0x00400006": [
+            "ScheduledPerformingPhysicianName",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040000B": [
+            "ScheduledPerformingPhysicianIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00400007": [
+            "ScheduledProcedureStepDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00400004": [
+            "ScheduledProcedureStepEndDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00400005": [
+            "ScheduledProcedureStepEndTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00404008": [
+            "ScheduledProcedureStepExpirationDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00400009": [
+            "ScheduledProcedureStepID",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00400011": [
+            "ScheduledProcedureStepLocation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404010": [
+            "ScheduledProcedureStepModificationDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00400002": [
+            "ScheduledProcedureStepStartDate",
+            "DA",
+            "RETIRER"
+        ],
+        "0x00404005": [
+            "ScheduledProcedureStepStartDateTime",
+            "DT",
+            "RETIRER"
+        ],
+        "0x00400003": [
+            "ScheduledProcedureStepStartTime",
+            "TM",
+            "RETIRER"
+        ],
+        "0x00400001": [
+            "ScheduledStationAETitle",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404027": [
+            "ScheduledStationGeographicLocationCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00400010": [
+            "ScheduledStationName",
+            "-",
+            "RETIRER"
+        ],
+        "0x00404025": [
+            "ScheduledStationNameCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x00321020": [
+            "ScheduledStudyLocation",
+            "-",
+            "RETIRER"
+        ],
+        "0x00321021": [
+            "ScheduledStudyLocationAETitle",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080021": [
+            "SeriesDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x0008103E": [
+            "SeriesDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x0020000E": [
+            "SeriesInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00080031": [
+            "SeriesTime",
+            "TM",
+            "PSEUDONYMISER"
+        ],
+        "0x00380062": [
+            "ServiceEpisodeDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00380060": [
+            "ServiceEpisodeID",
+            "LO",
+            "RETIRER"
+        ],
+        "0x300A01B2": [
+            "SetupTechniqueDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x300A01A6": [
+            "ShieldingDeviceDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x004006FA": [
+            "SlideIdentifier",
+            "-",
+            "RETIRER"
+        ],
+        "0x001021A0": [
+            "SmokingStatus",
+            "CS",
+            "RETIRER"
+        ],
+        "0x00080018": [
+            "SOPInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30100015": [
+            "SourceConceptualVolumeUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0018936A": [
+            "SourceEndDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x00340005": [
+            "SourceIdentifier",
+            "OB",
+            "PSEUDONYMISER"
+        ],
+        "0x00082112": [
+            "SourceImageSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x300A0216": [
+            "SourceManufacturer",
+            "LO",
+            "RETIRER"
+        ],
+        "0x30080105": [
+            "SourceSerialNumber",
+            "LO",
+            "EFFACER"
+        ],
+        "0x00189369": [
+            "SourceStartDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x00380050": [
+            "SpecialNeeds",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040050A": [
+            "SpecimenAccessionNumber",
+            "-",
+            "RETIRER"
+        ],
+        "0x00400602": [
+            "SpecimenDetailedDescription",
+            "UT",
+            "RETIRER"
+        ],
+        "0x00400551": [
+            "SpecimenIdentifier",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00400610": [
+            "SpecimenPreparationSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x00400600": [
+            "SpecimenShortDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00400554": [
+            "SpecimenUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00189516": [
+            "StartAcquisitionDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x00081010": [
+            "StationName",
+            "SH",
+            "EFFACER"
+        ],
+        "0x00880140": [
+            "StorageMediaFile-setUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30060008": [
+            "StructureSetDate",
+            "DA",
+            "EFFACER"
+        ],
+        "0x30060006": [
+            "StructureSetDescription",
+            "ST",
+            "RETIRER"
+        ],
+        "0x30060002": [
+            "StructureSetLabel",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x30060004": [
+            "StructureSetName",
+            "LO",
+            "RETIRER"
+        ],
+        "0x30060009": [
+            "StructureSetTime",
+            "TM",
+            "EFFACER"
+        ],
+        "0x00324000": [
+            "StudyComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080020": [
+            "StudyDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x00081030": [
+            "StudyDescription",
+            "LO",
+            "RETIRER"
+        ],
+        "0x00200010": [
+            "StudyID",
+            "SH",
+            "EFFACER"
+        ],
+        "0x00320012": [
+            "StudyIDIssuer",
+            "-",
+            "RETIRER"
+        ],
+        "0x0020000D": [
+            "StudyInstanceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00080030": [
+            "StudyTime",
+            "TM",
+            "EFFACER"
+        ],
+        "0x00200200": [
+            "SynchronizationFrameofReferenceUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00182042": [
+            "TargetUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A354": [
+            "TelephoneNumber",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040DB0D": [
+            "TemplateExtensionCreatorUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x0040DB0C": [
+            "TemplateExtensionOrganizationUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x40004000": [
+            "TextComments",
+            "LT",
+            "RETIRER"
+        ],
+        "0x20300020": [
+            "TextString",
+            "-",
+            "RETIRER"
+        ],
+        "0x00080201": [
+            "TimezoneOffsetFromUTC",
+            "SH",
+            "RETIRER"
+        ],
+        "0x00880910": [
+            "TopicAuthor",
+            "-",
+            "RETIRER"
+        ],
+        "0x00880912": [
+            "TopicKeywords",
+            "-",
+            "RETIRER"
+        ],
+        "0x00880906": [
+            "TopicSubject",
+            "-",
+            "RETIRER"
+        ],
+        "0x00880904": [
+            "TopicTitle",
+            "-",
+            "RETIRER"
+        ],
+        "0x00620021": [
+            "TrackingUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00081195": [
+            "TransactionUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00185011": [
+            "TransducerIdentificationSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x30080250": [
+            "TreatmentDate",
+            "DA",
+            "PSEUDONYMISER"
+        ],
+        "0x300A00B2": [
+            "TreatmentMachineName",
+            "SH",
+            "EFFACER"
+        ],
+        "0x300A0608": [
+            "TreatmentPositionGroupLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0609": [
+            "TreatmentPositionGroupUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0700": [
+            "TreatmentSessionUID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x30100077": [
+            "TreatmentSite",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x3010007A": [
+            "TreatmentTechniqueNotes",
+            "UT",
+            "EFFACER"
+        ],
+        "0x30080251": [
+            "TreatmentTime",
+            "TM",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0736": [
+            "TreatmentToleranceViolationDateTime",
+            "DT",
+            "PSEUDONYMISER"
+        ],
+        "0x300A0734": [
+            "TreatmentToleranceViolationDescription",
+            "ST",
+            "PSEUDONYMISER"
+        ],
+        "0x0018100A": [
+            "UDISequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x0040A124": [
+            "UID",
+            "UI",
+            "PSEUDONYMISER"
+        ],
+        "0x00181009": [
+            "UniqueDeviceIdentifier",
+            "UT",
+            "RETIRER"
+        ],
+        "0x30100033": [
+            "UserContentLabel",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x30100034": [
+            "UserContentLongLabel",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A352": [
+            "VerbalSource",
+            "-",
+            "RETIRER"
+        ],
+        "0x0040A358": [
+            "VerbalSourceIdentifierCodeSequence",
+            "SQ",
+            "RETIRER"
+        ],
+        "0x0040A088": [
+            "VerifyingObserverIdentificationCodeSequence",
+            "SQ",
+            "EFFACER"
+        ],
+        "0x0040A075": [
+            "VerifyingObserverName",
+            "PN",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A073": [
+            "VerifyingObserverSequence",
+            "SQ",
+            "PSEUDONYMISER"
+        ],
+        "0x0040A027": [
+            "VerifyingOrganization",
+            "LO",
+            "PSEUDONYMISER"
+        ],
+        "0x00384000": [
+            "VisitComments",
+            "-",
+            "RETIRER"
+        ],
+        "0x00189371": [
+            "X-RayDetectorID",
+            "SH",
+            "PSEUDONYMISER"
+        ],
+        "0x00189373": [
+            "X-RayDetectorLabel",
+            "ST",
+            "RETIRER"
+        ],
+        "0x00189367": [
+            "X-RaySourceID",
+            "UC",
+            "PSEUDONYMISER"
+        ],
+        "0x60000011": [
+            "-",
+            "US",
+            "RETIRER"
+        ],
+        "0x60000102": [
+            "-",
+            "US",
+            "RETIRER"
+        ],
+        "0x00186036": [
+            "SteeringAngle",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x0018601A": [
+            "RegionLocationMinY0",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x0018601e": [
+            "RegionLocationMaxY1",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00186012": [
+            "RegionSpatialFormat",
+            "US",
+            "CONSERVER"
+        ],
+        "0x00186024": [
+            "PhysicalUnitsXDirection",
+            "US",
+            "CONSERVER"
+        ],
+        "0x0018602e": [
+            "PhysicalDeltaY",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00186014": [
+            "RegionDataType",
+            "US",
+            "CONSERVER"
+        ],
+        "0x0018602C": [
+            "PhysicalDeltaX",
+            "FD",
+            "CONSERVER"
+        ],
+        "0x00186026": [
+            "PhysicalUnitsYDirection",
+            "US",
+            "CONSERVER"
+        ],
+        "0x0018601c": [
+            "RegionLocationMaxX1",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00186018": [
+            "RegionLocationMinX0",
+            "UL",
+            "CONSERVER"
+        ],
+        "0x00186022": [
+            "ReferencePixelY0",
+            "SL",
+            "CONSERVER"
+        ],
+        "0x00080064": [
+            "ConversionType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181160": [
+            "FilterType",
+            "SH",
+            "CONSERVER"
+        ],
+        "0x00080105": [
+            "MappingResource",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00080106": [
+            "ContextGroupVersion",
+            "DT",
+            "CONSERVER"
+        ],
+        "0x0008010f": [
+            "ContextIdentifier",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00201002": [
+            "ImagesInAcquisition",
+            "IS",
+            "CONSERVER"
+        ],
+        "0x00187024": [
+            "DetectorActiveShape",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00080008": [
+            "ImageType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00080103": [
+            "CodingSchemeVersion",
+            "SH",
+            "CONSERVER"
+        ],
+        "0x00081150": [
+            "ReferencedSOPClassUID",
+            "UI",
+            "CONSERVER"
+        ],
+        "0x0028135a": [
+            "SpatialLocationsPreserved",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00540222": [
+            "ViewModifierCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00180015": [
+            "BodyPartExamined",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280301": [
+            "BurnedInAnnotation",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00400318": [
+            "OrganExposed",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00281054": [
+            "RescaleType",
+            "LO",
+            "CONSERVER"
+        ],
+        "0x00282110": [
+            "LossyImageCompression",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00181508": [
+            "PositionerType",
+            "CS",
+            "CONSERVER"
+        ],
+        "0x00280103": [
+            "PixelRepresentation",
+            "US",
+            "CONSERVER"
+        ],
+        "0x7fe00010": [
+            "PixelData",
+            "OW",
+            "PSEUDONYMISER"
+        ],
+        "0x00540220": [
+            "ViewCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00400008": [
+            "ScheduledProtocolCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00540412": [
+            "PatientOrientationModifierCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00186020": [
+            "ReferencedPixelX0",
+            "SL",
+            "CONSERVER"
+        ],
+        "0x0040a170": [
+            "PurposeOfReferencedCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00082218": [
+            "AnatomicRegionSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00081032": [
+            "ProcedureCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00321064": [
+            "RequestedProcedureCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00540410": [
+            "PatientOrientationCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00186011": [
+            "SequenceOfUltrasoundRegions",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00283010": [
+            "VOILUTSequence",
+            "SQ",
+            "CONSERVER"
+        ],
+        "0x00400260": [
+            "PerformedProtocolCodeSequence",
+            "SQ",
+            "CONSERVER"
+        ]
+    },
+    "specific_rules": {
+        "0x00080100": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        },
+        "0x00080104": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        },
+        "0x00080102": {
+            "sequence": "0x00540220",
+            "rule": "CONSERVER"
+        }
+    }
+}
