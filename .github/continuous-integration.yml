@@ -2,7 +2,7 @@ name: kskit Continuous Integration
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["master"]
 
 jobs:
   codebase-checks:
