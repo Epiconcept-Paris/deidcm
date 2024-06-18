@@ -1,4 +1,4 @@
-## kskit_deid module
+## deidcm module
 
 Functionality for cancer screening data pipeline including DICOM image importing and processing.
 
@@ -6,12 +6,12 @@ Initially conceived for french breast cancer screening program during the execut
 
 ## Documentation
 
-kskit_deid documentation can be found at: [https://epiconcept-paris.github.io/kskit-deid/](https://epiconcept-paris.github.io/kskit-deid/)
+deidcm documentation can be found at: [https://epiconcept-paris.github.io/deidcm/](https://epiconcept-paris.github.io/deidcm/)
 
 ### Installation
 
 ```bash
-pip install kskit_deid
+pip install deidcm
 ```
 
 ### Installation for contributors
@@ -19,8 +19,8 @@ pip install kskit_deid
 1. Download source code
 
 ```bash
-git clone https://github.com/Epiconcept-Paris/kskit-deid.git
-cd kskit_deid
+git clone https://github.com/Epiconcept-Paris/deidcm.git
+cd deidcm
 ```
 
 2. Create and activate a virtual environment
@@ -30,7 +30,7 @@ python3 -m venv env
 . env/bin/activate
 ```
 
-3. Install kskit_deid
+3. Install deidcm
 
 ```bash
 pip install -e .
@@ -40,7 +40,7 @@ pip install -e .
 
 Open a python interpreter and try to deidentify a dicom file:
 ```python
-from kskit_deid_deid.dicom.deid_mammogram import deidentify_image_png
+from deidcm_deid.dicom.deid_mammogram import deidentify_image_png
 
 deidentify_image_png(
     "/path/to/mammogram.dcm",

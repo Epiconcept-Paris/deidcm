@@ -9,11 +9,11 @@ import pandas as pd
 from pydicom.errors import InvalidDicomError
 from PIL import Image
 
-from kskit_deid.dicom.dicom2df import (
+from deidcm.dicom.dicom2df import (
     dicom2df
 )
 
-from kskit_deid.dicom.df2dicom import (
+from deidcm.dicom.df2dicom import (
     df2dicom,
     df2hdh
 )

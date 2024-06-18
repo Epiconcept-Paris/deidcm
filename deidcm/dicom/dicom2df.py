@@ -6,7 +6,7 @@ import pandas as pd
 import json
 import itertools
 import time
-from kskit_deid.dicom.utils import log
+from deidcm.dicom.utils import log
 
 
 def write_dicom(infiles):

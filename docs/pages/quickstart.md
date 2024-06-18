@@ -1,11 +1,11 @@
 ## Prerequisites
 
 !!! note
-    Optical Character Recognition (OCR) is an intensive resource-consuming process and it is recommended to have at least **4 GB of free RAM** for running kskit_deid functionalities related to image deidentification.
+    Optical Character Recognition (OCR) is an intensive resource-consuming process and it is recommended to have at least **4 GB of free RAM** for running deidcm functionalities related to image deidentification.
 
 
 !!! info
-    kskit_deid relies on `easyOCR` which uses `PyTorch`. If your system does not have a GPU, consider installing `PyTorch` CPU-only version ([more information here](https://pytorch.org/get-started/locally/#linux-installation){:target="_blank"}).
+    deidcm relies on `easyOCR` which uses `PyTorch`. If your system does not have a GPU, consider installing `PyTorch` CPU-only version ([more information here](https://pytorch.org/get-started/locally/#linux-installation){:target="_blank"}).
 
 * For installing `PyTorch` and `PyTorch Vision` **CPU-only dependencies** on a Linux system, run the command below:
 
@@ -17,10 +17,10 @@ pip3 install torch torchvision --extra-index-url https://download.pytorch.org/wh
 
 ## Installation
 
-For installing `kskit_deid` tools, run the following command:
+For installing `deidcm` tools, run the following command:
 
 ```bash
-pip install kskit_deid
+pip install deidcm
 ```
 
 After that, you'll have to define an environment variable called `DP_HOME`. This
@@ -39,10 +39,10 @@ export DP_HOME=/path/to/folder
 !!! info
     You can set this folder wherever you want. However, keep in mind that this folder is essential for the package and you'll probably open it more than once. So, don't put it somewhere too complicated to access.
 
-## Start working with kskit_deid
+## Start working with deidcm
 
 ```py title="deidentify_image.py" linenums="1"
-from kskit_deid.dicom.deid_mammogram import deidentify_image_png
+from deidcm.dicom.deid_mammogram import deidentify_image_png
 
 deidentify_image_png(
     "/data/dicoms/1.3.6.1.4.1.9590.100.1.2.16146556.dcm",

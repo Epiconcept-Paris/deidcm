@@ -11,17 +11,17 @@ import pydicom
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 
-from kskit_deid.dicom2png import dicom2narray
-from kskit_deid.dicom.df2dicom import df2dicom
-from kskit_deid.dicom.deid_mammogram import (
+from deidcm.dicom2png import dicom2narray
+from deidcm.dicom.df2dicom import df2dicom
+from deidcm.dicom.deid_mammogram import (
     deidentify_attributes,
     gen_uuid128,
     replace_with_dummy_str,
     gen_dicom_uid,
     get_text_areas
 )
-from kskit_deid.dicom.utils import write_all_ds, format_ds_tag
-from kskit_deid.test_cases.cases import (
+from deidcm.dicom.utils import write_all_ds, format_ds_tag
+from deidcm.test_cases.cases import (
     ui_tags,
     sq_tags,
     dadt_tags,

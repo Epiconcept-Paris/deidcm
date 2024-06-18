@@ -1,4 +1,4 @@
-::: kskit_deid.dicom.deid_mammogram
+::: deidcm.dicom.deid_mammogram
     options:
         show_root_full_path: true
         members: None
@@ -10,13 +10,13 @@
 
 ## Image Deidentification
 
-::: kskit_deid.dicom.deid_mammogram.deidentify_image_png
+::: deidcm.dicom.deid_mammogram.deidentify_image_png
 
-::: kskit_deid.dicom.deid_mammogram.get_PIL_image
+::: deidcm.dicom.deid_mammogram.get_PIL_image
 
 ??? example
     ```py title="get_PIL_image.py" linenums="1"
-    from kskit_deid_deid.dicom.deid_mammogram import get_PIL_image
+    from deidcm_deid.dicom.deid_mammogram import get_PIL_image
     import pydicom
 
     ds = pydicom.read_file("my-mammogram.dcm")
@@ -24,18 +24,18 @@
     img.show()
     ```
 
-::: kskit_deid.dicom.deid_mammogram.get_text_areas
+::: deidcm.dicom.deid_mammogram.get_text_areas
 
 !!! info
     The list of available languages can be found [here](https://www.jaided.ai/easyocr/){:target="_blank"}.
 
-::: kskit_deid.dicom.deid_mammogram.remove_authorized_words_from
+::: deidcm.dicom.deid_mammogram.remove_authorized_words_from
 
-::: kskit_deid.dicom.deid_mammogram.hide_text
+::: deidcm.dicom.deid_mammogram.hide_text
 
 ## Attributes Deidentification
 
-::: kskit_deid.dicom.deid_mammogram.deidentify_attributes
+::: deidcm.dicom.deid_mammogram.deidentify_attributes
 
 !!! info
     `org_root` refers to a prefix used for deidentifying DICOM UIDs. 
@@ -70,7 +70,7 @@
 
     **Step n°2**: We deidentify the folder containing our test mammogram
     ```py linenums="1"
-    from kskit_deid_deid.dicom.deid_mammogram import deidentify_attributes
+    from deidcm_deid.dicom.deid_mammogram import deidentify_attributes
 
     df = deidentify_attributes("/path/to/mammogram/folder", "/path/to/outdir", org_root="9.9.9.9.9", erase_outdir=False)
     print(df.ConcatenationUID_0x00209161_UI_1____)
@@ -79,18 +79,18 @@
     9.9.9.9.9.474079559915109435636573090782
     ```
 
-::: kskit_deid.dicom.deid_mammogram.load_recipe
+::: deidcm.dicom.deid_mammogram.load_recipe
 
 !!! note
-    You don't have to call this function as it already implicitly called by [deidentify_attributes][kskit_deid.dicom.deid_mammogram.deidentify_attributes].
+    You don't have to call this function as it already implicitly called by [deidentify_attributes][deidcm.dicom.deid_mammogram.deidentify_attributes].
 
 !!! tip
     This function can be called to check if your customized recipe is correctly
-    detected by kskit_deid.
+    detected by deidcm.
 
 ??? example
     ```py title="load_recipe.py" linenums="1"
-    from kskit_deid_deid.dicom.deid_mammogram import load_recipe
+    from deidcm_deid.dicom.deid_mammogram import load_recipe
 
     recipe = load_recipe()
     print(recipe)
@@ -100,10 +100,10 @@
     {'0x00020000': ['FileMetaInformationGroupLength', 'UL', 'CONSERVER'], '0x00020001': ['FileMetaInformationVersion', 'OB', 'CONSERVER']}
     ```
 
-::: kskit_deid.dicom.deid_mammogram.get_general_rule
+::: deidcm.dicom.deid_mammogram.get_general_rule
 
 !!! note
-    This function is implicitly called by [deidentify_attributes][kskit_deid.dicom.deid_mammogram.deidentify_attributes] each time
+    This function is implicitly called by [deidentify_attributes][deidcm.dicom.deid_mammogram.deidentify_attributes] each time
     it needs to take a deidentification action.
 
 !!! warning
@@ -114,7 +114,7 @@
     **Example n°1**: Retrieve a rule for a tag inside the recipe
     
     ```py title="get_general_rule_for_known_tag.py" linenums="1"
-    from kskit_deid_deid.dicom.deid_mammogram import load_recipe, get_general_rule
+    from deidcm_deid.dicom.deid_mammogram import load_recipe, get_general_rule
 
     recipe = load_recipe()
     rule = get_general_rule("0x00020000", recipe)
@@ -126,7 +126,7 @@
     **Example n°2**: Retrieve a rule for a tag that is not declared inside the recipe
     
     ```py title="get_general_rule_for_unknown_tag.py" linenums="1"
-    from kskit_deid_deid.dicom.deid_mammogram import load_recipe, get_general_rule
+    from deidcm_deid.dicom.deid_mammogram import load_recipe, get_general_rule
 
     recipe = load_recipe()
     rule = get_general_rule("0x00026666", recipe)
@@ -135,4 +135,4 @@
     RETIRER
     ```
 
-::: kskit_deid.dicom.deid_mammogram.get_specific_rule
+::: deidcm.dicom.deid_mammogram.get_specific_rule

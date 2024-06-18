@@ -28,8 +28,8 @@ import pandas as pd
 
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
-from kskit_deid.dicom.dicom2df import dicom2df
-from kskit_deid.dicom.utils import log
+from deidcm.dicom.dicom2df import dicom2df
+from deidcm.dicom.utils import log
 
 
 def deidentify_image_ndarray(ds: Dataset) -> np.ndarray:

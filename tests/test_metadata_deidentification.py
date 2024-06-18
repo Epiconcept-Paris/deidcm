@@ -9,7 +9,7 @@ import string
 
 import pandas as pd
 
-from kskit_deid.dicom.deid_mammogram import (
+from deidcm.dicom.deid_mammogram import (
     load_recipe,
     get_general_rule,
     offset4date,

@@ -8,7 +8,7 @@ import tempfile
 import numpy as np
 from PIL import Image
 
-from kskit_deid.dicom.deid_mammogram import (
+from deidcm.dicom.deid_mammogram import (
     deidentify_image_png,
     load_authorized_words,
     get_text_areas,

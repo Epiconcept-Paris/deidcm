@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 from pydicom import Dataset
 
-from kskit_deid.deid_verification import (
+from deidcm.deid_verification import (
     is_background_black_enough,
     levenshtein_distance,
     gen_ui_case,
@@ -24,7 +24,7 @@ from kskit_deid.deid_verification import (
     compare_ocr_data_and_reality
 )
 
-from kskit_deid.test_cases.cases import (
+from deidcm.test_cases.cases import (
     ui_tags,
     sq_tags,
     dadt_tags,
@@ -32,7 +32,7 @@ from kskit_deid.test_cases.cases import (
     tm_tags
 )
 
-from kskit_deid.dicom.deid_mammogram import get_text_areas
+from deidcm.dicom.deid_mammogram import get_text_areas
 
 
 class MetadataDeidentificationTest(unittest.TestCase):

@@ -1,8 +1,8 @@
-# Welcome to kskit_deid
+# Welcome to deidcm
 
-## What is kskit_deid?
+## What is deidcm?
 
-kskit_deid is a reusable toolset for deidentifiying **images** and **metadata** contained inside DICOM files. kskit_deid stands on the shoulders of giants (PyTorch, easyOCR)
+deidcm is a reusable toolset for deidentifiying **images** and **metadata** contained inside DICOM files. deidcm stands on the shoulders of giants (PyTorch, easyOCR)
 
 This package was initially built for processing medical data from the [Deep.Piste](https://www.health-data-hub.fr/partenariats/deep-piste){:target="_blank"} study. It was primarly made for mammograms.
 
@@ -13,7 +13,7 @@ Image deidentification is the process of removing text information that can be u
 ![img-to-deidentify.png](img/index/img-to-deid.png){: style="height: 245px"}
 ![deidentified-img.png](img/index/deid-img.png){: style="height: 245px"}
 
-kskit_deid image deidentifier can also work with a list of **authorized words**. This list can be used to keep useful information on your image. For instance, let's say we'd like to keep information related to *image laterality* if present on our images (circled in green in the following image). All other text information will be considered as sensible (circled in red in the following image).
+deidcm image deidentifier can also work with a list of **authorized words**. This list can be used to keep useful information on your image. For instance, let's say we'd like to keep information related to *image laterality* if present on our images (circled in green in the following image). All other text information will be considered as sensible (circled in red in the following image).
 
 ![deidentified-img.png](img/index/deidentification-process.gif)
 
@@ -271,12 +271,12 @@ B -->|No| Z[Apply the strictest rule: REMOVE];
 
 ### Define your own recipe
 
-A `recipe.json` file is already available inside kskit_deid package. However, it is possible to define your own `recipe.json`.
+A `recipe.json` file is already available inside deidcm package. However, it is possible to define your own `recipe.json`.
 
 !!! warning
     The inbuilt `recipe.json` file was created for the [Deep.Piste](https://www.health-data-hub.fr/partenariats/deep-piste){:target="_blank"} study. It was made for mammograms only and you should probably define ***your own file meeting your own needs***.
 
-    If you don't define a new `recipe.json` folder, kskit_deid will show a warning and automatically use its inbuilt referential.
+    If you don't define a new `recipe.json` folder, deidcm will show a warning and automatically use its inbuilt referential.
 
 In order to do define your own `recipe.json`, you'll have to create the file `$DP_HOME/data/input/recipe.json` and respect this structure:
 
@@ -303,7 +303,7 @@ In order to do define your own `recipe.json`, you'll have to create the file `$D
 !!! note
     * `AttributeName` is only used for making the file readable for humans
     * `AttributeType` is the attribute's [DICOM Value Representation (VR)](https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.2.html){:target="_blank"}. It is represented by two letters.
-    * `DeidentificationAction` is a string that defines which action kskit_deid deidentifier will take for a specific attribute. This value should be among the possible actions in the below table.
+    * `DeidentificationAction` is a string that defines which action deidcm deidentifier will take for a specific attribute. This value should be among the possible actions in the below table.
 
 | **Action (French Name)** | **Equivalent in English** |                              **Description**                              |
 |:------------------------:|:-------------------------:|:-------------------------------------------------------------------------:|

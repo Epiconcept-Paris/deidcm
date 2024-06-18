@@ -13,8 +13,8 @@ import pydicom
 from pydicom.dataset import Dataset, FileMetaDataset
 from pydicom.sequence import Sequence
 from PIL import Image
-from kskit_deid.dicom.utils import log
-from kskit_deid.dicom.deid_mammogram import (
+from deidcm.dicom.utils import log
+from deidcm.dicom.deid_mammogram import (
     deidentify_image_ndarray,
     deidentify_image_png,
     save_deidentified_image_png,
@@ -36,7 +36,7 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_fil
         img_path = df["FilePath"][index]
         outfile = os.path.basename(img_path)
 
-        # Backward compatibility with old tests in kskit package
+        # Backward compatibility with old tests in deidcm package
         # This parameter should not be True otherwise
         if test:
             ds.save_as(f"{outdir}/{outfile}", write_like_original=False)

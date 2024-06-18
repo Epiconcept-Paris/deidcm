@@ -1,4 +1,4 @@
-name: kskit Continuous Integration
+name: deidcm Continuous Integration
 
 on:
   pull_request:
@@ -27,7 +27,7 @@ jobs:
         name: Ensure Default Package Manager is up to date
         run: python3 -m pip install --upgrade pip setuptools wheel
       -
-        name: Install kskit_deid Package
+        name: Install deidcm Package
         run: pip install -e .[quality-tools]
       -
         name: Test with Pytest

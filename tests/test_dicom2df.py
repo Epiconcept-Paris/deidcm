@@ -5,7 +5,7 @@ import os
 
 import pandas as pd
 
-from kskit_deid.dicom.dicom2df import (
+from deidcm.dicom.dicom2df import (
     dicom2df
 )
 
