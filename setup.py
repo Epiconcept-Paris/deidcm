@@ -19,16 +19,13 @@ setup(
         "easyocr",
         "opencv-python",
         "opencv-python-headless",
-        "Numpy==1.26.4",
+        "Numpy>=1.21.6",
         "matplotlib",
         "pandas",
         "pillow",
         "pydicom"
     ],
-    packages=find_packages(
-        include=['deidcm', 'deidcm.dicom'],
-        exclude=['tests', 'docs']
-    ),
+    packages=find_packages(),
     extras_require={
         "quality-tools": [
             "pylint",
