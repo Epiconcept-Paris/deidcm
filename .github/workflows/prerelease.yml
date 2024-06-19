@@ -1,11 +1,11 @@
-name: Publish Python Package to TestPyPI - Prerelease
+name: Prerelease Python Package on TestPyPI 
 
 on:
   release:
       types: [prereleased]
 
 jobs:
-  testpypi-publish:
+  prerelease:
     name: Publish prerelease to TestPyPI
     runs-on: ubuntu-latest
     environment: testpypi

@@ -1,11 +1,11 @@
-name: Publish Python Package to PyPI - Release
+name: Release Python Package on PyPI 
 
 on:
   release:
     types: [released]
 
 jobs:
-  pypi-publish:
+  rlease:
     name: Publish release to PyPI
     runs-on: ubuntu-latest
     environment:
