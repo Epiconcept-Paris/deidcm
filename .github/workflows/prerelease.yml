@@ -8,7 +8,9 @@ jobs:
   prerelease:
     name: Publish prerelease to TestPyPI
     runs-on: ubuntu-latest
-    environment: testpypi
+    environment:
+      name: prerelease
+      url: https://test.pypi.org/p/deidcm
     permissions:
         id-token: write
     steps:
