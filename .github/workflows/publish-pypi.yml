@@ -2,11 +2,12 @@ name: Publish Python Package to PyPI- Release
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 jobs:
   pypi-publish:
     name: Publish release to PyPI
+    if: '!github.event.release.prerelease'
     runs-on: ubuntu-latest
     environment:
       name: pypi
