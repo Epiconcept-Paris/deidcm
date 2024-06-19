@@ -22,7 +22,7 @@ jobs:
         python-version: "3.x"
     - name: Build Package
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip build
         python3 -m build
     - name: Publish to TestPyPi
       uses: pypa/gh-action-pypi-publish@release/v1
