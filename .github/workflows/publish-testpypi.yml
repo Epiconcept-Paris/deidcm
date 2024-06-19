@@ -2,12 +2,11 @@ name: Publish Python Package to TestPyPI - Prerelease
 
 on:
   release:
-      types: [published]
+      types: [prereleased]
 
 jobs:
   testpypi-publish:
     name: Publish prerelease to TestPyPI
-    if: github.event.release.prerelease == true
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:

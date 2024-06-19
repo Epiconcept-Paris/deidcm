@@ -2,12 +2,11 @@ name: Publish Python Package to PyPI- Release
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   pypi-publish:
     name: Publish release to PyPI
-    if: github.event.release.prerelease == false
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -15,6 +14,13 @@ jobs:
     permissions:
       id-token: write
     steps:
+      - name: Check Prerelease Status
+        run: |
+          echo "Prerelease status: ${{ github.event.release.prerelease }}"
+          if [ "${{ github.event.release.prerelease }}" = "true" ]; then
+            echo "This is a prerelease. Failing the job."
+            exit 1
+          fi 
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
