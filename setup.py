@@ -7,7 +7,7 @@ with open('README.md', encoding="utf-8") as f:
 
 setup(
     name='deidcm',
-    version='0.0.1-alpha',
+    version='0.0.1',
     description='Reusable toolset for deidentifiying images and metadata contained inside DICOM files',
     long_description=readme,
     long_description_content_type='text/markdown',
@@ -25,7 +25,10 @@ setup(
         "pillow",
         "pydicom"
     ],
-    packages=find_packages(exclude=('tests', 'docs')),
+    packages=find_packages(
+        include=['deidcm', 'deidcm.dicom'],
+        exclude=['tests', 'docs']
+    ),
     extras_require={
         "quality-tools": [
             "pylint",
