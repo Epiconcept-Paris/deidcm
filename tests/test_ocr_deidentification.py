@@ -10,9 +10,9 @@ from PIL import Image
 
 from deidcm.dicom.deid_mammogram import (
     deidentify_image_png,
-    load_authorized_words,
     get_text_areas,
 )
+from deidcm.config import Config
 
 
 class OcrDeidentificationTest(unittest.TestCase):
@@ -25,13 +25,11 @@ class OcrDeidentificationTest(unittest.TestCase):
         cls.test_mammo_dir = os.path.join(
             cls.test_assets_dir, 'sample_mammograms')
         cls.png_dir = os.path.join(cls.test_assets_dir, 'png_files')
-        cls.dp_home = os.path.join(cls.test_assets_dir, 'dp_home')
-        os.environ['DP_HOME'] = cls.dp_home
-
-    @classmethod
-    def tearDownClass(cls):
-        """this method is called once after running all tests"""
-        os.environ.pop('DP_HOME')
+        cls.user_files = os.path.join(cls.test_assets_dir, 'user_files')
+        cls.ocr_deid_ignore_words_filepath = os.path.join(
+            cls.user_files, 'ocr_deid_ignore.txt')
+        cls.config = Config.get_instance()
+        cls.config.set_ocr_ignored_words(cls.ocr_deid_ignore_words_filepath)
 
     def test_png_deidentification(self):
         sample_mammo_path = os.path.join(self.test_mammo_dir, 'cmmd-1.dcm')
@@ -46,7 +44,8 @@ class OcrDeidentificationTest(unittest.TestCase):
 
     def test_load_authorized_words(self):
         """nominal case"""
-        words = load_authorized_words()
+        words = Config.load_authorized_words(
+            self.ocr_deid_ignore_words_filepath)
         self.assertEqual(['HELLO', 'ALTER', 'DSQLD'], words,
                          "Both lists should contain the same words")
 
