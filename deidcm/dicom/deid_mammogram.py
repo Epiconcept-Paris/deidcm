@@ -10,7 +10,6 @@ fulfills the following purposes:
 import re
 import os
 import uuid
-import json
 import base64
 import string
 import hashlib
@@ -19,15 +18,15 @@ from random import choice
 from typing import List
 from datetime import datetime
 from datetime import timedelta
-from functools import lru_cache
 
 import pydicom
 from pydicom import Dataset
 import numpy as np
 import pandas as pd
-
 from PIL import Image, ImageDraw, ImageFilter
 from easyocr import Reader
+
+from deidcm.config import Config
 from deidcm.dicom.dicom2df import dicom2df
 from deidcm.dicom.utils import log
 
@@ -175,11 +174,6 @@ def get_text_areas(pixels: np.ndarray, languages: list = ['fr']) -> list:
     try:
         if ocr_data[0][2] > 0.3:
             return remove_authorized_words_from(ocr_data)
-    except ValueError:
-        warnings.warn(
-            "Cannot load authorized words file. To suppress this warning, \
-            please create an empty ocr_deid_ignore.txt", RuntimeWarning)
-        return ocr_data
     # If ocr_data is empty, trying to access for
     # checking level of confidence will raise IndexError
     except IndexError:
@@ -199,31 +193,17 @@ def remove_authorized_words_from(ocr_data: list) -> list:
     Returns:
         The same list of words and coordinates minus the authorized words elements.
     """
-    authorized_words = load_authorized_words()
+    config = Config()
     if ocr_data is None:
         filtered_ocr_data = ocr_data
     else:
         filtered_ocr_data = []
         for data in ocr_data:
-            if data[1].upper() in authorized_words:
+            if data[1].upper() in config.authorized_words:
                 log(f'Ignoring word {data[1].upper()}')
             else:
                 filtered_ocr_data.append(data)
     return filtered_ocr_data
-
-
-@lru_cache(maxsize=1)
-def load_authorized_words() -> list:
-    home_folder = os.environ.get('DP_HOME')
-    if home_folder is None:
-        raise ValueError('cannot load DP_HOME')
-    filepath = os.path.join(home_folder, 'data', 'input',
-                            'epiconcept', 'ocr_deid_ignore.txt')
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f'Cannot load {filepath}')
-    with open(filepath, 'r', encoding="utf8") as f:
-        words = list(map(str.strip, f.readlines()))
-    return words
 
 
 def hide_text(pixels: np.ndarray, ocr_data: list, color_value: str = "black", mode: str = "rectangle", margin=300) -> np.ndarray:
@@ -309,7 +289,7 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
     Returns:
         A Pandas dataframe containing all metadata/attributes information.
     """
-    if False in list(map(lambda x: os.path.exists(x), [indir, outdir])):
+    if False in list(map(os.path.exists, [indir, outdir])):
         raise ValueError(f"Path {indir} or {outdir} does not exist.")
 
     if erase_outdir:
@@ -317,8 +297,8 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
             os.remove(os.path.join(outdir, file))
 
     df = dicom2df(indir)
-    recipe = load_recipe()
 
+    config = Config()
     for file in df.index:
         for attribute in df.columns:
             value = df[attribute][file]
@@ -326,50 +306,11 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
                 df.loc[file, attribute] = apply_deidentification(
                     attribute,
                     value,
-                    recipe,
+                    config.recipe,
                     org_root
                 )
     df['PatientIdentityRemoved_0x00120062_CS_1____'] = 'YES'
     return df
-
-
-@lru_cache(maxsize=1)
-def load_recipe() -> dict:
-    """Get the recipe from recipe.json and load it into a python dict.
-
-    This function reads `recipe.json`. If a user-defined version of the file
-    is detected inside `$DP_HOME/data/input`, it will be used. Otherwise, the
-    inbuilt version of the file will be used.
-
-    Be aware that the inbuilt version of the file does not suit a generic usage.
-    It was created for the Deep.piste study. It is highly recommended to create
-    your own version of `recipe.json`.
-
-    Returns:
-        A Python dictionary with recipe elements.
-    """
-    recipe = None
-
-    # Loads user customized recipe.json file
-    home_folder = os.environ.get('DP_HOME')
-    if home_folder is None:
-        raise ValueError('cannot load DP_HOME')
-    filepath = os.path.join(home_folder, 'data', 'input', 'recipe.json')
-    if not os.path.exists(filepath):
-        log(
-            f"WARNING: No customized recipe.json found at {filepath}. Defaulting to package inbuilt recipe.json")
-    else:
-        recipe = filepath
-
-    # Loads default inbuilt recipe.json file
-    if recipe is None:
-        recipe = os.path.join(os.path.dirname(__file__), 'recipe.json')
-
-    try:
-        with open(recipe, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        raise ValueError(f"Recipe file {recipe} cannot be found.")
 
 
 def get_id(id_attribute):

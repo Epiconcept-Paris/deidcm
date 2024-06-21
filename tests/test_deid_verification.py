@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image
 from pydicom import Dataset
 
+from deidcm.config import Config
 from deidcm.deid_verification import (
     is_background_black_enough,
     levenshtein_distance,
@@ -44,13 +45,11 @@ class MetadataDeidentificationTest(unittest.TestCase):
         cls.test_assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         cls.test_fonts_dir = os.path.join(
             cls.test_assets_dir, 'fonts')
-        cls.dp_home = os.path.join(cls.test_assets_dir, 'dp_home')
-        os.environ['DP_HOME'] = cls.dp_home
-
-    @classmethod
-    def tearDownClass(cls):
-        """this method is called once after running all tests"""
-        os.environ.pop('DP_HOME')
+        cls.user_files = os.path.join(cls.test_assets_dir, 'user_files')
+        cls.authorized_words_filepath = os.path.join(
+            cls.user_files, 'authorized_words.txt')
+        cls.config = Config(
+            authorized_words_path=cls.authorized_words_filepath)
 
     def test_is_background_black_enough_black_img(self):
         """nominal case with a pitch black image"""

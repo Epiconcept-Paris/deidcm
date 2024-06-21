@@ -41,13 +41,16 @@ export DP_HOME=/path/to/folder
 
 ## Start working with deidcm
 
+You can start using `deidcm` by importing functions.
+
+Here is an example with the `deidentify_image_png` function. This function takes 3 parameters: an input dicom file, the output directory and the name of the final png file. More details can be found [here][deidcm.dicom.deid_mammogram.deidentify_image_png].
+
 ```py title="deidentify_image.py" linenums="1"
 from deidcm.dicom.deid_mammogram import deidentify_image_png
 
 deidentify_image_png(
-    "/data/dicoms/1.3.6.1.4.1.9590.100.1.2.16146556.dcm",
-    "/data/processed",
-    "1.3.6.1.4.1.9590.100.1.2.16146556"
+    infile="/data/dicoms/1.3.6.1.4.1.9590.100.1.2.16146556.dcm",
+    outdir="/data/processed",
+    filename="1.3.6.1.4.1.9590.100.1.2.16146556"
 )
-
 ```

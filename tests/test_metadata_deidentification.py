@@ -9,8 +9,8 @@ import string
 
 import pandas as pd
 
+from deidcm.config import Config
 from deidcm.dicom.deid_mammogram import (
-    load_recipe,
     get_general_rule,
     offset4date,
     gen_dicom_uid,
@@ -29,31 +29,28 @@ class MetadataDeidentificationTest(unittest.TestCase):
         cls.test_assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         cls.test_mammo_dir = os.path.join(
             cls.test_assets_dir, 'sample_mammograms')
-        cls.dp_home = os.path.join(cls.test_assets_dir, 'dp_home')
-        os.environ['DP_HOME'] = cls.dp_home
-        cls.recipe = load_recipe()
-
-    @classmethod
-    def tearDownClass(cls):
-        """this method is called once after running all tests"""
-        os.environ.pop('DP_HOME')
+        cls.user_files = os.path.join(cls.test_assets_dir, 'user_files')
+        cls.authorized_words_filepath = os.path.join(
+            cls.user_files, 'authorized_words.txt')
+        cls.config = Config(
+            authorized_words_path=cls.authorized_words_filepath)
 
     def test_regex(self):
         """test function for get_general_rule()"""
         self.assertEqual(get_general_rule(
-            '0x50ffffff', self.recipe), 'RETIRER')
+            '0x50ffffff', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x50a23e56', self.recipe), 'RETIRER')
+            '0x50a23e56', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x50123456', self.recipe), 'RETIRER')
+            '0x50123456', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x60003000', self.recipe), 'RETIRER')
+            '0x60003000', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x60004000', self.recipe), 'RETIRER')
+            '0x60004000', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x60564000', self.recipe), 'RETIRER')
+            '0x60564000', self.config.recipe), 'RETIRER')
         self.assertEqual(get_general_rule(
-            '0x605d3000', self.recipe), 'RETIRER')
+            '0x605d3000', self.config.recipe), 'RETIRER')
 
     def test_offset4date(self):
         """test function for offset4date"""

@@ -31,6 +31,9 @@
 
 ::: deidcm.dicom.deid_mammogram.remove_authorized_words_from
 
+!!! info
+    For more information on how to define your own list of authorized words, go to [Customize Deidentification Tasks](#customize-deidentification-tasks)
+
 ::: deidcm.dicom.deid_mammogram.hide_text
 
 ## Attributes Deidentification
@@ -79,27 +82,6 @@
     9.9.9.9.9.474079559915109435636573090782
     ```
 
-::: deidcm.dicom.deid_mammogram.load_recipe
-
-!!! note
-    You don't have to call this function as it already implicitly called by [deidentify_attributes][deidcm.dicom.deid_mammogram.deidentify_attributes].
-
-!!! tip
-    This function can be called to check if your customized recipe is correctly
-    detected by deidcm.
-
-??? example
-    ```py title="load_recipe.py" linenums="1"
-    from deidcm_deid.dicom.deid_mammogram import load_recipe
-
-    recipe = load_recipe()
-    print(recipe)
-    ```
-
-    ```py
-    {'0x00020000': ['FileMetaInformationGroupLength', 'UL', 'CONSERVER'], '0x00020001': ['FileMetaInformationVersion', 'OB', 'CONSERVER']}
-    ```
-
 ::: deidcm.dicom.deid_mammogram.get_general_rule
 
 !!! note
@@ -136,3 +118,56 @@
     ```
 
 ::: deidcm.dicom.deid_mammogram.get_specific_rule
+
+## Customize Deidentification Tasks
+
+::: deidcm.config.Config
+    options:
+        show_root_full_path: true
+        members: None
+
+::: deidcm.config.Config.load_recipe
+    options:
+        show_root_full_path: true
+
+!!! note
+    You don't have to call this function as it already implicitly when you instanciate [the Config object][deidcm.dicom.deid_mammogram.Config].
+
+!!! tip
+    This function can be called to check if your customized recipe is correctly
+    detected by deidcm.
+
+??? example
+    ```py title="example_load_recipe.py" linenums="1"
+    from deidcm.config import Config
+
+    config = Config(recipe_path="/path/to/custom-recipe.json", authorized_words_path="/path/to/authorized_words.txt")
+    print(config.recipe)
+    ```
+
+    ```py
+    {'0x00020000': ['FileMetaInformationGroupLength', 'UL', 'CONSERVER'], '0x00020001': ['FileMetaInformationVersion', 'OB', 'CONSERVER']}
+    ```
+
+::: deidcm.config.Config.load_authorized_words
+    options:
+            show_root_full_path: true
+
+!!! note
+    You don't have to call this function as it already implicitly when you instanciate [the Config object][deidcm.dicom.deid_mammogram.Config].
+
+!!! tip
+    This function can be called to check if your customized list of authorized words is correctly
+    detected by deidcm.
+
+??? example
+    ```py title="example_load_recipe.py" linenums="1"
+    from deidcm.config import Config
+
+    config = Config(recipe_path="/path/to/custom-recipe.json", authorized_words_path="/path/to/authorized_words.txt")
+    print(config.authorized_words)
+    ```
+
+    ```py
+    ['HELLO', 'ALTER', 'DSQLD', 'SHOCR']
+    ```

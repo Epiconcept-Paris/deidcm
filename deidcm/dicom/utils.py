@@ -6,7 +6,8 @@ import sys
 import pydicom
 from PIL import Image
 
-def write_all_ds(indir: str, outdir: str, silent: bool=False) -> None:
+
+def write_all_ds(indir: str, outdir: str, silent: bool = False) -> None:
     """Writes the ds of all the dicom in a folder"""
     nb_files = len(os.listdir(indir))
     counter = 0
@@ -19,7 +20,7 @@ def write_all_ds(indir: str, outdir: str, silent: bool=False) -> None:
 def write1ds(file: str, outdir: str) -> None:
     """Writes the ds of a given dicom file"""
     ds = pydicom.dcmread(file)
-    with open(os.path.join(outdir, f"{os.path.basename(file)[:-4]}.txt"),'w') as f:
+    with open(os.path.join(outdir, f"{os.path.basename(file)[:-4]}.txt"), 'w') as f:
         f.write(str(ds))
 
 
@@ -47,7 +48,7 @@ def show_series(indir: str, tag: str) -> None:
                     files[element.value].append(file)
                 except Exception:
                     files[element.value] = [file]
-    
+
     for key, value in dict(Counter(series)).items():
         print(f"{key} appears {value} time(s)")
         if value == 1:
@@ -66,7 +67,7 @@ def d() -> str:
     return f'{now}'
 
 
-def log(txt: Union[str, list], logtype: int=0) -> None:
+def log(txt: Union[str, list], logtype: int = 0) -> None:
     if logtype == 1:
         logtype = ' (WARNING) '
     elif logtype == 2:
@@ -76,7 +77,7 @@ def log(txt: Union[str, list], logtype: int=0) -> None:
     if type(txt) == str:
         print(f'{d()}{logtype}{txt}')
     else:
-        f = lambda x: print(f'{d()}{logtype}{x}')
+        def f(x): return print(f'{d()}{logtype}{x}')
         list(map(f, txt))
     sys.stdout.flush()
 
@@ -85,23 +86,7 @@ def reduce_PIL_img_size(im: Image, reduce_factor: int, verbose: bool) -> Image:
     """Reduce the size of an image by dividing with the given factor"""
     width, height = im.size
     print(f"Size before reducing: {im.size}") if verbose else None
-    im.thumbnail((width/reduce_factor, height/reduce_factor), Image.ANTIALIAS)
+    im.thumbnail((width/reduce_factor, height/reduce_factor),
+                 Image.Resampling.LANCZOS)
     print(f"Size after reducing: {im.size}") if verbose else None
     return im
-
-
-def get_all_mammograms_words(dicom_path: str, report_path: str) -> None:
-    for file in os.listdir(dicom_path):
-        words = []
-        filepath = os.path.join(dicom_path, file)
-        pixels, ds = dicom2narray(filepath)
-        ocr_data = get_text_areas(pixels)
-        if ocr_data is None:
-            continue
-        words.extend([data[1] for data in ocr_data])
-        with open(report_path, 'a') as f:
-            list(map(lambda x: f.write(f'{x}\n'), words))
-
-
-if __name__ == '__main__':
-    print(get_all_mammograms_words('data/input/test_deid_ocr', 'data/input/mammogram_words'))

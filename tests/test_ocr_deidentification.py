@@ -10,9 +10,9 @@ from PIL import Image
 
 from deidcm.dicom.deid_mammogram import (
     deidentify_image_png,
-    load_authorized_words,
     get_text_areas,
 )
+from deidcm.config import Config
 
 
 class OcrDeidentificationTest(unittest.TestCase):
@@ -25,13 +25,11 @@ class OcrDeidentificationTest(unittest.TestCase):
         cls.test_mammo_dir = os.path.join(
             cls.test_assets_dir, 'sample_mammograms')
         cls.png_dir = os.path.join(cls.test_assets_dir, 'png_files')
-        cls.dp_home = os.path.join(cls.test_assets_dir, 'dp_home')
-        os.environ['DP_HOME'] = cls.dp_home
-
-    @classmethod
-    def tearDownClass(cls):
-        """this method is called once after running all tests"""
-        os.environ.pop('DP_HOME')
+        cls.user_files = os.path.join(cls.test_assets_dir, 'user_files')
+        cls.authorized_words_filepath = os.path.join(
+            cls.user_files, 'authorized_words.txt')
+        cls.config = Config(
+            authorized_words_path=cls.authorized_words_filepath)
 
     def test_png_deidentification(self):
         sample_mammo_path = os.path.join(self.test_mammo_dir, 'cmmd-1.dcm')
@@ -46,13 +44,15 @@ class OcrDeidentificationTest(unittest.TestCase):
 
     def test_load_authorized_words(self):
         """nominal case"""
-        words = load_authorized_words()
-        self.assertEqual(['HELLO', 'ALTER', 'DSQLD'], words,
+        words = Config.load_authorized_words(
+            self.authorized_words_filepath)
+        self.assertEqual(['HELLO', 'ALTER', 'DSQLD', 'SHOCR'], words,
                          "Both lists should contain the same words")
 
     def test_get_text_areas_w_b(self):
         """
         check if text is correctly detected for white text on black background
+        and if ignored words are not present in results
         """
         im = Image.open(os.path.join(self.png_dir, 'white-txt-black-bg.png'))
         pixels = np.array(im)
@@ -60,6 +60,6 @@ class OcrDeidentificationTest(unittest.TestCase):
         detected_words = set([el[1] for el in detected_elements])
         self.assertEqual(
             detected_words,
-            set(['JTRX4', 'SHOCR', 'DSLC72']),
+            set(['JTRX4', 'DSLC72']),
             "Words detected should match words written on PNG image"
         )
