@@ -5,14 +5,9 @@ on:
       types: [prereleased]
 
 jobs:
-  prerelease:
-    name: Publish prerelease to TestPyPI
+  build-prerelease:
+    name: Build package for TestPyPI
     runs-on: ubuntu-latest
-    environment:
-      name: prerelease
-      url: https://test.pypi.org/p/deidcm
-    permissions:
-        id-token: write
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -24,6 +19,30 @@ jobs:
       run: |
         python -m pip install --upgrade pip build
         python -m build
+    # the following step is used to pass data to publish-test-pypi job
+    # Artifacts can be used for this purpose between jobs of a same workflow run
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+          name: prerelease-package-distributions
+          path: dist/
+    
+  publish-test-pypi:
+    name: Publish prerelease to TestPyPI
+    needs:
+      - build-prerelease
+    runs-on: ubuntu-latest
+    environment:
+      name: prerelease
+      url: https://test.pypi.org/p/deidcm
+    permissions:
+        id-token: write
+    steps:
+    - name: Download the dists
+      uses: actions/download-artifact@v4
+      with:
+          name: prerelease-package-distributions
+          path: dist/
     - name: Publish to TestPyPi
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
