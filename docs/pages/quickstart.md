@@ -23,22 +23,6 @@ For installing `deidcm` tools, run the following command:
 pip install deidcm
 ```
 
-After that, you'll have to define an environment variable called `DP_HOME`. This
-variable is used to locate your **data directory** where you'll:
-
-* put your DICOM files for submitting them to the deidentifier tool
-* find the output of the deidentifier tool (deidentified information)
-* define referentials used by the package (`recipe.json`, `ocr_deid_words.txt`)
-
-To define this **data directory**, run the following command:
-
-```bash
-export DP_HOME=/path/to/folder
-```
-
-!!! info
-    You can set this folder wherever you want. However, keep in mind that this folder is essential for the package and you'll probably open it more than once. So, don't put it somewhere too complicated to access.
-
 ## Start working with deidcm
 
 You can start using `deidcm` by importing functions.
@@ -46,7 +30,12 @@ You can start using `deidcm` by importing functions.
 Here is an example with the `deidentify_image_png` function. This function takes 3 parameters: an input dicom file, the output directory and the name of the final png file. More details can be found [here][deidcm.dicom.deid_mammogram.deidentify_image_png].
 
 ```py title="deidentify_image.py" linenums="1"
+from deidcm.config import Config
 from deidcm.dicom.deid_mammogram import deidentify_image_png
+
+# Default Configuration (inbuilt-recipe, all words on pixels 
+# have to be erased)
+Config()
 
 deidentify_image_png(
     infile="/data/dicoms/1.3.6.1.4.1.9590.100.1.2.16146556.dcm",
@@ -54,3 +43,6 @@ deidentify_image_png(
     filename="1.3.6.1.4.1.9590.100.1.2.16146556"
 )
 ```
+
+!!! note
+    If you want to use a custom recipe, use the [the Config object][deidcm.dicom.deid_mammogram.Config].

@@ -126,6 +126,25 @@
         show_root_full_path: true
         members: None
 
+::: deidcm.config.Config.__new__
+
+??? example
+    Default Configuration (inbuilt recipe, no authorized words)
+    ```py title="default_config.py" linenums="1"
+    from deidcm.config import Config
+
+    config = Config()
+    print(config.recipe)
+    ```
+
+    Custom Configuration
+    ```py title="custom_config.py" linenums="1"
+    from deidcm.config import Config
+
+    config = Config(recipe_path="/path/to/custom-recipe.json", authorized_words_path="/path/to/authorized_words.txt")
+    print(config.recipe)
+    ```
+
 ::: deidcm.config.Config.load_recipe
     options:
         show_root_full_path: true

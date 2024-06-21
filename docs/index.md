@@ -271,14 +271,14 @@ B -->|No| Z[Apply the strictest rule: REMOVE];
 
 ### Define your own recipe
 
-A `recipe.json` file is already available inside deidcm package. However, it is possible to define your own `recipe.json`.
+A `recipe.json` file is already available inside deidcm package. However, it is possible to define your own `recipe.json`. In order to specify a custom recipe, use the [the Config object][deidcm.dicom.deid_mammogram.Config]. 
 
 !!! warning
     The inbuilt `recipe.json` file was created for the [Deep.Piste](https://www.health-data-hub.fr/partenariats/deep-piste){:target="_blank"} study. It was made for mammograms only and you should probably define ***your own file meeting your own needs***.
 
     If you don't define a new `recipe.json` folder, deidcm will show a warning and automatically use its inbuilt referential.
 
-In order to do define your own `recipe.json`, you'll have to create the file `$DP_HOME/data/input/recipe.json` and respect this structure:
+In order to do define your own `recipe.json`, you'll have to create the file `recipe.json` and respect this structure :
 
 ```json
 {

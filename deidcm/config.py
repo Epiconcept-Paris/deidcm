@@ -26,6 +26,10 @@ class Config:
         """
         Create a new instance of Config if it does not exist.
 
+        Args:
+            recipe_path: the path of your custom `recipe.json` file.
+            authorized_words_path: the path of your custom `authorized_words.txt` file
+
         Returns:
             Config: The single instance of the Config class.
         """
