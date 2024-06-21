@@ -1,15 +1,28 @@
-"""Hold the environment settings"""
+"""Class used to define environment configuration."""
 
 import json
 import os
+import warnings
 from typing_extensions import Self
 
 
 class Config:
-    """Singleton object to easily access env settings"""
-    _instance = None
+    """This class is used to change the configuration of your environment.
 
-    def __new__(cls) -> Self:
+    This singleton object has to be instanciated for deidentification tasks.
+    It allows you to define the path to a custom recipe and the path to 
+    a authorized_words.txt file.
+
+    - `recipe.json`: a JSON file that contains the recipe orchestrating the
+    attribute deidentification process.
+    - `authorized_words.txt`: a TXT file that contains one word per line. Each
+    word will be kept on the image even if it is detected by the OCR reader.
+    """
+    _instance = None
+    _recipe = None
+    _authorized_words = []
+
+    def __new__(cls, recipe_path: str = None, authorized_words_path: str = None) -> Self:
         """
         Create a new instance of Config if it does not exist.
 
@@ -18,26 +31,35 @@ class Config:
         """
         if cls._instance is None:
             cls._instance = super(Config, cls).__new__(cls)
+
+            # Init recipe
+            cls._recipe = cls.load_recipe(recipe_path)
+
+            # Init authorized_words
+            if authorized_words_path is None:
+                print(
+                    "No authorized_words.txt file given. All OCR detected words will be erased.")
+            else:
+                cls._authorized_words = cls.load_authorized_words(
+                    authorized_words_path)
+
         return cls._instance
 
     @classmethod
-    def get_instance(cls) -> Self:
-        if not cls._instance:
-            cls._instance = cls()
-        return cls._instance
+    def load_authorized_words(cls, authorized_words_filepath: str) -> list:
+        """Get and load the list of authorized words from authorized_words.json
 
-    def set_recipe(self, filepath) -> None:
-        self._recipe = self.load_recipe(filepath)
+        This function reads `authorized_words.txt` and load it into a python list.
+        If the file is not defined, the deidentification process will erase
+        all detected words.
 
-    def set_ocr_ignored_words(self, filepath) -> None:
-        self._ocr_ignored_words = self.load_authorized_words(filepath)
-
-    @classmethod
-    def load_authorized_words(cls, ocr_ignored_words_filepath: str) -> list:
-        if not os.path.exists(ocr_ignored_words_filepath):
+        Returns:
+            A Python list of authorized words
+        """
+        if not os.path.exists(authorized_words_filepath):
             raise FileNotFoundError(
-                f'Cannot load {ocr_ignored_words_filepath}')
-        with open(ocr_ignored_words_filepath, 'r', encoding="utf8") as f:
+                f'Cannot load {authorized_words_filepath}')
+        with open(authorized_words_filepath, 'r', encoding="utf8") as f:
             words = list(map(str.strip, f.readlines()))
         return words
 
@@ -58,15 +80,16 @@ class Config:
         recipe = None
 
         # Load user customized recipe.json file
-        if not os.path.exists(recipe_filepath):
+        if recipe_filepath is None or not os.path.exists(recipe_filepath):
             print(
-                f"WARNING: No customized recipe.json found at {recipe_filepath}. Defaulting to package inbuilt recipe.json")
+                f"No customized recipe.json found at path `{recipe_filepath}`. Defaulting to package inbuilt recipe.json")
         else:
             recipe = recipe_filepath
 
         # Load default inbuilt recipe.json file
         if recipe is None:
-            recipe = os.path.join(os.path.dirname(__file__), 'recipe.json')
+            recipe = os.path.join(os.path.dirname(
+                __file__), 'dicom', 'recipe.json')
 
         try:
             with open(recipe, 'r', encoding="utf8") as f:
@@ -76,17 +99,13 @@ class Config:
                 f"Recipe file {recipe} cannot be found.") from exc
 
     @property
-    def recipe_filepath(self) -> str:
-        return self.recipe_filepath
-
-    @property
     def recipe(self) -> dict:
-        return self.recipe
+        """Getter of recipe"""
+        if self._recipe is None:
+            raise RuntimeError("Recipe has not been initialized")
+        return self._recipe
 
     @property
-    def ocr_ignored_words_filepath(self) -> str:
-        return self.ocr_ignored_words_filepath
-
-    @property
-    def ocr_ignored_words(self) -> list:
-        return self.ocr_ignored_words
+    def authorized_words(self) -> list:
+        """Getter of authorized_words"""
+        return self._authorized_words

@@ -174,11 +174,6 @@ def get_text_areas(pixels: np.ndarray, languages: list = ['fr']) -> list:
     try:
         if ocr_data[0][2] > 0.3:
             return remove_authorized_words_from(ocr_data)
-    except ValueError:
-        warnings.warn(
-            "Cannot load authorized words file. To suppress this warning, \
-            please create an empty ocr_deid_ignore.txt", RuntimeWarning)
-        return ocr_data
     # If ocr_data is empty, trying to access for
     # checking level of confidence will raise IndexError
     except IndexError:
@@ -198,13 +193,13 @@ def remove_authorized_words_from(ocr_data: list) -> list:
     Returns:
         The same list of words and coordinates minus the authorized words elements.
     """
-    config = Config.get_instance()
+    config = Config()
     if ocr_data is None:
         filtered_ocr_data = ocr_data
     else:
         filtered_ocr_data = []
         for data in ocr_data:
-            if data[1].upper() in config.ocr_ignored_words:
+            if data[1].upper() in config.authorized_words:
                 log(f'Ignoring word {data[1].upper()}')
             else:
                 filtered_ocr_data.append(data)
@@ -303,7 +298,7 @@ def deidentify_attributes(indir: str, outdir: str, org_root: str, erase_outdir: 
 
     df = dicom2df(indir)
 
-    config = Config.get_instance()
+    config = Config()
     for file in df.index:
         for attribute in df.columns:
             value = df[attribute][file]

@@ -30,10 +30,10 @@ class MetadataDeidentificationTest(unittest.TestCase):
         cls.test_mammo_dir = os.path.join(
             cls.test_assets_dir, 'sample_mammograms')
         cls.user_files = os.path.join(cls.test_assets_dir, 'user_files')
-        cls.ocr_deid_ignore_words_filepath = os.path.join(
-            cls.user_files, 'ocr_deid_ignore.txt')
-        cls.config = Config.get_instance()
-        cls.config.set_ocr_ignored_words(cls.ocr_deid_ignore_words_filepath)
+        cls.authorized_words_filepath = os.path.join(
+            cls.user_files, 'authorized_words.txt')
+        cls.config = Config(
+            authorized_words_path=cls.authorized_words_filepath)
 
     def test_regex(self):
         """test function for get_general_rule()"""
