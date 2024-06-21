@@ -26,6 +26,10 @@ setup(
         "pydicom"
     ],
     packages=find_packages(),
+
+    # Include non-code file in distribution
+    include_package_data=True,
+
     extras_require={
         "quality-tools": [
             "pylint",
