@@ -143,13 +143,12 @@ def get_PIL_image(dataset: pydicom.dataset.Dataset) -> Image:
 
 def numpy2bytes(pixels: np.ndarray, ds: pydicom.dataset.Dataset) -> bytes:
     """Returns bytes form of a numpy array built with proper ds' settings"""
-    # pixels[pixels < 300] = 0
     if ds.BitsAllocated == 8:
         return pixels.astype(np.uint8).tobytes()
     elif ds.BitsAllocated == 16:
         return pixels.astype(np.uint16).tobytes()
-    # return pixels.tobytes()
-
+    else:
+        raise ValueError(f"Unsupported BitsAllocated value: {ds.BitsAllocated}")
 
 def get_text_areas(pixels: np.ndarray, languages: list = ['fr']) -> list:
     """Read and return words of an image.

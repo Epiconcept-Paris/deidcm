@@ -1,3 +1,4 @@
+from pydicom.dataset import Dataset
 from collections import Counter
 from datetime import datetime
 from typing import Union
@@ -90,3 +91,27 @@ def reduce_PIL_img_size(im: Image, reduce_factor: int, verbose: bool) -> Image:
                  Image.Resampling.LANCZOS)
     print(f"Size after reducing: {im.size}") if verbose else None
     return im
+
+
+def compare_dicom_datasets(ds1: Dataset, ds2: Dataset) -> bool:
+    # Check if both datasets have the same number of elements
+    if len(ds1) != len(ds2):
+        return False
+    # Iterate over all elements in the first dataset
+    for elem in ds1:
+        tag = elem.tag
+        # Check if the tag exists in the second dataset
+        if tag not in ds2:
+            print(f"Tag {tag} not found in second dataset.")
+            return False
+        # Check if the values are equal
+        value1 = elem.value
+        value2 = ds2[tag].value
+        if isinstance(value1, Dataset) and isinstance(value2, Dataset):
+            # Recursively compare nested datasets
+            if not compare_dicom_datasets(value1, value2):
+                return False
+        elif value1 != value2:
+            print(f"Values for tag {tag} do not match: {value1} != {value2}")
+            return False
+    return True

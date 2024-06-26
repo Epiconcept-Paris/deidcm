@@ -8,29 +8,31 @@ repo_url: https://github.com/Epiconcept-Paris/deidcm/
 
 nav:
   - Home: index.md
-  - Quickstart: 'pages/quickstart.md'
-  - Mammogram Deidentification: 'pages/deid_mammogram.md'
-  - License: 'pages/license.md'
-  - About Epiconcept: 'pages/about_epiconcept.md'
+  - Quickstart: "pages/quickstart.md"
+  - Mammogram Deidentification: "pages/deid_mammogram.md"
+  - dicom2df Module: "pages/dicom2df.md"
+  - df2dicom Module: "pages/df2dicom.md"
+  - License: "pages/license.md"
+  - About Epiconcept: "pages/about_epiconcept.md"
 
 # Warning: don't add plugins while in serve mode. It will throw errors.
 plugins:
-- search:
-    lang: en
-# Documentation auto-generation from package's docstrings
-- mkdocstrings:
-    handlers:
-      python:
-        options:
-          docstring_style: google
-          show_source: false
-          # This refers to the docstring of the module. If true, it shows this
-          # docstring.
-          show_root_heading: true
-          show_root_full_path: false
-          # This changes the heading level of function signatures
-          # retrieved with mkdocstring
-          heading_level: 6
+  - search:
+      lang: en
+  # Documentation auto-generation from package's docstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            # This refers to the docstring of the module. If true, it shows this
+            # docstring.
+            show_root_heading: true
+            show_root_full_path: false
+            # This changes the heading level of function signatures
+            # retrieved with mkdocstring
+            heading_level: 6
 
 extra:
   social:
@@ -41,12 +43,11 @@ extra:
 
 copyright: Copyright &copy; 2023-2024 Epiconcept
 
-
 theme:
   name: material
   favicon: img/epiconcept-logo.png
   logo: img/epiconcept-logo-xl.png
-  palette:    
+  palette:
     # Palette toggle for light mode
     - scheme: default
       primary: cyan

@@ -2,7 +2,7 @@
 
 ## What is deidcm?
 
-deidcm is a reusable toolset for deidentifiying **images** and **metadata** contained inside DICOM files. deidcm stands on the shoulders of giants (PyTorch, easyOCR)
+deidcm is a reusable toolset for deidentifiying **images** and **metadata** contained inside DICOM files. deidcm stands on the shoulders of giants ([PyTorch](https://github.com/pytorch/pytorch){:target="_blank"}, [easyOCR](https://github.com/JaidedAI/EasyOCR){:target="_blank"})
 
 This package was initially built for processing medical data from the [Deep.Piste](https://www.health-data-hub.fr/partenariats/deep-piste){:target="_blank"} study. It was primarly made for mammograms.
 
@@ -218,7 +218,7 @@ The recipe file contains 2 types of rules:
 **How do we use these rules?**
 
 - In practice, we'll mostly use **general rules**. They allow us to apply a given deidentification action on a targeted attribute.
-- **Specific rules** find their use when we want to target an generic attribute inside a sequence. By generic, we refer to an attribute that is used several
+- **Specific rules** find their use when we want to target a generic attribute inside a sequence. By generic, we refer to an attribute that is used several
     times in the dataset but inside different sequences. Let's see an example:
 
 !!! example
@@ -258,7 +258,7 @@ The recipe file contains 2 types of rules:
     If a **general rule** is defined for a given sequence. The rule applied to the children will be the strictest between the sequence rule and the sequence child rule.
 
 !!! warning
-    If a **general rule** is defined for a given sequence and children have **specific rules**, the **specific rules** will override the **general rule**
+    If a **general rule** is defined for a given sequence and children have **specific rules**, the **specific rules** will override the **general rule**.
 
 ``` mermaid
 graph TD
@@ -278,7 +278,7 @@ A `recipe.json` file is already available inside deidcm package. However, it is 
 
     If you don't define a new `recipe.json` folder, deidcm will show a warning and automatically use its inbuilt referential.
 
-In order to do define your own `recipe.json`, you'll have to create the file `recipe.json` and respect this structure :
+In order to define your own `recipe.json`, you'll have to create the file `recipe.json` and respect this structure :
 
 ```json
 {

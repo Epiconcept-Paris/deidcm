@@ -1,3 +1,11 @@
+"""
+
+This module contains functions used to transform DICOM files into 
+a single pandas DataFrame. It opens each file with pydicom, and flats the DICOM
+nested structure before saving it to the dataFrame.
+
+"""
+
 import os
 import pydicom
 from matplotlib import pyplot
@@ -20,7 +28,22 @@ def write_dicom(infiles):
         i = i + 1
 
 
-def dicom2df(search_dir, with_private=False, with_pixels=False, with_seqs=True):
+def dicom2df(search_dir: str, with_private: bool = False, with_pixels: bool = False, with_seqs: bool = True) -> pd.DataFrame:
+    """Create a pandas DataFrame based on a directory of DICOM files
+
+    This function creates 
+
+    Args:
+        search_dir: Path to the directory containing the DICOM files.
+        with_private: Whether to include Private DICOM tags in the dataframe
+            or not.
+        with_pixels: Whether to include pixel bytes (PixelData attribute) in the produced the dataFrame or not.
+            Default to false as it has an important impact on performance.
+        with_seqs: Whether to include DICOM sequences of attributes in the produced dataFrame or not.
+
+    Returns:
+        A dataframe with information of all DICOM files present in `search_dir`.
+    """
     files = search_dicom(search_dir)
     dicos = map(
         lambda f: flat_dicom(f, with_private=with_private,
