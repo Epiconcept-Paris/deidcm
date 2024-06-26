@@ -1,5 +1,9 @@
 """
-Reusable tools for deidentification purposes
+
+This module contains functions used to transform a pandas DataFrame into
+DICOM and PNG files. It can build a valid DICOM file by obtaining the
+pixels and DICOM attributes from the DataFrame.
+
 """
 
 
@@ -9,6 +13,7 @@ import base64
 import json
 
 import pandas as pd
+from numpy import ndarray
 import pydicom
 from pydicom.dataset import Dataset, FileMetaDataset
 from pydicom.sequence import Sequence
@@ -25,10 +30,19 @@ PIXEL = ('0x7fe0010', 'OB')
 MAMMO_ID_COL = 'SOPInstanceUID_0x00080018_UI_1____'
 
 
-def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_file_formats=None):
+def df2dicom(df: pd.DataFrame, outdir: str, do_image_deidentification: bool = False, test: bool = False, output_file_formats: list = None) -> None:
     """
-    Deidentifies DICOM files and generates PNG files for each mammogram alongside
-    a CSV file containing all deidentified tags
+    Build DICOM and/or PNG files from a pandas DataFrame obtained with [dicom2df][deidcm.dicom.dicom2df.dicom2df].
+
+    Args:
+        df: The pandas DataFrame obtained with `dicom2df` that you want to convert back to DICOM/PNG files.
+        outdir: Path of the directory that will contain your files at the end of the process.
+        do_image_deidentification: Whether or not this process will trigger the OCR deidentification for
+            pixels.
+        test: This option should not be left to False anytime.
+        output_file_formats: A list of formats. Currently supported formats are ["dcm", "png"]. Both
+            can be used alone if you need a single output format. If you select "png", the process
+            will produce a PNG for each line of `df`
     """
     for index in range(len(df)):
         ds = build_dicom(df, index, parent_path='')
@@ -62,9 +76,9 @@ def df2dicom(df, outdir, do_image_deidentification=False, test=False, output_fil
 
         if "dcm" in output_file_formats:
             if do_image_deidentification:
-                ds.add_new(PIXEL[0], PIXEL[1], numpy2bytes(pixels, ds))
+                ds.PixelData = numpy2bytes(pixels, ds)
             else:
-                ds.add_new(PIXEL[0], PIXEL[1], get_original_img(img_path))
+                ds.PixelData = get_original_img(img_path).tobytes()
             try:
                 # write_like_original=False in order to force pydicom to write
                 #  correct DICOM headers at file writing time
@@ -93,7 +107,7 @@ def df2hdh(df: pd.DataFrame, outdir: str, exclude_images: bool) -> None:
     df.to_csv(os.path.join(outdir, 'meta.csv'))
 
 
-def get_original_img(filepath) -> bytes:
+def get_original_img(filepath) -> ndarray:
     """Finds and returns the original image"""
     return pydicom.read_file(filepath).pixel_array
 

@@ -7,14 +7,6 @@
 !!! info
     deidcm relies on `easyOCR` which uses `PyTorch`. If your system does not have a GPU, consider installing `PyTorch` CPU-only version ([more information here](https://pytorch.org/get-started/locally/#linux-installation){:target="_blank"}).
 
-* For installing `PyTorch` and `PyTorch Vision` **CPU-only dependencies** on a Linux system, run the command below:
-
-```bash
-pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
-```
-
-* If you have a GPU on your system, please install the correct version of `PyTorch` and `PyTorch Vision` for your computer ([PyTorch Installation Guide](https://pytorch.org/get-started/locally/#start-locally){:target="_blank"}).
-
 ## Installation
 
 For installing `deidcm` tools, run the following command:
