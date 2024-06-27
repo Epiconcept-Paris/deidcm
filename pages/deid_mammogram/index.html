@@ -1,0 +1,2038 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reusable tools for mammograms de-identification">
+      
+      
+        <meta name="author" content="Francisco ORCHARD, William MADIE">
+      
+      
+      
+        <link rel="prev" href="../quickstart/">
+      
+      
+        <link rel="next" href="../dicom2df/">
+      
+      
+      <link rel="icon" href="../../img/epiconcept-logo.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>Mammogram Deidentification - deidcm</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#deidcm.dicom.deid_mammogram" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="deidcm" class="md-header__button md-logo" aria-label="deidcm" data-md-component="logo">
+      
+  <img src="../../img/epiconcept-logo-xl.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            deidcm
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Mammogram Deidentification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="cyan" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Epiconcept-Paris/deidcm/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="deidcm" class="md-nav__button md-logo" aria-label="deidcm" data-md-component="logo">
+      
+  <img src="../../img/epiconcept-logo-xl.png" alt="logo">
+
+    </a>
+    deidcm
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Epiconcept-Paris/deidcm/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Mammogram Deidentification
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Mammogram Deidentification
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      deid_mammogram
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.deidentify_image_png" class="md-nav__link">
+    <span class="md-ellipsis">
+      deidentify_image_png
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_PIL_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_PIL_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_text_areas" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_text_areas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.remove_authorized_words_from" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_authorized_words_from
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.hide_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      hide_text
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.deidentify_attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      deidentify_attributes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_general_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_general_rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_specific_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_specific_rule
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-deidentification-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customize Deidentification Tasks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customize Deidentification Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.__new__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.load_recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.load_authorized_words" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_authorized_words
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dicom2df/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    dicom2df Module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../df2dicom/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    df2dicom Module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about_epiconcept/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About Epiconcept
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      deid_mammogram
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.deidentify_image_png" class="md-nav__link">
+    <span class="md-ellipsis">
+      deidentify_image_png
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_PIL_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_PIL_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_text_areas" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_text_areas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.remove_authorized_words_from" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_authorized_words_from
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.hide_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      hide_text
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.deidentify_attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      deidentify_attributes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_general_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_general_rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.dicom.deid_mammogram.get_specific_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_specific_rule
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-deidentification-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customize Deidentification Tasks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customize Deidentification Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.__new__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.load_recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deidcm.config.Config.load_authorized_words" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_authorized_words
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Mammogram Deidentification</h1>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h6 id="deidcm.dicom.deid_mammogram" class="doc doc-heading">
+            <code>deidcm.dicom.deid_mammogram</code>
+
+
+</h6>
+
+    <div class="doc doc-contents first">
+
+      <p>This module is a mammograms deidentification toolbox.</p>
+<p>This module contains functions related to deidentification of mammograms. It
+fulfills the following purposes:</p>
+<ul>
+<li>deidentifying mammogram's images</li>
+<li>deidentifying mammogram's metadata</li>
+</ul>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Deidentification Functionalities</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Image Deidentification based on OCR</td>
+</tr>
+<tr>
+<td style="text-align: center;">Attributes/Metadata Deidentification based on a Recipe</td>
+</tr>
+</tbody>
+</table>
+<h2 id="image-deidentification">Image Deidentification</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.deidentify_image_png" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">deidentify_image_png</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Deidentify and write a given mammogram's image in outdir as filename.png</p>
+<p>This function invokes the OCR reader for getting all potential words on a 
+mammogram's image. Then, it hides all found words by higlighting them in black. </p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>infile</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The path of the DICOM file to deidentify.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>outdir</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The path of the directory that will store the output.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>filename</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the resulting PNG file. (don't add the file extension).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.get_PIL_image" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_PIL_image</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Get Image object from Python Imaging Library(PIL)</p>
+<p>Get the image from the pydicom dataset and convert it from a numpy.ndarray
+to a PIL image object. If available, the function will use metadata information 
+contained inside the pydicom dataset for the conversion.  </p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>dataset</code></td>
+            <td>
+                  <code><span title="pydicom.dataset.Dataset">Dataset</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A pydicom dataset which can be obtained from a DICOM file.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>Image</code></td>            <td>
+                  <code><span title="PIL.Image">Image</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A PIL image object.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><details class="example">
+<summary>Example</summary>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">get_PIL_image.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span>
+<span class="normal"><a href="#__codelineno-0-4">4</a></span>
+<span class="normal"><a href="#__codelineno-0-5">5</a></span>
+<span class="normal"><a href="#__codelineno-0-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">deidcm_deid.dicom.deid_mammogram</span> <span class="kn">import</span> <span class="n">get_PIL_image</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">import</span> <span class="nn">pydicom</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">pydicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;my-mammogram.dcm&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="n">img</span> <span class="o">=</span> <span class="n">get_PIL_image</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+</details>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.get_text_areas" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_text_areas</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fr&#39;</span><span class="p">])</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Read and return words of an image.</p>
+<p>This function takes a pixel array in input and submits it to the easyOCR Reader.
+This Reader will then return a list of found words. This function implicitly 
+remove authorized words from the computed list.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pixels</code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>An array representing an image.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>languages</code></td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of supported languages for the OCR Reader.
+This allows to submit images with text written in different languages.</p>
+              </div>
+            </td>
+            <td>
+                  <code>[&#39;fr&#39;]</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>list</code></td>            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of words detected on the submitted image.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The list of available languages can be found <a href="https://www.jaided.ai/easyocr/" target="_blank">here</a>.</p>
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.remove_authorized_words_from" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">remove_authorized_words_from</span><span class="p">(</span><span class="n">ocr_data</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Remove authorized words from ocr_data list</p>
+<p>This function allows to remove authorized words from easyOCR output.
+It is useful if you want to keep some text information on your image such
+as image laterality information (RMLO, LCC, OBLIQUE G...).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>ocr_data</code></td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of words and coordinates obtained after submitting an image to easyOCR Reader.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same list of words and coordinates minus the authorized words elements.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>For more information on how to define your own list of authorized words, go to <a href="#customize-deidentification-tasks">Customize Deidentification Tasks</a></p>
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.hide_text" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hide_text</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">ocr_data</span><span class="p">,</span> <span class="n">color_value</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Censor text present on the pixels array representing an image.</p>
+<p>Take the input image and draw new shapes with PIL package in order to
+censor OCR-detected words.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pixels</code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A pixels array representing an image</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>ocr_data</code></td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of words and coordinates obtained by easyOCR Reader after submitting an image.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>color_value</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string indicating the color of the rectangle used for censoring information (<code>white</code> or <code>black</code>)</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;black&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>mode</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string indicating the method for censoring information. (<code>blur</code> or <code>rectangle</code>)</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;rectangle&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The deidentified pixels array.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><h2 id="attributes-deidentification">Attributes Deidentification</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.deidentify_attributes" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">deidentify_attributes</span><span class="p">(</span><span class="n">indir</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">org_root</span><span class="p">,</span> <span class="n">erase_outdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Produce a Pandas dataframe with deidentified information from a folder of DICOM files.</p>
+<p>This function creates a Pandas dataframe from all files present in the <code>indir</code> folder.
+Then, it loads the deidentification recipe and iterates through the dataframe to
+deidentify its content. Finally, it returns the deidentified dataframe object. </p>
+<p>It also takes <code>outdir</code> and <code>erase_outdir</code>
+arguments for handling output directory auto-cleaning in the context of a data
+pipeline. If you're not interested in auto-cleaning your output repository, simply
+specify <code>outdir</code> and set <code>erase_outdir</code> to <code>False</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>indir</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The input directory (DICOM files to deidentify)</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>outdir</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The output directory (deidentified/resulting files)</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>org_root</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>An organization root identifier for deidentifying DICOM UIDs.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>erase_outdir</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Empty the output directory if True</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Pandas dataframe containing all metadata/attributes information.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition info">
+<p class="admonition-title">Info</p>
+<p><code>org_root</code> refers to a prefix used for deidentifying DICOM UIDs. 
+This prefix has to be unique for your organization.</p>
+<p>For more information, see <a href="https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_9.2.html" target="_blank">NEMA DICOM Standards Documentation</a>.</p>
+</div>
+<details class="example">
+<summary>Example</summary>
+<p>Let's test our recipe by adding one of its attribute into a pydicom dataset.
+The attribute in our recipe looks like this:
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&quot;0x00209161&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="s2">&quot;ConcatenationUID&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s2">&quot;UI&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="s2">&quot;PSEUDONYMISER&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">],</span>
+</span></code></pre></div></p>
+<p><strong>Step n°1</strong>: We add the new DICOM UID to our pydicom dataset
+<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span>
+<span class="normal"><a href="#__codelineno-2-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">pydicom</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">pydicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;my-mammogram.dcm&quot;</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="n">ds</span><span class="o">.</span><span class="n">add_new</span><span class="p">(</span><span class="s2">&quot;0x00209161&quot;</span><span class="p">,</span> <span class="s2">&quot;UI&quot;</span><span class="p">,</span> <span class="s2">&quot;1.123.123.1234.123456.12345678&quot;</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="n">ds</span><span class="o">.</span><span class="n">save_as</span><span class="p">(</span><span class="s2">&quot;my-modified-mammogram.dcm&quot;</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div></p>
+<p>It will then appear inside your pydicom dataset:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">(</span><span class="m">0020</span>,<span class="w"> </span><span class="m">9161</span><span class="o">)</span><span class="w"> </span>Concatenation<span class="w"> </span>UID<span class="w">                   </span>UI:<span class="w"> </span><span class="m">1</span>.123.123.1234.123456.12345678
+</span></code></pre></div></p>
+<p><strong>Step n°2</strong>: We deidentify the folder containing our test mammogram
+<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">deidcm_deid.dicom.deid_mammogram</span> <span class="kn">import</span> <span class="n">deidentify_attributes</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="n">df</span> <span class="o">=</span> <span class="n">deidentify_attributes</span><span class="p">(</span><span class="s2">&quot;/path/to/mammogram/folder&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/outdir&quot;</span><span class="p">,</span> <span class="n">org_root</span><span class="o">=</span><span class="s2">&quot;9.9.9.9.9&quot;</span><span class="p">,</span> <span class="n">erase_outdir</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ConcatenationUID_0x00209161_UI_1____</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="m">9</span>.9.9.9.9.474079559915109435636573090782
+</span></code></pre></div></p>
+</details>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.get_general_rule" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_general_rule</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Get the rule associated with the given tag in <code>recipe.json</code></p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>tag</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A DICOM tag</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>recipe</code></td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Python dictionary containing recipe elements. See <code>load_recipe()</code></p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The action associated to this DICOM tag in the provided recipe. It can be anything among deidentification actions (CONSERVER, RETIRER EFFACER, PSEUDONYMISER)</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is implicitly called by <a class="autorefs autorefs-internal" href="#deidcm.dicom.deid_mammogram.deidentify_attributes">deidentify_attributes</a> each time
+it needs to take a deidentification action.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This function takes a <a href="https://fr.wikipedia.org/wiki/Zero_trust" target="_blank">zero trust approach</a> when encountering
+unknown tags and will always return RETIRER (= REMOVE) for all tags not found inside the recipe.</p>
+</div>
+<details class="example">
+<summary>Example</summary>
+<p><strong>Example n°1</strong>: Retrieve a rule for a tag inside the recipe</p>
+<p><div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">get_general_rule_for_known_tag.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">deidcm_deid.dicom.deid_mammogram</span> <span class="kn">import</span> <span class="n">load_recipe</span><span class="p">,</span> <span class="n">get_general_rule</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="n">recipe</span> <span class="o">=</span> <span class="n">load_recipe</span><span class="p">()</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="n">rule</span> <span class="o">=</span> <span class="n">get_general_rule</span><span class="p">(</span><span class="s2">&quot;0x00020000&quot;</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>CONSERVER
+</span></code></pre></div></p>
+<p><strong>Example n°2</strong>: Retrieve a rule for a tag that is not declared inside the recipe</p>
+<p><div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">get_general_rule_for_unknown_tag.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span>
+<span class="normal"><a href="#__codelineno-8-3">3</a></span>
+<span class="normal"><a href="#__codelineno-8-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">deidcm_deid.dicom.deid_mammogram</span> <span class="kn">import</span> <span class="n">load_recipe</span><span class="p">,</span> <span class="n">get_general_rule</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="n">recipe</span> <span class="o">=</span> <span class="n">load_recipe</span><span class="p">()</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="n">rule</span> <span class="o">=</span> <span class="n">get_general_rule</span><span class="p">(</span><span class="s2">&quot;0x00026666&quot;</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>RETIRER
+</span></code></pre></div></p>
+</details>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.dicom.deid_mammogram.get_specific_rule" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_specific_rule</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Extract the specific rule from a list of tags in <code>recipe.json</code> if there is one.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>tags</code></td>
+            <td>
+                  <code><span title="typing.List">List</span>[str]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of DICOM tags. The parent attribute is always before the child attribute. 
+For instance, if we take ['AAA', 'BBB', 'CCC'], 'AAA' is a sequence containing 'BBB' and 'BBB'
+is a sequence containing the attribute 'CCC'.  </p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>recipe</code></td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Python dictionary containing recipe elements. See <code>load_recipe()</code></p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The action associated to this DICOM tag in the provided recipe. Same values as <code>get_general_rules</code>. 
+It can also return <code>None</code> if no specific rules are defined for tags inside the list.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><h2 id="customize-deidentification-tasks">Customize Deidentification Tasks</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h6 id="deidcm.config.Config" class="doc doc-heading">
+            <code>deidcm.config.Config</code>
+
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+
+      <p>This class is used to change the configuration of your environment.</p>
+<p>This singleton object has to be instanciated for deidentification tasks.
+It allows you to define the path to a custom recipe and the path to 
+a authorized_words.txt file.</p>
+<ul>
+<li><code>recipe.json</code>: a JSON file that contains the recipe orchestrating the
+attribute deidentification process.</li>
+<li><code>authorized_words.txt</code>: a TXT file that contains one word per line. Each
+word will be kept on the image even if it is detected by the OCR reader.</li>
+</ul>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.config.Config.__new__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__new__</span><span class="p">(</span><span class="n">recipe_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">authorized_words_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Create a new instance of Config if it does not exist.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>recipe_path</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>the path of your custom <code>recipe.json</code> file.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>authorized_words_path</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>the path of your custom <code>authorized_words.txt</code> file</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>Config</code></td>            <td>
+                  <code><span title="typing_extensions.Self">Self</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The single instance of the Config class.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><details class="example">
+<summary>Example</summary>
+<p>Default Configuration (inbuilt recipe, no authorized words)
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">default_config.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
+<span class="normal"><a href="#__codelineno-10-2">2</a></span>
+<span class="normal"><a href="#__codelineno-10-3">3</a></span>
+<span class="normal"><a href="#__codelineno-10-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="kn">from</span> <span class="nn">deidcm.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">recipe</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div></p>
+<p>Custom Configuration
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">custom_config.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">deidcm.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">recipe_path</span><span class="o">=</span><span class="s2">&quot;/path/to/custom-recipe.json&quot;</span><span class="p">,</span> <span class="n">authorized_words_path</span><span class="o">=</span><span class="s2">&quot;/path/to/authorized_words.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">recipe</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div></p>
+</details>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.config.Config.load_recipe" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">deidcm</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">load_recipe</span><span class="p">(</span><span class="n">recipe_filepath</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Get the recipe from recipe.json and load it into a python dict.</p>
+<p>This function reads <code>recipe.json</code>. If a user-defined version of the file
+is detected, it will be used. Otherwise, the inbuilt version of the file will be used.</p>
+<p>Be aware that the inbuilt version of the file does not suit a generic usage.
+It was created for the Deep.piste study. It is highly recommended to create
+your own version of <code>recipe.json</code>.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Python dictionary with recipe elements.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You don't have to call this function as it already implicitly when you instanciate <a class="autorefs autorefs-internal" href="#deidcm.config.Config">the Config object</a>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This function can be called to check if your customized recipe is correctly
+detected by deidcm.</p>
+</div>
+<details class="example">
+<summary>Example</summary>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">example_load_recipe.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span>
+<span class="normal"><a href="#__codelineno-12-2">2</a></span>
+<span class="normal"><a href="#__codelineno-12-3">3</a></span>
+<span class="normal"><a href="#__codelineno-12-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="kn">from</span> <span class="nn">deidcm.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">recipe_path</span><span class="o">=</span><span class="s2">&quot;/path/to/custom-recipe.json&quot;</span><span class="p">,</span> <span class="n">authorized_words_path</span><span class="o">=</span><span class="s2">&quot;/path/to/authorized_words.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">recipe</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span><span class="s1">&#39;0x00020000&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;FileMetaInformationGroupLength&#39;</span><span class="p">,</span> <span class="s1">&#39;UL&#39;</span><span class="p">,</span> <span class="s1">&#39;CONSERVER&#39;</span><span class="p">],</span> <span class="s1">&#39;0x00020001&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;FileMetaInformationVersion&#39;</span><span class="p">,</span> <span class="s1">&#39;OB&#39;</span><span class="p">,</span> <span class="s1">&#39;CONSERVER&#39;</span><span class="p">]}</span>
+</span></code></pre></div>
+</details>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="deidcm.config.Config.load_authorized_words" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">deidcm</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">load_authorized_words</span><span class="p">(</span><span class="n">authorized_words_filepath</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents first">
+
+      <p>Get and load the list of authorized words from authorized_words.json</p>
+<p>This function reads <code>authorized_words.txt</code> and load it into a python list.
+If the file is not defined, the deidentification process will erase
+all detected words.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Python list of authorized words</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You don't have to call this function as it already implicitly when you instanciate <a class="autorefs autorefs-internal" href="#deidcm.config.Config">the Config object</a>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This function can be called to check if your customized list of authorized words is correctly
+detected by deidcm.</p>
+</div>
+<details class="example">
+<summary>Example</summary>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">example_load_recipe.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span>
+<span class="normal"><a href="#__codelineno-14-2">2</a></span>
+<span class="normal"><a href="#__codelineno-14-3">3</a></span>
+<span class="normal"><a href="#__codelineno-14-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="kn">from</span> <span class="nn">deidcm.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">recipe_path</span><span class="o">=</span><span class="s2">&quot;/path/to/custom-recipe.json&quot;</span><span class="p">,</span> <span class="n">authorized_words_path</span><span class="o">=</span><span class="s2">&quot;/path/to/authorized_words.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">authorized_words</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">[</span><span class="s1">&#39;HELLO&#39;</span><span class="p">,</span> <span class="s1">&#39;ALTER&#39;</span><span class="p">,</span> <span class="s1">&#39;DSQLD&#39;</span><span class="p">,</span> <span class="s1">&#39;SHOCR&#39;</span><span class="p">]</span>
+</span></code></pre></div>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023-2024 Epiconcept
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Epiconcept-Paris/deidcm/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://fr.linkedin.com/company/epiconcept" target="_blank" rel="noopener" title="fr.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>

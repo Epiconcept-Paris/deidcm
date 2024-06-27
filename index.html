@@ -1,0 +1,1017 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reusable tools for mammograms de-identification">
+      
+      
+        <meta name="author" content="Francisco ORCHARD, William MADIE">
+      
+      
+      
+      
+        <link rel="next" href="pages/quickstart/">
+      
+      
+      <link rel="icon" href="img/epiconcept-logo.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>deidcm</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#welcome-to-deidcm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="deidcm" class="md-header__button md-logo" aria-label="deidcm" data-md-component="logo">
+      
+  <img src="img/epiconcept-logo-xl.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            deidcm
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="cyan" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Epiconcept-Paris/deidcm/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="deidcm" class="md-nav__button md-logo" aria-label="deidcm" data-md-component="logo">
+      
+  <img src="img/epiconcept-logo-xl.png" alt="logo">
+
+    </a>
+    deidcm
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Epiconcept-Paris/deidcm/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-deidcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is deidcm?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Deidentification
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-customizable-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      The customizable recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-and-specific-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      General and Specific Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-your-own-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Define your own recipe
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/quickstart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/deid_mammogram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mammogram Deidentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/dicom2df/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    dicom2df Module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/df2dicom/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    df2dicom Module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pages/about_epiconcept/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About Epiconcept
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-deidcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is deidcm?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Deidentification
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes-deidentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes Deidentification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes Deidentification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-customizable-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      The customizable recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-and-specific-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      General and Specific Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-your-own-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Define your own recipe
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="welcome-to-deidcm">Welcome to deidcm</h1>
+<h2 id="what-is-deidcm">What is deidcm?</h2>
+<p>deidcm is a reusable toolset for deidentifiying <strong>images</strong> and <strong>metadata</strong> contained inside DICOM files. deidcm stands on the shoulders of giants (<a href="https://github.com/pytorch/pytorch" target="_blank">PyTorch</a>, <a href="https://github.com/JaidedAI/EasyOCR" target="_blank">easyOCR</a>)</p>
+<p>This package was initially built for processing medical data from the <a href="https://www.health-data-hub.fr/partenariats/deep-piste" target="_blank">Deep.Piste</a> study. It was primarly made for mammograms.</p>
+<h2 id="image-deidentification">Image Deidentification</h2>
+<p>Image deidentification is the process of removing text information that can be used to identify an individual from an image. Our method uses <strong>Optical Text Recognition</strong> (<strong>OCR</strong>) for retrieving all text boxes present on an image. Then, we extract image coordinates from these text boxes and use them to hide information.</p>
+<p><img alt="img-to-deidentify.png" src="img/index/img-to-deid.png" style="height: 245px" />
+<img alt="deidentified-img.png" src="img/index/deid-img.png" style="height: 245px" /></p>
+<p>deidcm image deidentifier can also work with a list of <strong>authorized words</strong>. This list can be used to keep useful information on your image. For instance, let's say we'd like to keep information related to <em>image laterality</em> if present on our images (circled in green in the following image). All other text information will be considered as sensible (circled in red in the following image).</p>
+<p><img alt="deidentified-img.png" src="img/index/deidentification-process.gif" /></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The previous image has been obtained from the public dataset <a href="https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70230508#702305083240e43d037c47eba3f5325d0a08c9ac" target="_blank"><em>The Chinese Mammography Database (CMMD): An online mammography database with biopsy confirmed types for machine diagnosis of breast</em></a>. This dataset is accessible through the <a href="https://imaging.cancer.gov/informatics/cancer_imaging_archive.htm" target="_blank"><em>The Cancer Imaging Archive (TCIA) Retriever tool</em></a>.</p>
+</div>
+<h2 id="attributes-deidentification">Attributes Deidentification</h2>
+<p>Attributes or Metadata Deidentification is the process of removing sensible text information that can be used to identify an individual from a DICOM file attributes dataset. Expand the following section to see an example of DICOM attributes dataset.</p>
+<details class="example">
+<summary>Example</summary>
+<p><strong>What does a DICOM attributes dataset look like?</strong></p>
+<p>Let's visualize it. In order to do so, you'll need a DICOM file.
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">visualize_dicom_dataset.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span>
+<span class="normal"><a href="#__codelineno-0-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">pydicom</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">pydicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;my_mammogram.dcm&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div></p>
+<p>Now, you should obtain an output like the following one:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Dataset.file_meta<span class="w"> </span>-------------------------------
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0000</span><span class="o">)</span><span class="w"> </span>File<span class="w"> </span>Meta<span class="w"> </span>Information<span class="w"> </span>Group<span class="w"> </span>Length<span class="w">  </span>UL:<span class="w"> </span><span class="m">208</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0001</span><span class="o">)</span><span class="w"> </span>File<span class="w"> </span>Meta<span class="w"> </span>Information<span class="w"> </span>Version<span class="w">       </span>OB:<span class="w"> </span>b<span class="s1">&#39;\x00\x01&#39;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0002</span><span class="o">)</span><span class="w"> </span>Media<span class="w"> </span>Storage<span class="w"> </span>SOP<span class="w"> </span>Class<span class="w"> </span>UID<span class="w">         </span>UI:<span class="w"> </span>Digital<span class="w"> </span>Mammography<span class="w"> </span>X-Ray<span class="w"> </span>Image<span class="w"> </span>Storage<span class="w"> </span>-<span class="w"> </span>For<span class="w"> </span>Presentation
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0003</span><span class="o">)</span><span class="w"> </span>Media<span class="w"> </span>Storage<span class="w"> </span>SOP<span class="w"> </span>Instance<span class="w"> </span>UID<span class="w">      </span>UI:<span class="w"> </span><span class="m">1</span>.3.6.1.4.1.14519.5.2.1.1239.1759.58672524
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0010</span><span class="o">)</span><span class="w"> </span>Transfer<span class="w"> </span>Syntax<span class="w"> </span>UID<span class="w">                 </span>UI:<span class="w"> </span>Explicit<span class="w"> </span>VR<span class="w"> </span>Little<span class="w"> </span>Endian
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0012</span><span class="o">)</span><span class="w"> </span>Implementation<span class="w"> </span>Class<span class="w"> </span>UID<span class="w">            </span>UI:<span class="w"> </span><span class="m">1</span>.3.6.1.4.1.22213.1.143
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0013</span><span class="o">)</span><span class="w"> </span>Implementation<span class="w"> </span>Version<span class="w"> </span>Name<span class="w">         </span>SH:<span class="w"> </span><span class="s1">&#39;0.5&#39;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">(</span><span class="m">0002</span>,<span class="w"> </span><span class="m">0016</span><span class="o">)</span><span class="w"> </span>Source<span class="w"> </span>Application<span class="w"> </span>Entity<span class="w"> </span>Title<span class="w">     </span>AE:<span class="w"> </span><span class="s1">&#39;POSDA&#39;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-------------------------------------------------
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0005</span><span class="o">)</span><span class="w"> </span>Specific<span class="w"> </span>Character<span class="w"> </span>Set<span class="w">              </span>CS:<span class="w"> </span><span class="s1">&#39;ISO_IR 100&#39;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0008</span><span class="o">)</span><span class="w"> </span>Image<span class="w"> </span>Type<span class="w">                          </span>CS:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;DERIVED&#39;</span>,<span class="w"> </span><span class="s1">&#39;PRIMARY&#39;</span><span class="o">]</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0012</span><span class="o">)</span><span class="w"> </span>Instance<span class="w"> </span>Creation<span class="w"> </span>Date<span class="w">              </span>DA:<span class="w"> </span><span class="s1">&#39;20170818&#39;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0013</span><span class="o">)</span><span class="w"> </span>Instance<span class="w"> </span>Creation<span class="w"> </span>Time<span class="w">              </span>TM:<span class="w"> </span><span class="s1">&#39;114640&#39;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0014</span><span class="o">)</span><span class="w"> </span>Instance<span class="w"> </span>Creator<span class="w"> </span>UID<span class="w">                </span>UI:<span class="w"> </span><span class="m">1</span>.3.6.1.4.1.14519.5.2.1.1239.1759.25669314
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0016</span><span class="o">)</span><span class="w"> </span>SOP<span class="w"> </span>Class<span class="w"> </span>UID<span class="w">                       </span>UI:<span class="w"> </span>Digital<span class="w"> </span>Mammography<span class="w"> </span>X-Ray<span class="w"> </span>Image<span class="w"> </span>Storage<span class="w"> </span>-<span class="w"> </span>For<span class="w"> </span>Presentation
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0018</span><span class="o">)</span><span class="w"> </span>SOP<span class="w"> </span>Instance<span class="w"> </span>UID<span class="w">                    </span>UI:<span class="w"> </span><span class="m">1</span>.3.6.1.4.1.14519.5.2.1.1239.1759.58672524
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0020</span><span class="o">)</span><span class="w"> </span>Study<span class="w"> </span>Date<span class="w">                          </span>DA:<span class="w"> </span><span class="s1">&#39;20100718&#39;</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0021</span><span class="o">)</span><span class="w"> </span>Series<span class="w"> </span>Date<span class="w">                         </span>DA:<span class="w"> </span><span class="s1">&#39;20100718&#39;</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0022</span><span class="o">)</span><span class="w"> </span>Acquisition<span class="w"> </span>Date<span class="w">                    </span>DA:<span class="w"> </span><span class="s1">&#39;20100718&#39;</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0023</span><span class="o">)</span><span class="w"> </span>Content<span class="w"> </span>Date<span class="w">                        </span>DA:<span class="w"> </span><span class="s1">&#39;20100718&#39;</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0030</span><span class="o">)</span><span class="w"> </span>Study<span class="w"> </span>Time<span class="w">                          </span>TM:<span class="w"> </span><span class="s1">&#39;000000&#39;</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0031</span><span class="o">)</span><span class="w"> </span>Series<span class="w"> </span>Time<span class="w">                         </span>TM:<span class="w"> </span><span class="s1">&#39;000000&#39;</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0032</span><span class="o">)</span><span class="w"> </span>Acquisition<span class="w"> </span>Time<span class="w">                    </span>TM:<span class="w"> </span><span class="s1">&#39;000000&#39;</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0033</span><span class="o">)</span><span class="w"> </span>Content<span class="w"> </span>Time<span class="w">                        </span>TM:<span class="w"> </span><span class="s1">&#39;000000&#39;</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0050</span><span class="o">)</span><span class="w"> </span>Accession<span class="w"> </span>Number<span class="w">                    </span>SH:<span class="w"> </span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0060</span><span class="o">)</span><span class="w"> </span>Modality<span class="w">                            </span>CS:<span class="w"> </span><span class="s1">&#39;MG&#39;</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0068</span><span class="o">)</span><span class="w"> </span>Presentation<span class="w"> </span>Intent<span class="w"> </span>Type<span class="w">            </span>CS:<span class="w"> </span><span class="s1">&#39;FOR PRESENTATION&#39;</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0070</span><span class="o">)</span><span class="w"> </span>Manufacturer<span class="w">                        </span>LO:<span class="w"> </span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0090</span><span class="o">)</span><span class="w"> </span>Referring<span class="w"> </span>Physician<span class="s1">&#39;s Name          PN: &#39;&#39;</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="s1">(0008, 2218)  Anatomic Region Sequence  1 item(s) ---- </span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">76752008</span><span class="s1">&#39;</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>SCT<span class="s1">&#39;</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Breast<span class="s1">&#39;</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="s1">---------</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="s1">(0010, 0010) Patient&#39;</span>s<span class="w"> </span>Name<span class="w">                      </span>PN:<span class="w"> </span><span class="s1">&#39;D1-0002&#39;</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="o">(</span><span class="m">0010</span>,<span class="w"> </span><span class="m">0020</span><span class="o">)</span><span class="w"> </span>Patient<span class="w"> </span>ID<span class="w">                          </span>LO:<span class="w"> </span><span class="s1">&#39;D1-0002&#39;</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="o">(</span><span class="m">0010</span>,<span class="w"> </span><span class="m">0030</span><span class="o">)</span><span class="w"> </span>Patient<span class="s1">&#39;s Birth Date                DA: &#39;&#39;</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="s1">(0010, 0040) Patient&#39;</span>s<span class="w"> </span>Sex<span class="w">                       </span>CS:<span class="w"> </span><span class="s1">&#39;F&#39;</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="o">(</span><span class="m">0010</span>,<span class="w"> </span><span class="m">1010</span><span class="o">)</span><span class="w"> </span>Patient<span class="s1">&#39;s Age                       AS: &#39;</span>040Y<span class="s1">&#39;</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="s1">(0012, 0062) Patient Identity Removed            CS: &#39;</span>YES<span class="s1">&#39;</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="s1">(0012, 0063) De-identification Method            LO: &#39;</span>Per<span class="w"> </span>DICOM<span class="w"> </span>PS<span class="w"> </span><span class="m">3</span>.15<span class="w"> </span>AnnexE.<span class="w"> </span>Details<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0012</span>,0064<span class="s1">&#39;</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="s1">(0012, 0064)  De-identification Method Code Sequence  8 item(s) ---- </span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113100</span><span class="s1">&#39;</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Basic<span class="w"> </span>Application<span class="w"> </span>Confidentiality<span class="w"> </span>Profile<span class="s1">&#39;</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113101</span><span class="s1">&#39;</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Clean<span class="w"> </span>Pixel<span class="w"> </span>Data<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113104</span><span class="s1">&#39;</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Clean<span class="w"> </span>Structured<span class="w"> </span>Content<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113105</span><span class="s1">&#39;</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Clean<span class="w"> </span>Descriptors<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113107</span><span class="s1">&#39;</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Retain<span class="w"> </span>Longitudinal<span class="w"> </span>Temporal<span class="w"> </span>Information<span class="w"> </span>Modified<span class="w"> </span>Dates<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113108</span><span class="s1">&#39;</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Retain<span class="w"> </span>Patient<span class="w"> </span>Characteristics<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113109</span><span class="s1">&#39;</span>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Retain<span class="w"> </span>Device<span class="w"> </span>Identity<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="s1">    ---------</span>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="s1">    (0008, 0100) Code Value                          SH: &#39;</span><span class="m">113111</span><span class="s1">&#39;</span>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="s1">    (0008, 0102) Coding Scheme Designator            SH: &#39;</span>DCM<span class="s1">&#39;</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="s1">    (0008, 0104) Code Meaning                        LO: &#39;</span>Retain<span class="w"> </span>Safe<span class="w"> </span>Private<span class="w"> </span>Option<span class="s1">&#39;</span>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="s1">---------</span>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="s1">(0013, 0010) Private Creator                     LO: &#39;</span>CTP<span class="s1">&#39;</span>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="s1">(0013, 1010) Private tag data                    LO: &#39;</span>CMMD<span class="s1">&#39;</span>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="s1">(0013, 1013) Private tag data                    LO: &#39;</span><span class="m">12391759</span><span class="s1">&#39;</span>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="s1">(0018, 0015) Body Part Examined                  CS: &#39;</span>BREAST<span class="s1">&#39;</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="s1">(0018, 1164) Imager Pixel Spacing                DS: [0.094090909, 0.094090909]</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="s1">(0018, 1508) Positioner Type                     CS: &#39;</span>MAMMOGRAPHIC<span class="s1">&#39;</span>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="s1">(0018, 7004) Detector Type                       CS: &#39;</span>SCINTILLATOR<span class="s1">&#39;</span>
+</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="s1">(0020, 000d) Study Instance UID                  UI: 1.3.6.1.4.1.14519.5.2.1.1239.1759.24151979</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="s1">(0020, 000e) Series Instance UID                 UI: 1.3.6.1.4.1.14519.5.2.1.1239.1759.61082364</span>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="s1">(0020, 0010) Study ID                            SH: &#39;&#39;</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="s1">(0020, 0011) Series Number                       IS: &#39;</span><span class="m">1</span><span class="s1">&#39;</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="s1">(0020, 0013) Instance Number                     IS: &#39;</span><span class="m">2</span><span class="s1">&#39;</span>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a><span class="s1">(0020, 0020) Patient Orientation                 CS: [&#39;</span>A<span class="s1">&#39;, &#39;</span>FR<span class="s1">&#39;]</span>
+</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="s1">(0020, 0062) Image Laterality                    CS: &#39;</span>L<span class="s1">&#39;</span>
+</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a><span class="s1">(0028, 0002) Samples per Pixel                   US: 1</span>
+</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="s1">(0028, 0004) Photometric Interpretation          CS: &#39;</span>MONOCHROME2<span class="s1">&#39;</span>
+</span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="s1">(0028, 0010) Rows                                US: 2294</span>
+</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a><span class="s1">(0028, 0011) Columns                             US: 1914</span>
+</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="s1">(0028, 0100) Bits Allocated                      US: 8</span>
+</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a><span class="s1">(0028, 0101) Bits Stored                         US: 8</span>
+</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="s1">(0028, 0102) High Bit                            US: 7</span>
+</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="s1">(0028, 0103) Pixel Representation                US: 0</span>
+</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a><span class="s1">(0028, 0301) Burned In Annotation                CS: &#39;</span>NO<span class="s1">&#39;</span>
+</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a><span class="s1">(0028, 0303) Longitudinal Temporal Information M CS: &#39;</span>MODIFIED<span class="s1">&#39;</span>
+</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a><span class="s1">(0028, 1040) Pixel Intensity Relationship        CS: &#39;</span>LOG<span class="s1">&#39;</span>
+</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a><span class="s1">(0028, 1041) Pixel Intensity Relationship Sign   SS: -1</span>
+</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a><span class="s1">(0028, 1050) Window Center                       DS: &#39;</span><span class="m">128</span>.0<span class="s1">&#39;</span>
+</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a><span class="s1">(0028, 1051) Window Width                        DS: &#39;</span><span class="m">256</span>.0<span class="s1">&#39;</span>
+</span><span id="__span-1-104"><a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a><span class="s1">(0028, 1052) Rescale Intercept                   DS: &#39;</span><span class="m">0</span>.0<span class="s1">&#39;</span>
+</span><span id="__span-1-105"><a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a><span class="s1">(0028, 1053) Rescale Slope                       DS: &#39;</span><span class="m">1</span>.0<span class="s1">&#39;</span>
+</span><span id="__span-1-106"><a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a><span class="s1">(0028, 1054) Rescale Type                        LO: &#39;</span>US<span class="s1">&#39;</span>
+</span><span id="__span-1-107"><a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a><span class="s1">(0028, 1055) Window Center &amp; Width Explanation   LO: &#39;</span>Full<span class="w"> </span>width<span class="w"> </span>of<span class="w"> </span><span class="m">8</span><span class="w"> </span>bit<span class="w"> </span>data<span class="s1">&#39;</span>
+</span><span id="__span-1-108"><a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a><span class="s1">(0028, 1056) VOI LUT Function                    CS: &#39;</span>SIGMOID<span class="s1">&#39;</span>
+</span><span id="__span-1-109"><a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a><span class="s1">(0028, 2110) Lossy Image Compression             CS: &#39;</span><span class="m">00</span><span class="s1">&#39;</span>
+</span><span id="__span-1-110"><a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a><span class="s1">(0040, 0318) Organ Exposed                       CS: &#39;</span>BREAST<span class="s1">&#39;</span>
+</span><span id="__span-1-111"><a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a><span class="s1">(0040, 0555)  Acquisition Context Sequence  0 item(s) ---- </span>
+</span><span id="__span-1-112"><a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a><span class="s1">(0054, 0220)  View Code Sequence  1 item(s) ---- </span>
+</span><span id="__span-1-113"><a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a><span class="s1">(0008, 0100) Code Value                          SH: &#39;</span><span class="m">399368009</span><span class="s1">&#39;</span>
+</span><span id="__span-1-114"><a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a><span class="s1">(0008, 0102) Coding Scheme Designator            SH: &#39;</span>SCT<span class="s1">&#39;</span>
+</span><span id="__span-1-115"><a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a><span class="s1">(0008, 0104) Code Meaning                        LO: &#39;</span>medio-lateral<span class="w"> </span>oblique<span class="s1">&#39;</span>
+</span><span id="__span-1-116"><a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a><span class="s1">(0054, 0222)  View Modifier Code Sequence  0 item(s) ---- </span>
+</span><span id="__span-1-117"><a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a><span class="s1">---------</span>
+</span><span id="__span-1-118"><a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a><span class="s1">(2050, 0020) Presentation LUT Shape              CS: &#39;</span>IDENTITY<span class="err">&#39;</span>
+</span><span id="__span-1-119"><a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a><span class="o">(</span>7fe0,<span class="w"> </span><span class="m">0010</span><span class="o">)</span><span class="w"> </span>Pixel<span class="w"> </span>Data<span class="w">                          </span>OB:<span class="w"> </span>Array<span class="w"> </span>of<span class="w"> </span><span class="m">4390716</span><span class="w"> </span>elements
+</span></code></pre></div></p>
+</details>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The previous dataset has been obtained from the public dataset <a href="https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70230508#702305083240e43d037c47eba3f5325d0a08c9ac" target="_blank"><em>The Chinese Mammography Database (CMMD): An online mammography database with biopsy confirmed types for machine diagnosis of breast</em></a>. This dataset is accessible through the <a href="https://imaging.cancer.gov/informatics/cancer_imaging_archive.htm" target="_blank"><em>The Cancer Imaging Archive (TCIA) Retriever tool</em></a>.</p>
+</div>
+<h3 id="the-customizable-recipe">The customizable recipe</h3>
+<p>The attributes deidentifier is based on a <strong>customizable recipe</strong> which is a file describing deidentification actions for each DICOM attribute. The recipe file is written in <a href="https://json.org/json-fr.html" target="_blank">JSON</a>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;general_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="nt">&quot;0x00020000&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">            </span><span class="s2">&quot;FileMetaInformationGroupLength&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">            </span><span class="s2">&quot;UL&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">            </span><span class="s2">&quot;CONSERVER&quot;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="nt">&quot;0x001811BB&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">            </span><span class="s2">&quot;AcquisitionFieldOfViewLabel&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">            </span><span class="s2">&quot;LO&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">            </span><span class="s2">&quot;PSEUDONYMISER&quot;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="nt">&quot;0x001021B0&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">            </span><span class="s2">&quot;AdditionalPatientHistory&quot;</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">            </span><span class="s2">&quot;LT&quot;</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">            </span><span class="s2">&quot;RETIRER&quot;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="p">]</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="nt">&quot;0x00080032&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="s2">&quot;AcquisitionTime&quot;</span><span class="p">,</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">            </span><span class="s2">&quot;TM&quot;</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">            </span><span class="s2">&quot;EFFACER&quot;</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="p">]</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="nt">&quot;specific_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">        </span><span class="nt">&quot;0x00080100&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">            </span><span class="nt">&quot;sequence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x00540220&quot;</span><span class="p">,</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">            </span><span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONSERVER&quot;</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="nt">&quot;0x00080104&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">            </span><span class="nt">&quot;sequence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x00540220&quot;</span><span class="p">,</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">            </span><span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONSERVER&quot;</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">        </span><span class="nt">&quot;0x00080102&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">            </span><span class="nt">&quot;sequence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x00540220&quot;</span><span class="p">,</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">            </span><span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONSERVER&quot;</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="general-and-specific-rules">General and Specific Rules</h3>
+<p>The recipe file contains 2 types of rules:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Type of Rules</strong></th>
+<th style="text-align: center;"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>General Rules</strong></td>
+<td style="text-align: center;">A basic rule. It can be defined for any attribute.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Specific Rules</strong></td>
+<td style="text-align: center;">A rule used to target a child attribute of a sequence.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How do we use these rules?</strong></p>
+<ul>
+<li>In practice, we'll mostly use <strong>general rules</strong>. They allow us to apply a given deidentification action on a targeted attribute.</li>
+<li><strong>Specific rules</strong> find their use when we want to target a generic attribute inside a sequence. By generic, we refer to an attribute that is used several
+    times in the dataset but inside different sequences. Let's see an example:</li>
+</ul>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>In the following dataset, we have <strong>2 sequences</strong> that hold very different types of information. However, these sequences use the same children attributes.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">(</span><span class="m">0012</span>,<span class="w"> </span><span class="m">0064</span><span class="o">)</span><span class="w">  </span>My<span class="w"> </span>First<span class="w"> </span>Sequence<span class="w">  </span><span class="m">3</span><span class="w"> </span>item<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>----<span class="w"> </span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0100</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Value<span class="w">                          </span>SH:<span class="w"> </span><span class="s1">&#39;A1&#39;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0102</span><span class="o">)</span><span class="w"> </span>Coding<span class="w"> </span>Scheme<span class="w"> </span>Designator<span class="w">            </span>SH:<span class="w"> </span><span class="s1">&#39;Mam&#39;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0104</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Meaning<span class="w">                        </span>LO:<span class="w"> </span><span class="s1">&#39;Mammogram&#39;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>---------
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0100</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Value<span class="w">                          </span>SH:<span class="w"> </span><span class="s1">&#39;A2&#39;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0102</span><span class="o">)</span><span class="w"> </span>Coding<span class="w"> </span>Scheme<span class="w"> </span>Designator<span class="w">            </span>SH:<span class="w"> </span><span class="s1">&#39;MamR&#39;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0104</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Meaning<span class="w">                        </span>LO:<span class="w"> </span><span class="s1">&#39;Mammogram Reader&#39;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>---------
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0100</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Value<span class="w">                          </span>SH:<span class="w"> </span><span class="s1">&#39;A3&#39;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0102</span><span class="o">)</span><span class="w"> </span>Coding<span class="w"> </span>Scheme<span class="w"> </span>Designator<span class="w">            </span>SH:<span class="w"> </span><span class="s1">&#39;SE&#39;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0104</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Meaning<span class="w">                        </span>LO:<span class="w"> </span><span class="s1">&#39;Study Exam&#39;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>---------
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="o">(</span><span class="m">0013</span>,<span class="w"> </span><span class="m">0242</span><span class="o">)</span><span class="w">  </span>My<span class="w"> </span>Second<span class="w"> </span>Sequence<span class="w">  </span><span class="m">1</span><span class="w"> </span>item<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>----<span class="w"> </span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0100</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Value<span class="w">                          </span>SH:<span class="w"> </span><span class="s1">&#39;BT-67&#39;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0102</span><span class="o">)</span><span class="w"> </span>Coding<span class="w"> </span>Scheme<span class="w"> </span>Designator<span class="w">            </span>SH:<span class="w"> </span><span class="s1">&#39;XRC&#39;</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="o">(</span><span class="m">0008</span>,<span class="w"> </span><span class="m">0104</span><span class="o">)</span><span class="w"> </span>Code<span class="w"> </span>Meaning<span class="w">                        </span>LO:<span class="w"> </span><span class="s1">&#39;ACQUISITION: X-RAY CHEST&#39;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>---------
+</span></code></pre></div></p>
+<p><strong>Case n°1</strong>: Delete all <code>Code Meaning</code> attributes</p>
+<p>We set a general rule for the attribute <code>Code Meaning</code> with the action <code>RETIRER</code>.</p>
+<p><strong>Case n°2</strong>: Delete all <code>Code Meaning</code> attributes <strong>except those inside</strong> <code>My Second Sequence</code> </p>
+<ul>
+<li>We set a general rule for the attribute <code>Code Meaning</code> with the action <code>RETIRER</code>.</li>
+<li>We set a specific rule for the attribute <code>Code Meaning</code> inside <code>My Second Sequence</code>.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If a <strong>general rule</strong> is defined for a given sequence. The rule applied to the children will be the strictest between the sequence rule and the sequence child rule.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If a <strong>general rule</strong> is defined for a given sequence and children have <strong>specific rules</strong>, the <strong>specific rules</strong> will override the <strong>general rule</strong>.</p>
+</div>
+<pre class="mermaid"><code>graph TD
+A[Tag 0x00540220 in 0x00080100 SQ] --&gt; B{General Rule?};
+B --&gt;|Yes| C{Specific Rule?};
+C --&gt;|Yes| D[Apply specific rule];
+C --&gt;|No| E[Apply the strictest rule between general rules];
+B --&gt;|No| Z[Apply the strictest rule: REMOVE];</code></pre>
+<h3 id="define-your-own-recipe">Define your own recipe</h3>
+<p>A <code>recipe.json</code> file is already available inside deidcm package. However, it is possible to define your own <code>recipe.json</code>. In order to specify a custom recipe, use the <a class="autorefs autorefs-internal" href="pages/deid_mammogram/#deidcm.config.Config">the Config object</a>. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The inbuilt <code>recipe.json</code> file was created for the <a href="https://www.health-data-hub.fr/partenariats/deep-piste" target="_blank">Deep.Piste</a> study. It was made for mammograms only and you should probably define <strong><em>your own file meeting your own needs</em></strong>.</p>
+<p>If you don't define a new <code>recipe.json</code> folder, deidcm will show a warning and automatically use its inbuilt referential.</p>
+</div>
+<p>In order to define your own <code>recipe.json</code>, you'll have to create the file <code>recipe.json</code> and respect this structure :</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;general_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="nt">&quot;HEXADECIMAL_DICOM_TAG_ATTRIBUTE&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">            </span><span class="s2">&quot;AttributeName&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">            </span><span class="s2">&quot;AttributeType&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">            </span><span class="s2">&quot;DeidentificationAction&quot;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="err">...</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">&quot;specific_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="nt">&quot;HEXADECIMAL_DICOM_TAG_OF_CHILD_ATTRIBUTE&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">            </span><span class="nt">&quot;sequence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HEXADECIMAL_DICOM_TAG_OF_SEQUENCE_ATTRIBUTE&quot;</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">            </span><span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeidentificationAction&quot;</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="err">...</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><code>AttributeName</code> is only used for making the file readable for humans</li>
+<li><code>AttributeType</code> is the attribute's <a href="https://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.2.html" target="_blank">DICOM Value Representation (VR)</a>. It is represented by two letters.</li>
+<li><code>DeidentificationAction</code> is a string that defines which action deidcm deidentifier will take for a specific attribute. This value should be among the possible actions in the below table.</li>
+</ul>
+</div>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Action (French Name)</strong></th>
+<th style="text-align: center;"><strong>Equivalent in English</strong></th>
+<th style="text-align: center;"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">CONSERVER</td>
+<td style="text-align: center;">KEEP</td>
+<td style="text-align: center;">The attribute will be kept.</td>
+</tr>
+<tr>
+<td style="text-align: center;">EFFACER</td>
+<td style="text-align: center;">ERASE</td>
+<td style="text-align: center;">The attribute will still be in the dataset but its value will be blanked.</td>
+</tr>
+<tr>
+<td style="text-align: center;">RETIRER</td>
+<td style="text-align: center;">REMOVE</td>
+<td style="text-align: center;">The attribute will be removed from the dataset.</td>
+</tr>
+<tr>
+<td style="text-align: center;">PSEUDONYMISER</td>
+<td style="text-align: center;">DEIDENTIFY</td>
+<td style="text-align: center;">The attribute will be deidentified.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>English names are not supported inside the <code>recipe.json</code>. The equivalent column above is just for information purposes.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023-2024 Epiconcept
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Epiconcept-Paris/deidcm/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://fr.linkedin.com/company/epiconcept" target="_blank" rel="noopener" title="fr.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "search.suggest", "search.share"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>
