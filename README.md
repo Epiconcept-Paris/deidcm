@@ -1,3 +1,5 @@
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deidcm)
+
 ## deidcm module
 
 Functionality for cancer screening data pipeline including DICOM image importing and processing.
@@ -35,6 +37,10 @@ python3 -m venv env
 ```bash
 pip install -e .
 ```
+
+### How to contribute
+
+Please send a PR for small bugs/improvements. For bigger ones, open an issue first. 
 
 ### Checking installation
 
