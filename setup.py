@@ -8,6 +8,7 @@ with open('README.md', encoding="utf-8") as f:
 setup(
     name='deidcm',
     version='0.0.3',
+    python_requires='>=3.6',
     description='Reusable toolset for deidentifiying images and metadata contained inside DICOM files',
     long_description=readme,
     long_description_content_type='text/markdown',
