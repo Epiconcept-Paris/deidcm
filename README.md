@@ -1,4 +1,8 @@
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deidcm)
+<!---![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deidcm)--->
+![pypi](https://img.shields.io/pypi/v/deidcm.svg?color=blue)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/deidcm)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/deidcm)
+![PyPI - License](https://img.shields.io/pypi/l/deidcm?color=green)
 
 ## deidcm module
 
