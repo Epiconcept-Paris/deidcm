@@ -47,5 +47,20 @@ setup(
             "pymdown-extensions",
             "mkdocs-pymdownx-material-extras"
         ]
-    }
+    },
+    classifiers=[
+        "License:: OSI Approved:: MIT License",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Intended Audience:: Healthcare Industry",
+        "Topic:: Scientific/Engineering:: Image Processing",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.10",
+    ]
 )
